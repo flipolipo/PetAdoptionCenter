@@ -88,6 +88,16 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "SimpleWebDal/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/SimpleWebDal.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SimpleWebDal.dll": {}
+        }
       }
     }
   },
@@ -429,11 +439,16 @@
         "swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512",
         "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
+    },
+    "SimpleWebDal/1.0.0": {
+      "type": "project",
+      "path": "../SimpleWebDal/SimpleWebDal.csproj",
+      "msbuildProject": "../SimpleWebDal/SimpleWebDal.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj",
+      "SimpleWebDal >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.5.0"
     ]
   },
@@ -464,8 +479,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj": {
-              "projectPath": "C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj"
+            "C:\\Projects\\module 4\\PAC\\SimpleWebDal\\SimpleWebDal.csproj": {
+              "projectPath": "C:\\Projects\\module 4\\PAC\\SimpleWebDal\\SimpleWebDal.csproj"
             }
           }
         }
@@ -507,16 +522,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Nie można znaleźć projektu „C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj”. Sprawdź, czy odwołanie projektu jest prawidłowe i czy plik projektu istnieje.",
-      "libraryId": "C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj",
-      "targetGraphs": [
-        "net6.0"
-      ]
-    }
-  ]
+  }
 }

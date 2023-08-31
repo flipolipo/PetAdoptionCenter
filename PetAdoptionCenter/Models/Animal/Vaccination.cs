@@ -1,6 +1,6 @@
 ﻿namespace PetAdoptionCenter.Models.Animal
 {
-    public class VaccinationInfo
+    public class Vaccination
     {
         public string VaccinationName { get; set; }
         public DateTime date { get; set; }

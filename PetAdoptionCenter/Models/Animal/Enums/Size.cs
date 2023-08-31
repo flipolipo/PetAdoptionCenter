@@ -1,6 +1,9 @@
 ﻿namespace PetAdoptionCenter.Models.Animal.Enums
 {
-    public Enum DogSize
+    public enum Size
     {
+        Small,
+        Medium,
+        Large
     }
 }
