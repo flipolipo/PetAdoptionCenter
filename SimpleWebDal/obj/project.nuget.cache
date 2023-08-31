@@ -1,25 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "aizPGHwiaCx56liAu87iznC5y6rJzzSuNlw0/pv4WQ0/8qxNdB52wdSElSkJBZLq82NJ5INAbXnbcn4JIGX0Eg==",
-  "success": false,
+  "dgSpecHash": "wQCCh13tc0ha4Rwo33EMpBT0YlNu2dG84I2leYpGhO6SHkgUhZqpaG8QPq9mXAE5ien/9chCAyFOJq0Fjvgm2g==",
+  "success": true,
   "projectFilePath": "C:\\Projects\\module 4\\PAC\\SimpleWebDal\\SimpleWebDal.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\juros\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
-    "C:\\Users\\juros\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
-    "C:\\Users\\juros\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
-    "C:\\Users\\juros\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
-    "C:\\Users\\juros\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
-    "C:\\Users\\juros\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.5.0\\swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
-  ],
-  "logs": [
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Nie można znaleźć projektu „C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj”. Sprawdź, czy odwołanie projektu jest prawidłowe i czy plik projektu istnieje.",
-      "libraryId": "C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj",
-      "targetGraphs": [
-        "net6.0"
-      ]
-    }
-  ]
+  "expectedPackageFiles": [],
+  "logs": []
 }
