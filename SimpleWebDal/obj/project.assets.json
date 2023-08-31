@@ -91,6 +91,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
+          "C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj": "1.0.0",
           "Swashbuckle.AspNetCore": "6.5.0"
         },
         "compile": {
@@ -516,5 +517,16 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Nie można znaleźć projektu „C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj”. Sprawdź, czy odwołanie projektu jest prawidłowe i czy plik projektu istnieje.",
+      "libraryId": "C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }

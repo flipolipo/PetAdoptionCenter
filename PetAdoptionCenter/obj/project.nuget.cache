@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "Yd9IqQcz24wIiNVcLoxSoiTysCsuPlzPDmg7ve6W5NgG+1yeMLfUm5LYxejwviMmuDfqGBI3exdSdkgOtBq+2A==",
-  "success": true,
+  "dgSpecHash": "4vfthzMwGiuAaWx5CJ4iJ8U6fj/WJllje4GjMDTYwvlnLX/jju6CtCZw//R3i48xMXosXC87MTN/i/Y/uKO4dQ==",
+  "success": false,
   "projectFilePath": "C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\PetAdoptionCenter.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\juros\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
@@ -11,5 +11,15 @@
     "C:\\Users\\juros\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
     "C:\\Users\\juros\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.5.0\\swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Nie można znaleźć projektu „C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj”. Sprawdź, czy odwołanie projektu jest prawidłowe i czy plik projektu istnieje.",
+      "libraryId": "C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj",
+      "targetGraphs": [
+        "net6.0"
+      ]
+    }
+  ]
 }

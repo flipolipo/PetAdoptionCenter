@@ -27,7 +27,11 @@
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj": {
+                "projectPath": "C:\\Projects\\module 4\\PAC\\PetAdoptionCenter\\SimpleWebDal.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
