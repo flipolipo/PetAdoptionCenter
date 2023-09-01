@@ -1,9 +1,8 @@
-﻿namespace PetAdoptionCenter.Models.Animal.Enums
+﻿namespace PetAdoptionCenter.Models.Animal.Enums;
+
+public enum Size
 {
-    public enum Size
-    {
-        Small,
-        Medium,
-        Large
-    }
+    Small,
+    Medium,
+    Large
 }

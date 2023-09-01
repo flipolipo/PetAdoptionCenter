@@ -1,10 +1,9 @@
-﻿namespace PetAdoptionCenter.Models.Animal.Enums
-{
-    public enum PetStatus
-    {
-        TemporaryHouse,
-        AthShelter,
-        OnAWalk
+﻿namespace PetAdoptionCenter.Models.Animal.Enums;
 
-    }
+public enum PetStatus
+{
+    TemporaryHouse,
+    AthShelter,
+    OnAWalk
+
 }

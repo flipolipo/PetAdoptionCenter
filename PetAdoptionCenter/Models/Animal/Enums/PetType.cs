@@ -1,8 +1,7 @@
-﻿namespace PetAdoptionCenter.Models.Animal.Enums
+﻿namespace PetAdoptionCenter.Models.Animal.Enums;
+
+public enum PetType
 {
-    public enum PetType
-    {
-        Dog,
-        Cat
-    }
+    Dog,
+    Cat
 }
