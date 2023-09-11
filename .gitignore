@@ -5,6 +5,7 @@
 /bin/
 /obj/
 .DS_Store
+/Properties/launchSettings.json
 
 .vscode/*
 !.vscode/settings.json
