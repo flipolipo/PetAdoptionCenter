@@ -6,7 +6,8 @@
 /obj/
 .DS_Store
 /Properties/launchSettings.json
-
+.launchSettings.json
+/PetAdoptionCenter/Properties/launchSettings.json
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
