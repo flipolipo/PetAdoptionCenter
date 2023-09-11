@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PetAdoptionCenter.Models.WebUser;
+using System.ComponentModel.DataAnnotations;
 
-namespace PetAdoptionCenter.Models.WebUser;
+namespace PetAdoptionCenter.DTOs;
 
-public class BasicInformation
+public class BasicInformationDTO
 {
     [Required]
     [MinLength(2)]
@@ -13,11 +14,7 @@ public class BasicInformation
     [MaxLength(20)]
     public string Surname { get; set; }
     [Required]
-    [Phone]
-    public string Phone { get; set; }
-    [Required]
     [EmailAddress]
     public string Email { get; set; }
-    [Required]
-    public Address address { get; set; }
+    public AddressDTO addressDTO { get; set; }
 }
