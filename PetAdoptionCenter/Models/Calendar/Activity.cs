@@ -9,5 +9,4 @@ public class Activity
     public string Name { get; set; }
     public DateTime AcctivityDate { get; set; }
     public Pet pet { get; set; }
-    public User user { get; set; }
 }
