@@ -14,5 +14,6 @@ public class Shelter
     public IEnumerable<User> UsersAdmin { get; set; }
     public IEnumerable<User> UsersHelping { get; set; }
     public IEnumerable<Pet> ListOfPets { get; set; }
+    public IEnumerable<Pet> ListOfPetsAdopted { get; set; }
     public TimeTable<Shelter> ShelterCalendar { get; set; }
 }
