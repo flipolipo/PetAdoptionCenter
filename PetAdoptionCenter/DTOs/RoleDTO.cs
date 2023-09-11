@@ -1,6 +1,4 @@
-﻿using PetAdoptionCenter.Models.WebUser;
-
-namespace PetAdoptionCenter.DTOs;
+﻿namespace PetAdoptionCenter.DTOs;
 
 public class RoleDTO
 {

@@ -11,8 +11,8 @@ public class Shelter
     public Address ShelterAddress { get; set; }
     public string ShelterDescription { get; set; }
     public User ShelterOwner { get; set; }
-    public IEnumerable<User> UsersAdmin { get; set; }
-    public IEnumerable<User> UsersHelping { get; set; }
+    public IEnumerable<User> ShelterWorkers { get; set; }
+    public IEnumerable<User> ShelterContributors { get; set; }
     public IEnumerable<Pet> ListOfPets { get; set; }
     public IEnumerable<Pet> ListOfPetsAdopted { get; set; }
     public TimeTable<Shelter> ShelterCalendar { get; set; }

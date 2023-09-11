@@ -16,5 +16,6 @@ public class AdoptionDTO
     [Required]
     public UserDTO Adopter { get; set; }
     [Required]
+    [DataType(DataType.Date)]
     public DateTime DateOfAdoption { get; set; }
 }
