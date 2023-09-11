@@ -5,9 +5,9 @@ VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetAdoptionCenter", "PetAdoptionCenter\PetAdoptionCenter.csproj", "{6FCC76A4-98CB-4C8D-AEC6-89215245CDE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SImpleWebLogic", "SImpleWebLogic\SImpleWebLogic.csproj", "{C05FE676-D5A8-49C1-85E9-5C9E7863B5F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SImpleWebLogic", "SImpleWebLogic\SImpleWebLogic.csproj", "{C05FE676-D5A8-49C1-85E9-5C9E7863B5F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWebDal", "SimpleWebDal\SimpleWebDal.csproj", "{9C7E898D-D96F-49FD-8AC8-A2E347BA4237}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleWebDal", "SimpleWebDal\SimpleWebDal.csproj", "{9C7E898D-D96F-49FD-8AC8-A2E347BA4237}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
