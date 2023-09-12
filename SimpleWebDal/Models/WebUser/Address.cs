@@ -4,6 +4,8 @@ namespace SimpleWebDal.Models.WebUser;
 
 public class Address
 {
+    [Key]
+    public uint Id { get; set; }
     [Required]
     [MinLength(2)]
     [MaxLength(50)]
