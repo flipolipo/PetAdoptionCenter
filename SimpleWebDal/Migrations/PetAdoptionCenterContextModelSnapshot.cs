@@ -23,16 +23,15 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.Address", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("AddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AddressId"));
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasMaxLength(35)
-                        .HasColumnType("character varying(35)");
+                        .HasColumnType("text");
 
                     b.Property<int>("FlatNumber")
                         .HasColumnType("integer");
@@ -47,12 +46,11 @@ namespace SimpleWebDal.Migrations
 
                     b.Property<string>("Street")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("AddressId");
 
-                    b.HasIndex("Id")
+                    b.HasIndex("AddressId")
                         .IsUnique();
 
                     b.ToTable("Addresses");
@@ -60,7 +58,7 @@ namespace SimpleWebDal.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1L,
+                            AddressId = 1,
                             City = "Warsaw",
                             FlatNumber = 3,
                             HouseNumber = "3a",
@@ -69,7 +67,7 @@ namespace SimpleWebDal.Migrations
                         },
                         new
                         {
-                            Id = 2L,
+                            AddressId = 2,
                             City = "Warsaw",
                             FlatNumber = 3,
                             HouseNumber = "3a",
@@ -78,7 +76,7 @@ namespace SimpleWebDal.Migrations
                         },
                         new
                         {
-                            Id = 3L,
+                            AddressId = 3,
                             City = "Warsaw",
                             FlatNumber = 3,
                             HouseNumber = "3a",
@@ -87,13 +85,73 @@ namespace SimpleWebDal.Migrations
                         },
                         new
                         {
-                            Id = 4L,
+                            AddressId = 4,
                             City = "Gdynia",
                             FlatNumber = 3,
                             HouseNumber = "3a",
                             PostalCode = "48-456",
                             Street = "Janasa"
                         });
+                });
+
+            modelBuilder.Entity("SimpleWebDal.Models.WebUser.BasicInformation", b =>
+                {
+                    b.Property<int>("BasicInformationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BasicInformationId"));
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("BasicInformationId");
+
+                    b.HasIndex("AddressId")
+                        .IsUnique();
+
+                    b.HasIndex("BasicInformationId")
+                        .IsUnique();
+
+                    b.ToTable("BasicInformations");
+
+                    b.HasData(
+                        new
+                        {
+                            BasicInformationId = 1,
+                            AddressId = 2,
+                            Email = "filip@wp.pl",
+                            Name = "Filip",
+                            Phone = "345678904",
+                            Surname = "Juroszek"
+                        });
+                });
+
+            modelBuilder.Entity("SimpleWebDal.Models.WebUser.BasicInformation", b =>
+                {
+                    b.HasOne("SimpleWebDal.Models.WebUser.Address", "Address")
+                        .WithOne()
+                        .HasForeignKey("SimpleWebDal.Models.WebUser.BasicInformation", "AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
                 });
 #pragma warning restore 612, 618
         }
