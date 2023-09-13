@@ -21,6 +21,11 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repository\AdminRepo\" />
+    <Folder Include="Repository\UserRepo\" />
+  </ItemGroup>
+
  
 
 </Project>
