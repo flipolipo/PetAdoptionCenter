@@ -17,7 +17,7 @@ namespace SimpleWebDal.Migrations
                 name: "Addresses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    AddressId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Street = table.Column<string>(type: "text", nullable: false),
                     HouseNumber = table.Column<string>(type: "text", nullable: false),
@@ -27,7 +27,7 @@ namespace SimpleWebDal.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.AddressId);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,13 +49,13 @@ namespace SimpleWebDal.Migrations
                         name: "FK_BasicInformations_Addresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Addresses",
-                        principalColumn: "Id",
+                        principalColumn: "AddressId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "Addresses",
-                columns: new[] { "Id", "City", "FlatNumber", "HouseNumber", "PostalCode", "Street" },
+                columns: new[] { "AddressId", "City", "FlatNumber", "HouseNumber", "PostalCode", "Street" },
                 values: new object[,]
                 {
                     { 1, "Warsaw", 3, "3a", "48-456", "Janasa" },
@@ -64,10 +64,15 @@ namespace SimpleWebDal.Migrations
                     { 4, "Gdynia", 3, "3a", "48-456", "Janasa" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "BasicInformations",
+                columns: new[] { "BasicInformationId", "AddressId", "Email", "Name", "Phone", "Surname" },
+                values: new object[] { 1, 2, "filip@wp.pl", "Filip", "345678904", "Juroszek" });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Addresses_Id",
+                name: "IX_Addresses_AddressId",
                 table: "Addresses",
-                column: "Id",
+                column: "AddressId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

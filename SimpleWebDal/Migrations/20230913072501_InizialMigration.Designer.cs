@@ -11,8 +11,8 @@ using SimpleWebDal.Data;
 namespace SimpleWebDal.Migrations
 {
     [DbContext(typeof(PetAdoptionCenterContext))]
-    [Migration("20230912155024_Test")]
-    partial class Test
+    [Migration("20230913072501_InizialMigration")]
+    partial class InizialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

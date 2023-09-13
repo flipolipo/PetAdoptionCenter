@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SimpleWebDal.Models.TimeTable;
-public class TimeTable<T>
+namespace SimpleWebDal.Models.Calendar;
+public class TimeTable
 {
     [Key]
     [Required]
-    public uint Id { get; init; }
-    [Required]
-    public T Owner { get; set; }
+    public int TimeTableId { get; init; }
     [Required]
     [DataType(DataType.Date)]
     public DateTime DateWithTime { get; set; }
+    public int ActivityId { get; set; }
     [Required]
+
     public Activity Activity { get; set; }
 }
