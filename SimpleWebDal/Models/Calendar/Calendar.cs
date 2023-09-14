@@ -6,9 +6,9 @@ public class TimeTable
 {
     [Key]
     [Required]
-    public uint Id { get; init; }
+    public int Id { get; init; }
     [Required]
-    public User Owner { get; set; }
+    public string Owner { get; set; }
     [Required]
     [DataType(DataType.Date)]
     public DateTime DateWithTime { get; set; }
