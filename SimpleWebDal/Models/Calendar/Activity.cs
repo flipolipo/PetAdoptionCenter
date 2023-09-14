@@ -1,14 +1,13 @@
 ﻿using SimpleWebDal.Models.Animal;
-using SimpleWebDal.Models.WebUser;
 using System.ComponentModel.DataAnnotations;
 
-namespace SimpleWebDal.Models.TimeTable;
+namespace SimpleWebDal.Models.Calendar;
 
 public class Activity
 {
     [Key]
     [Required]
-    public uint Id { get; set; }
+    public int Id { get; set; }
     [Required]
     [MinLength(2)]
     [MaxLength(50)]

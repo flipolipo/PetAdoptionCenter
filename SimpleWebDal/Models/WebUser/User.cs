@@ -1,5 +1,5 @@
 ﻿
-using SimpleWebDal.Models.TimeTable;
+using SimpleWebDal.Models.Calendar;
 using System.ComponentModel.DataAnnotations;
 
 namespace SimpleWebDal.Models.WebUser;
@@ -8,7 +8,7 @@ public class User
 {
     [Key]
     [Required]
-    public uint Id { get; set; }
+    public int Id { get; set; }
     [Required]
     [MinLength(2)]
     [MaxLength(15)]
@@ -17,8 +17,10 @@ public class User
     [MinLength(2)]
     [MaxLength(15)]
     public string Password { get; set; }
+    public int BasicInformationId { get; set; }
     [Required]
     public BasicInformation BasicInformation { get; set; }
-    public TimeTable<User> UsersTimeTable { get; set; }
+    public int TimeTableId { get; set; }
+    public TimeTable UsersTimeTable { get; set; }
     public IEnumerable<Role> Roles { get; set; }
 }

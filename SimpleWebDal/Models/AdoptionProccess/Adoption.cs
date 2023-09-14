@@ -8,7 +8,7 @@ namespace SimpleWebDal.Models.AdoptionProccess;
 public class Adoption
 {
     [Key]
-    public uint Id { get; set; }
+    public int Id { get; set; }
     [Required]
     
     public Pet PetToAdoption { get; set; }
