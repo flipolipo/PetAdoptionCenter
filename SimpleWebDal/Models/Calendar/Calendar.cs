@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SimpleWebDal.Models.WebUser;
+using System.ComponentModel.DataAnnotations;
 
 namespace SimpleWebDal.Models.Calendar;
 public class TimeTable
