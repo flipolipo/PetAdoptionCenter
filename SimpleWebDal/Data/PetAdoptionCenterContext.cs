@@ -13,7 +13,7 @@ public class PetAdoptionCenterContext : DbContext
 {
     public DbSet<Address> Addresses { get; set; }
     public DbSet<BasicInformation> BasicInformations { get; set; }
-    public DbSet<Role> Roles { get; set; }
+  
     public DbSet<User> Users { get; set; }
     public DbSet<TempHouse> TempHouses { get; set; }
     public DbSet<ProfileModel> Profiles { get; set; }
@@ -31,7 +31,7 @@ public class PetAdoptionCenterContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Wasz string");
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=PAC;Username=postgres;Password=rudy102;");
         base.OnConfiguring(optionsBuilder);
     }
 
@@ -135,191 +135,138 @@ public class PetAdoptionCenterContext : DbContext
   .IsUnique();
 
 
-        //Address(child) relations with parents (one-to-one):
+        //BasicInformation(parent) relations with Address (child) (one-to-one):
 
         builder.Entity<BasicInformation>()
          .HasOne(e => e.Address)
-         .WithOne(e => e.BasicInformation)
-         .HasForeignKey<Address>(a => a.BasicInformationId);
-
-     
-
-
-
+         .WithOne();
 
 
         //User (parent) relation with BasicInformation and Calendar (childs) (one-to-one):
 
         builder.Entity<User>()
          .HasOne(e => e.BasicInformation)
-         .WithOne(e => e.User)
-         .HasForeignKey<BasicInformation>(a => a.UserId);
+         .WithOne();
 
         builder.Entity<User>()
         .HasOne(e => e.UserCalendar)
-        .WithOne(e => e.User)
-        .HasForeignKey<CalendarModelClass>(a => a.UserId);
+        .WithOne();
 
-        //User (parent) relation with many Roles (child) (one-to-many):
-
-        builder.Entity<User>()
-        .HasMany(e => e.Roles)
-          .WithOne(e => e.User)
-          .HasForeignKey(e => e.UserId)
-          .HasPrincipalKey(e => e.UserId);
 
         //TempHouse (parent) relation with User, Address, Shelter (childs) (one-to-one):
 
         builder.Entity<TempHouse>()
          .HasOne(e => e.TemporaryOwner)
-         .WithOne(e => e.TempHouse)
-         .HasForeignKey<User>(a => a.UserId);
+         .WithOne();
 
         builder.Entity<TempHouse>()
         .HasOne(e => e.TemporaryHouseAddress)
-        .WithOne(e => e.TempHouse)
-        .HasForeignKey<Address>(a => a.TempHouseId);
+        .WithOne();
 
         builder.Entity<TempHouse>()
         .HasOne(e => e.ShelterName)
-        .WithOne(e => e.TempHouse)
-        .HasForeignKey<Shelter>(a => a.TempHouseId);
+        .WithOne();
 
         //TempHouse (parent) relation with PetsInTemporaryHouse (childs) (one-to-many):
 
         builder.Entity<TempHouse>()
        .HasMany(e => e.PetsInTemporaryHouse)
-         .WithOne(e => e.TempHouse)
-         .HasForeignKey(e => e.TempHouseId)
-         .HasPrincipalKey(e => e.TempHouseId);
+         .WithOne();
 
-        //Profile (parent) relation with FavouriteListPets, VirtualAdoptionPetsList (childs) (one-to-many):
+        //ProfileModel (parent) relation withPets (one-to-many):
 
         builder.Entity<ProfileModel>()
-       .HasMany(e => e.FavouriteListPets)
-         .WithOne(e => e.Profile)
-         .HasForeignKey(e => e.ProfileId)
-         .HasPrincipalKey(e => e.ProfileId);
+       .HasMany(e => e.ProfilePets)
+         .WithOne();
+
+        //ProfileModel (parent) relation UserLogged (one-to-one):
 
         builder.Entity<ProfileModel>()
-       .HasMany(e => e.VirtualAdoptionPetsList)
-         .WithOne(e => e.ProfileForVirtualAdoption)
-         .HasForeignKey(e => e.ProfileIdForVirtualAdoptionId)
-         .HasPrincipalKey(e => e.ProfileId);
+       .HasOne(e => e.UserLogged)
+         .WithOne();
 
-        //Shelter (parent) relation with ListOfPetsAdopted, ListOfPets, ShelterWorkers, ShelterContributors (childs) (one-to-many):
+        //Shelter (parent) relation with Pets and Users (childs) (one-to-many):
 
-        builder.Entity<Shelter>()
-       .HasMany(e => e.ListOfPetsAdopted)
-         .WithOne(e => e.ShelterListOfPetsAdopted)
-         .HasForeignKey(e => e.ShelterListOfPetsAdoptedId)
-         .HasPrincipalKey(e => e.ShelterId);
+
 
         builder.Entity<Shelter>()
-       .HasMany(e => e.ListOfPets)
-         .WithOne(e => e.ShelterListOfPets)
-         .HasForeignKey(e => e.ShelterListOfPetsId)
-         .HasPrincipalKey(e => e.ShelterId);
+       .HasMany(e => e.ShelterPets)
+         .WithOne();
 
         builder.Entity<Shelter>()
-       .HasMany(e => e.ShelterWorkers)
-         .WithOne(e => e.ShelterWorkers)
-         .HasForeignKey(e => e.ShelterWorkersId)
-         .HasPrincipalKey(e => e.ShelterId);
+       .HasMany(e => e.ShelterUsers)
+         .WithOne();
 
-        builder.Entity<Shelter>()
-       .HasMany(e => e.ShelterContributors)
-         .WithOne(e => e.ShelterContributors)
-         .HasForeignKey(e => e.ShelterContributorsId)
-         .HasPrincipalKey(e => e.ShelterId);
+        
 
         //Shelter (parent) relation with User, Address, Calendar (childs) (one-to-one):
 
-        builder.Entity<Shelter>()
-          .HasOne(e => e.ShelterOwner)
-          .WithOne(e => e.Shelter)
-          .HasForeignKey<User>(a => a.ShelterId);
+
 
         builder.Entity<Shelter>()
      .HasOne(e => e.ShelterAddress)
-     .WithOne(e => e.Shelter)
-     .HasForeignKey<Address>(a => a.ShelterId);
+     .WithOne();
+
 
         builder.Entity<Shelter>()
         .HasOne(e => e.ShelterCalendar)
-        .WithOne(e => e.Shelter)
-        .HasForeignKey<CalendarModelClass>(a => a.ShelterId);
+        .WithOne();
 
         //Calendar (parent) relation with Activities (childs) (one-to-many):
 
         builder.Entity<CalendarModelClass>()
        .HasMany(e => e.Activities)
-         .WithOne(e => e.Calendar)
-         .HasForeignKey(e => e.CalendarId)
-         .HasPrincipalKey(e => e.CalendarId);
+         .WithOne();
 
         //Activity (parent) relation with Pet (child) (one-to-one):
 
         builder.Entity<Activity>()
          .HasOne(e => e.Pet)
-         .WithOne(e => e.Activity)
-         .HasForeignKey<Pet>(a => a.ActivityId);
+         .WithOne();
 
         //BasicHealthInfo (parent) relation with Diseases and Vaccinations (childs) (one-to-many):
 
         builder.Entity<BasicHealthInfo>()
        .HasMany(e => e.Vaccinations)
-         .WithOne(e => e.BasicHealthInfo)
-         .HasForeignKey(e => e.BasicHealthInfoId)
-         .HasPrincipalKey(e => e.BasicHealthInfoId);
+         .WithOne();
+
 
         builder.Entity<BasicHealthInfo>()
       .HasMany(e => e.MedicalHistory)
-        .WithOne(e => e.BasicHealthInfo)
-        .HasForeignKey(e => e.BasicHealthInfoId)
-        .HasPrincipalKey(e => e.BasicHealthInfoId);
+        .WithOne();
+
 
         //Pet (parent) relation with BasicHealthInfo, Callendar, Shelter (child) (one-to-one):
 
         builder.Entity<Pet>()
          .HasOne(e => e.BasicHealthInfo)
-         .WithOne(e => e.Pet)
-         .HasForeignKey<BasicHealthInfo>(a => a.PetId);
+         .WithOne();
 
         builder.Entity<Pet>()
         .HasOne(e => e.Callendar)
-        .WithOne(e => e.Pet)
-        .HasForeignKey<CalendarModelClass>(a => a.PetId);
+        .WithOne();
 
-        builder.Entity<Pet>()
-        .HasOne(e => e.Shelter)
-        .WithOne(e => e.Pet)
-        .HasForeignKey<Shelter>(a => a.PetId);
+       
 
         //Pet (parent) relation with PatronUsers (childs) (one-to-many):
 
         builder.Entity<Pet>()
        .HasMany(e => e.PatronUsers)
-         .WithOne(e => e.Pet)
-         .HasForeignKey(e => e.PetId)
-         .HasPrincipalKey(e => e.PetId);
+         .WithOne();
 
         //Adoption (parent) relation with User, Pet, Shelter (child) (one-to-one):
 
         builder.Entity<Adoption>()
          .HasOne(e => e.Adopter)
-         .WithOne(e => e.Adoption)
-         .HasForeignKey<User>(a => a.AdoptionId);
+         .WithOne();
 
         builder.Entity<Adoption>()
-       .HasOne(e => e.PetToAdoption)
-       .WithOne(e => e.Adoption)
-       .HasForeignKey<Pet>(a => a.AdoptionId);
+       .HasOne(e => e.AdoptedPet)
+       .WithOne();
 
         builder.Entity<Adoption>()
        .HasOne(e => e.Shelter)
-       .WithOne(e => e.Adoption)
-       .HasForeignKey<Shelter>(a => a.AdoptionId);
+       .WithOne();
 
     }
 }

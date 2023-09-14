@@ -22,19 +22,7 @@ public class Address
 
     public string City { get; set; }
 
-    //Navigation properties:
 
-    public int BasicInformationId { get; set; } 
-    public BasicInformation BasicInformation { get; set; }
-
-    public int ShelterId { get; set; }
-    public Shelter Shelter { get; set; }
-
-    public int RoleId { get; set; }
-    public Role Role { get; set; }
-
-    public int TempHouseId { get; set; }
-    public TempHouse TempHouse { get; set; }
 
 
 }

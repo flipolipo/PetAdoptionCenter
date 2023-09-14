@@ -15,8 +15,4 @@ public class Activity
     public DateTime AcctivityDate { get; set; }
    public Pet Pet { get; set; }
 
-    //Navigation properties:
-
-    public int CalendarId { get; set; }
-    public CalendarModelClass Calendar { get; set; }
 }

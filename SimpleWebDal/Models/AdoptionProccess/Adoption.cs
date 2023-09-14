@@ -17,4 +17,6 @@ public class Adoption
     public User Adopter { get; set; }
 
     public DateTime DateOfAdoption { get; set; }
+
+   
 }

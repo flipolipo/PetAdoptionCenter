@@ -12,9 +12,7 @@ public class Disease
     
     public DateTime IllnessEnd { get; set; }
 
-    //Navigation properties:
 
-    public int BasicHealthInfoId { get; set; }
-    public BasicHealthInfo BasicHealthInfo { get; set; }
+   
 
 }

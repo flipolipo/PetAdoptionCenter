@@ -18,9 +18,6 @@ public class BasicInformation
     
     public Address Address { get; set; }
 
-    //Navigation properties:
-
-    public int UserId { get; set; }
-    public User User { get; set; }
+  
 
 }

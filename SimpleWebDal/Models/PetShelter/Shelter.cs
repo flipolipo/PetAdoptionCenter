@@ -16,17 +16,12 @@ public class Shelter
     public string Name { get; set; }
     public Address ShelterAddress { get; set; }
     public string ShelterDescription { get; set; }
-    public User ShelterOwner { get; set; }
     public ICollection<User> ShelterUsers { get; set; }
     public ICollection<Pet> ShelterPets { get; set; }
     public CalendarModelClass ShelterCalendar { get; set; }
 
-    //Navigation properties:
 
-    public int AdoptionId { get; set; }
-    public Adoption Adoption { get; set; }
-    public int TempHouseId { get; set; }
-    public TempHouse TempHouse { get; set; }
+
 
 
 }

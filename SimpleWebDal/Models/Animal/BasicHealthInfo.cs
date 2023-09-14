@@ -13,8 +13,7 @@ public class BasicHealthInfo
     public Size Size { get; set; }
     public ICollection<Vaccination> Vaccinations { get; set; }
     public ICollection<Disease> MedicalHistory { get; set; }
-    //Navigation properties:
+  
 
-    public int PetId { get; set; }
-    public Pet Pet { get; set; }
+   
 }
