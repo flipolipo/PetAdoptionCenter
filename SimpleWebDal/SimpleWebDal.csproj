@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Repository\AdminRepo\" />
-    <Folder Include="Repository\UserRepo\" />
   </ItemGroup>
 
  

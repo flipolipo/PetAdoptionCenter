@@ -1,5 +1,5 @@
 ﻿using SimpleWebDal.Models.Animal;
-using SimpleWebDal.Models.TimeTable;
+using SimpleWebDal.Models.Calendar;
 using SimpleWebDal.Models.WebUser;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,5 +11,5 @@ public class Profile
     public User UserLogged { get; set; }
     public IEnumerable<Pet> FavouriteListPets { get; set; }
     public IEnumerable<Pet> VirtualAdoptionPetsList { get; set; }
-    public TimeTable<Profile> CalendarActivity { get; set; }
+    public TimeTable CalendarActivity { get; set; }
 }

@@ -1,5 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using SimpleWebDal.Models.AdoptionProccess;
+using SimpleWebDal.Models.Animal;
+using SimpleWebDal.Models.PetShelter;
+using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 
 
@@ -9,6 +13,19 @@ namespace SimpleWebDal.Data
     public class PetAdoptionCenterContext : DbContext
     {
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<BasicInformation> BasicInformations { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<TempHouse> TempHouses { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
+        public DbSet<Shelter> Shelters { get; set; }
+        public DbSet<CalendarModelClass> Calendars { get; set; }
+        public DbSet<Activity> Activities { get; set; }
+        public DbSet<Vaccination> Vaccinations { get; set; }
+        public DbSet<Pet> Pets { get; set; }
+        public DbSet<Disease> Diseases { get; set; }
+        public DbSet<BasicHealthInfo> BasicHealthInfos { get; set; }
+        public DbSet<Adoption> AdoptionInfos { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var manager = new ConfigurationManager();
