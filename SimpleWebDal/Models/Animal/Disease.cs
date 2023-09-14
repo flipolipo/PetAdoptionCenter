@@ -1,18 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SimpleWebDal.Models.PetShelter;
+using System.ComponentModel.DataAnnotations;
 
 namespace SimpleWebDal.Models.Animal;
 
 public class Disease
 {
-    [Required]
-    [MinLength(2)]
-    [MaxLength(20)]
+   public int DiseaseId { get; set; }
     public string NameOfdisease { get; set; }
-    [Required]
-    [DataType(DataType.Date)]
+    
     public DateTime IllnessStart { get; set; }
-    [Required]
-    [DataType(DataType.Date)]
+    
     public DateTime IllnessEnd { get; set; }
+
+    //Navigation properties:
+
+    public int BasicHealthInfoId { get; set; }
+    public BasicHealthInfo BasicHealthInfo { get; set; }
 
 }

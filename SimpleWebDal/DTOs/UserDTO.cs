@@ -1,4 +1,4 @@
-﻿using SimpleWebDal.Models.Calendar;
+﻿using SimpleWebDal.Models.CalendarModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SimpleWebDal.DTOs;
@@ -11,6 +11,6 @@ public class UserDTO
     [MaxLength(15)]
     public string Username { get; set; }
     public BasicInformationDTO BasicInformation { get; set; }
-    public TimeTable UsersTimeTable { get; set; }
+    public CalendarModelClass UsersTimeTable { get; set; }
     public IEnumerable<RoleDTO> Roles { get; set; }
 }

@@ -7,16 +7,14 @@ namespace SimpleWebDal.Models.AdoptionProccess;
 
 public class Adoption
 {
-    [Key]
-    public uint AdoptionId { get; set; }
-    [Required]
-    
-    public Pet PetToAdoption { get; set; }
-    [Required]
+
+    public int AdoptionId { get; set; }
+
+    public Pet AdoptedPet { get; set; }
+
     public Shelter Shelter { get; set; }
-    [Required]
+
     public User Adopter { get; set; }
-    [Required]
-    [DataType(DataType.Date)]
+
     public DateTime DateOfAdoption { get; set; }
 }

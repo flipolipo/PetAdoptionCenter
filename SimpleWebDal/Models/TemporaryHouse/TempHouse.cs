@@ -6,18 +6,16 @@ using System.ComponentModel.DataAnnotations;
 namespace SimpleWebDal.Models.TemporaryHouse;
 
 public class TempHouse
-{
-    [Key]
-    [Required]
-    public uint Id { get; init; }
-    [Required]
-    public User TemporaryOwner { get; set; }
-    [Required]
+{ 
     
-    public Pet PetInTemporaryHouse { get; set; }
-    [Required]
+    public int TempHouseId { get; init; }
+    
+    public User TemporaryOwner { get; set; }
+    
+    public Address TemporaryHouseAddress { get; set; }
+    public ICollection<Pet> PetsInTemporaryHouse { get; set; }
+   
     public Shelter ShelterName { get; set; }
-    [Required]
-    [DataType(DataType.Date)]
+   
     public DateTime StartOfTemporaryHouseDate { get; init; }
 }

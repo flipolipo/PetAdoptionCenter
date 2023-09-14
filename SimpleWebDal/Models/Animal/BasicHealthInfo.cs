@@ -1,18 +1,20 @@
 ﻿using SimpleWebDal.Models.Animal.Enums;
+using SimpleWebDal.Models.WebUser;
 using System.ComponentModel.DataAnnotations;
 
 namespace SimpleWebDal.Models.Animal;
 
 public class BasicHealthInfo
 {
-    [Required]
-    [MinLength(2)]
-    [MaxLength(20)]
+  public int BasicHealthInfoId { get; set; }
     public string Name { get; set; }
-    [Required]
-    [Range(0,50)]
+    
     public int Age { get; set; }
     public Size Size { get; set; }
-    public IEnumerable<Vaccination> Vaccinations { get; set; }
-    public IEnumerable<Disease> MedicalHistory { get; set; }
+    public ICollection<Vaccination> Vaccinations { get; set; }
+    public ICollection<Disease> MedicalHistory { get; set; }
+    //Navigation properties:
+
+    public int PetId { get; set; }
+    public Pet Pet { get; set; }
 }

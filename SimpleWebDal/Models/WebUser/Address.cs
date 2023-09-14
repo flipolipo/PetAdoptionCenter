@@ -1,11 +1,14 @@
 ﻿
+using SimpleWebDal.Models.PetShelter;
+using SimpleWebDal.Models.TemporaryHouse;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata;
 
 namespace SimpleWebDal.Models.WebUser;
 
 public class Address
 {
-    [Key]
+
     public int AddressId { get; set; }
 
     public string Street { get; set; }
@@ -18,6 +21,20 @@ public class Address
     public string PostalCode { get; set; }
 
     public string City { get; set; }
+
+    //Navigation properties:
+
+    public int BasicInformationId { get; set; } 
+    public BasicInformation BasicInformation { get; set; }
+
+    public int ShelterId { get; set; }
+    public Shelter Shelter { get; set; }
+
+    public int RoleId { get; set; }
+    public Role Role { get; set; }
+
+    public int TempHouseId { get; set; }
+    public TempHouse TempHouse { get; set; }
 
 
 }

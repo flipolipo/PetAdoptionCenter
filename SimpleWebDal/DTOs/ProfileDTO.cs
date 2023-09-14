@@ -1,5 +1,5 @@
 ﻿using SimpleWebDal.Models.Animal;
-using SimpleWebDal.Models.Calendar;
+using SimpleWebDal.Models.CalendarModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SimpleWebDal.DTOs;
@@ -10,5 +10,5 @@ public class ProfileDTO
     public UserDTO UserLogged { get; set; }
     public IEnumerable<Pet> FavouriteListPets { get; set; }
     public IEnumerable<Pet> VirtualAdoptionPetsList { get; set; }
-    public TimeTable CalendarActivity { get; set; }
+    public CalendarModelClass CalendarActivity { get; set; }
 }

@@ -4,11 +4,14 @@ namespace SimpleWebDal.Models.Animal;
 
 public class Vaccination
 {
-    [Required]
-    [MinLength(2)]
-    [MaxLength(100)]
+
+public int VaccinationId { get; set; }
     public string VaccinationName { get; set; }
-    [Required]
-    [DataType(DataType.Date)]
+   
     public DateTime date { get; set; }
+
+    //Navigation properties:
+
+    public int BasicHealthInfoId { get; set; }
+    public BasicHealthInfo BasicHealthInfo { get; set; }
 }
