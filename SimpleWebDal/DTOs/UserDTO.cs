@@ -11,6 +11,6 @@ public class UserDTO
     [MaxLength(15)]
     public string Username { get; set; }
     public BasicInformationDTO BasicInformation { get; set; }
-    public CalendarModelClass UsersTimeTable { get; set; }
+    public CalendarActivity UsersTimeTable { get; set; }
     public IEnumerable<RoleDTO> Roles { get; set; }
 }

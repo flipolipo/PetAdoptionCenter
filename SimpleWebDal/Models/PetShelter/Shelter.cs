@@ -18,7 +18,7 @@ public class Shelter
     public string ShelterDescription { get; set; }
     public ICollection<User> ShelterUsers { get; set; }
     public ICollection<Pet> ShelterPets { get; set; }
-    public CalendarModelClass ShelterCalendar { get; set; }
+    public CalendarActivity ShelterCalendar { get; set; }
 
 
 

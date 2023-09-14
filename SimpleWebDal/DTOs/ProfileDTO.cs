@@ -10,5 +10,5 @@ public class ProfileDTO
     public UserDTO UserLogged { get; set; }
     public IEnumerable<Pet> FavouriteListPets { get; set; }
     public IEnumerable<Pet> VirtualAdoptionPetsList { get; set; }
-    public CalendarModelClass CalendarActivity { get; set; }
+    public CalendarActivity CalendarActivity { get; set; }
 }
