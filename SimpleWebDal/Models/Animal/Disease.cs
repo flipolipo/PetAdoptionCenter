@@ -5,14 +5,13 @@ namespace SimpleWebDal.Models.Animal;
 
 public class Disease
 {
-   public int DiseaseId { get; set; }
+   public int Id { get; set; }
     public string NameOfdisease { get; set; }
     
     public DateTime IllnessStart { get; set; }
     
     public DateTime IllnessEnd { get; set; }
-
-
-   
+    public int BasicHealthInfoId { get; set; }
+    public BasicHealthInfo? BasicHealthInfo { get; set; }
 
 }

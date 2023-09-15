@@ -12,9 +12,9 @@ namespace SimpleWebDal.Models.Animal;
 public class Pet
 {
 
-    public int PetId { get; init; }
+    public int Id { get; init; }
     public PetType Type { get; init; }
-    public BasicHealthInfo BasicHealthInfo { get; set; }
+    public BasicHealthInfo? BasicHealthInfo { get; set; }
     public string Description { get; set; }
     public CalendarActivity Callendar { get; set; }
     public PetStatus Status { get; set; }
