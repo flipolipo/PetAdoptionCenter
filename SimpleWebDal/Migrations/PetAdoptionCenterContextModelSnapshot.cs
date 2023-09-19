@@ -24,11 +24,11 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.Property<int>("RolesId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("UsersId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("RolesId", "UsersId");
 
@@ -39,23 +39,21 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.AdoptionProccess.Adoption", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("AdoptedPetId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("AdoptedPetId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("AdopterId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("AdopterId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateOfAdoption")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("ShelterId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ShelterId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -70,11 +68,9 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.BasicHealthInfo", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Age")
                         .HasColumnType("integer");
@@ -83,8 +79,8 @@ namespace SimpleWebDal.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PetId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("PetId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Size")
                         .HasColumnType("integer");
@@ -102,11 +98,11 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Disease", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("BasicHealthInfoId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("BasicHealthInfoId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("IllnessEnd")
                         .HasColumnType("timestamp with time zone");
@@ -130,14 +126,14 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Pet", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("AvaibleForAdoption")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("CallendarId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CallendarId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -160,11 +156,11 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Vaccination", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("BasicHealthInfoId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("BasicHealthInfoId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("VaccinationName")
                         .IsRequired()
@@ -185,8 +181,8 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.CalendarModel.Activity", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("AcctivityDate")
                         .HasColumnType("timestamp with time zone");
@@ -205,11 +201,9 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.CalendarModel.CalendarActivity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("DateWithTime")
                         .HasColumnType("timestamp with time zone");
@@ -224,17 +218,15 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.PetShelter.Shelter", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CalendarActivityId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CalendarActivityId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -260,14 +252,12 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.ProfileUser.ProfileModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -282,23 +272,21 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.TemporaryHouse.TempHouse", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ShelterId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ShelterId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("StartOfTemporaryHouseDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -319,11 +307,9 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.Address", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -354,14 +340,12 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.BasicInformation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -392,11 +376,9 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.Credentials", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -416,11 +398,9 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.Role", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
@@ -433,17 +413,17 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("BasicInformationId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("BasicInformationId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("CredentialsId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CredentialsId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("UserCalendarId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserCalendarId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 

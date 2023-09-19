@@ -5,8 +5,8 @@ namespace SimpleWebDal.Models.ProfileUser;
 
 public class ProfileModel
 {
-    public int Id { get; set; }
-    public int UserId { get; set; }
+    public Guid Id { get; set; }
+    public Guid UserId { get; set; }
     public User UserLogged { get; set; }
-    public ICollection<Pet> ProfilePets { get; set; }
+    public ICollection<Pet>? ProfilePets { get; set; }
 }

@@ -1,18 +1,12 @@
 ﻿using SimpleWebDal.Models.Animal.Enums;
-using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
-using System.ComponentModel.DataAnnotations;
-using SimpleWebDal.Models.TemporaryHouse;
-using SimpleWebDal.Models.ProfileUser;
-using SimpleWebDal.Models.AdoptionProccess;
 
 namespace SimpleWebDal.Models.Animal;
 
 public class Pet
 {
-
-    public int Id { get; init; }
+    public Guid Id { get; init; }
     public PetType Type { get; init; }
     public BasicHealthInfo? BasicHealthInfo { get; set; }
     public string Description { get; set; }
