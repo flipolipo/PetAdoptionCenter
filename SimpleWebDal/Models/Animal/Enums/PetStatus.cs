@@ -3,7 +3,9 @@
 public enum PetStatus
 {
     TemporaryHouse,
-    AthShelter,
-    OnAWalk
+    AtShelter,
+    OnAWalk,
+    Adopted,
+    OnAdoptionProccess
 
 }

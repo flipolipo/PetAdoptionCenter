@@ -1,14 +1,9 @@
 ﻿using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
+using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.TemporaryHouse;
-using SimpleWebDal.Models.TimeTable;
 using SimpleWebDal.Models.WebUser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SImpleWebLogic.Repository.ShelterRepo
 {
@@ -35,7 +30,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         //POST
         public Task<Shelter> CreateShelter();
         public Task<Pet> AddPet(int shelterId);
-        public Task<TimeTable> AddCallendar(int shelterId);
+        public Task<CalendarActivity> AddCallendar(int shelterId);
         public Task<User> AddWorker(int shelterId);
         public Task<User> AddContributor(int shelterId);
         public Task<TempHouse> AddTempHouse(int shelterId);

@@ -1,11 +1,10 @@
+using SimpleWebDal.Models.AdoptionProccess;
 using SimpleWebDal.Models.Animal;
+using SimpleWebDal.Models.Animal.Enums;
+using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.PetShelter;
+using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SImpleWebLogic.Repository.AdminRepo
 {
@@ -25,7 +24,7 @@ namespace SImpleWebLogic.Repository.AdminRepo
         public Task<IEnumerable<Adoption>> GetShelterAdoptions(int shelterId);
         public Task<IEnumerable<Adoption>> GetShelterPetAdoptions(int shelterId, int petId);
         public Task<IEnumerable<TempHouse>> GetAllShelterTempHouses(int shelterId);
-        public Task<TempHouse> GetShelterTempHouseByPetId(int shelterId, petId);
+        public Task<TempHouse> GetShelterTempHouseByPetId(int shelterId, int petId);
         public Task<Pet> GetPetHealthInfoById(int shelterId, int petId);
         public Task<IEnumerable<User>> GetAllUsers();
         public Task<User> GetUserById(int userId);
@@ -33,7 +32,7 @@ namespace SImpleWebLogic.Repository.AdminRepo
       //POST
         public Task<Shelter> CreateShelter();
         public Task<Pet> AddPet(int shelterId);
-        public Task<TimeTable> AddCallendar(int shelterId);
+        public Task<CalendarActivity> AddCallendar(int shelterId);
         public Task<User> AddWorker(int shelterId);
         public Task<User> AddContributor(int shelterId);
         public Task<TempHouse> AddTempHouse(int shelterId);

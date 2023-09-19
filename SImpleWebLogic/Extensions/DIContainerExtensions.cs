@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using AutoMapper;
 
 namespace SImpleWebLogic.Extensions;
 

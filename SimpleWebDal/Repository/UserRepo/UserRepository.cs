@@ -2,7 +2,7 @@
 using SimpleWebDal.Data;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
-using SimpleWebDal.Models.Calendar;
+using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
 
 namespace SimpleWebDal.Repository.UserRepo;
@@ -45,12 +45,12 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public Task<TimeTable> GetActivityForUserById(int userId, int activityId)
+    public Task<CalendarActivity> GetActivityForUserById(int userId, int activityId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<TimeTable> GetAllActivitiesForUser(int userId)
+    public Task<CalendarActivity> GetAllActivitiesForUser(int userId)
     {
         throw new NotImplementedException();
     }
@@ -100,7 +100,7 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public Task<TimeTable> GetCalendarForUser(int userId)
+    public Task<CalendarActivity> GetCalendarForUser(int userId)
     {
         throw new NotImplementedException();
     }

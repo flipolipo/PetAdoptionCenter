@@ -1,27 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SimpleWebDal.Models.PetShelter;
+using SimpleWebDal.Models.TemporaryHouse;
 
 namespace SimpleWebDal.Models.WebUser;
 
 public class Address
 {
-    [Key]
-    public uint Id { get; set; }
-    [Required]
-    [MinLength(2)]
-    [MaxLength(50)]
+    public Guid Id { get; set; }
     public string Street { get; set; }
-    [Required]
-    
-  
     public string HouseNumber { get; set; }
-    [Required]
-    
-    public int FlatNumber { get; set; }
-    [Required]
-    [RegularExpression(@"^\d{2}-\d{3}$", ErrorMessage = "Invalid postal code format. It should be in the format XX-XXX.")]
+    public int? FlatNumber { get; set; }
     public string PostalCode { get; set; }
-    [Required]
-    [MinLength(2)]
-    [MaxLength(35)]
     public string City { get; set; }
+    public Shelter? Shelter { get; set; }
+    public TempHouse? TemporaryHouse { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
-using SimpleWebDal.Models.Calendar;
+using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
 
 namespace SimpleWebDal.Repository.UserRepo;
@@ -16,9 +16,9 @@ public interface IUserRepository
     public Task<IEnumerable<Pet>> GetAllShelterPets(int shelterId);
     public Task<IEnumerable<Pet>> GetAllShelterDogsOrCats(int shelterId, PetType petType);
     public Task<Pet> GetShelterPetById(int shelterId, int petId);
-    public Task<TimeTable> GetCalendarForUser(int userId);
-    public Task<TimeTable> GetAllActivitiesForUser(int userId);
-    public Task<TimeTable> GetActivityForUserById(int userId, int activityId);
+    public Task<CalendarActivity> GetCalendarForUser(int userId);
+    public Task<CalendarActivity> GetAllActivitiesForUser(int userId);
+    public Task<CalendarActivity> GetActivityForUserById(int userId, int activityId);
     public Task<IEnumerable<Pet>> GetAllFavouritePets();
     public Task<Pet> GetFavouritePetById(int favouriteId);
     public Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets();

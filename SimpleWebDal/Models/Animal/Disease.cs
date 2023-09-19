@@ -1,18 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SimpleWebDal.Models.Animal;
+﻿namespace SimpleWebDal.Models.Animal;
 
 public class Disease
 {
-    [Required]
-    [MinLength(2)]
-    [MaxLength(20)]
+   public Guid Id { get; set; }
     public string NameOfdisease { get; set; }
-    [Required]
-    [DataType(DataType.Date)]
     public DateTime IllnessStart { get; set; }
-    [Required]
-    [DataType(DataType.Date)]
     public DateTime IllnessEnd { get; set; }
+    public Guid BasicHealthInfoId { get; set; }
+    public BasicHealthInfo? BasicHealthInfo { get; set; }
 
 }
