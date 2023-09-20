@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SimpleWebDal.Migrations
 {
     /// <inheritdoc />
-    public partial class InizialMigration : Migration
+    public partial class first : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace SimpleWebDal.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Street = table.Column<string>(type: "text", nullable: false),
                     HouseNumber = table.Column<string>(type: "text", nullable: false),
-                    FlatNumber = table.Column<int>(type: "integer", nullable: false),
+                    FlatNumber = table.Column<int>(type: "integer", nullable: true),
                     PostalCode = table.Column<string>(type: "text", nullable: false),
                     City = table.Column<string>(type: "text", nullable: false)
                 },
@@ -28,7 +28,21 @@ namespace SimpleWebDal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Calendars",
+                name: "BasicHealthInfos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Age = table.Column<int>(type: "integer", nullable: false),
+                    Size = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BasicHealthInfos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CalendarActivities",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -36,7 +50,7 @@ namespace SimpleWebDal.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Calendars", x => x.Id);
+                    table.PrimaryKey("PK_CalendarActivities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,22 +101,61 @@ namespace SimpleWebDal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Diseases",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    NameOfdisease = table.Column<string>(type: "text", nullable: false),
+                    IllnessStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IllnessEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    BasicHealthInfoId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Diseases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Diseases_BasicHealthInfos_BasicHealthInfoId",
+                        column: x => x.BasicHealthInfoId,
+                        principalTable: "BasicHealthInfos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Vaccinations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    VaccinationName = table.Column<string>(type: "text", nullable: false),
+                    date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    BasicHealthInfoId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vaccinations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Vaccinations_BasicHealthInfos_BasicHealthInfoId",
+                        column: x => x.BasicHealthInfoId,
+                        principalTable: "BasicHealthInfos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Activities",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    AcctivityDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    AcctivityDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CalendarActivityId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Activities", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Activities_Calendars_Id",
-                        column: x => x.Id,
-                        principalTable: "Calendars",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Activities_CalendarActivities_CalendarActivityId",
+                        column: x => x.CalendarActivityId,
+                        principalTable: "CalendarActivities",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -111,9 +164,9 @@ namespace SimpleWebDal.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
+                    CalendarId = table.Column<Guid>(type: "uuid", nullable: false),
                     AddressId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ShelterDescription = table.Column<string>(type: "text", nullable: false),
-                    CalendarActivityId = table.Column<Guid>(type: "uuid", nullable: false)
+                    ShelterDescription = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -125,100 +178,31 @@ namespace SimpleWebDal.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Shelters_Calendars_CalendarActivityId",
-                        column: x => x.CalendarActivityId,
-                        principalTable: "Calendars",
+                        name: "FK_Shelters_CalendarActivities_CalendarId",
+                        column: x => x.CalendarId,
+                        principalTable: "CalendarActivities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AdoptionInfos",
+                name: "Adoptions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AdoptedPetId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ShelterId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AdopterId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DateOfAdoption = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    PetId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DateOfAdoption = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ShelterId = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AdoptionInfos", x => x.Id);
+                    table.PrimaryKey("PK_Adoptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AdoptionInfos_Shelters_ShelterId",
+                        name: "FK_Adoptions_Shelters_ShelterId",
                         column: x => x.ShelterId,
                         principalTable: "Shelters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BasicHealthInfos",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Age = table.Column<int>(type: "integer", nullable: false),
-                    Size = table.Column<int>(type: "integer", nullable: false),
-                    PetId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BasicHealthInfos", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Diseases",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    NameOfdisease = table.Column<string>(type: "text", nullable: false),
-                    IllnessStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IllnessEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    BasicHealthInfoId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Diseases", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Diseases_BasicHealthInfos_BasicHealthInfoId",
-                        column: x => x.BasicHealthInfoId,
-                        principalTable: "BasicHealthInfos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Diseases_BasicHealthInfos_Id",
-                        column: x => x.Id,
-                        principalTable: "BasicHealthInfos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Vaccinations",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    VaccinationName = table.Column<string>(type: "text", nullable: false),
-                    date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    BasicHealthInfoId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Vaccinations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Vaccinations_BasicHealthInfos_BasicHealthInfoId",
-                        column: x => x.BasicHealthInfoId,
-                        principalTable: "BasicHealthInfos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Vaccinations_BasicHealthInfos_Id",
-                        column: x => x.Id,
-                        principalTable: "BasicHealthInfos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -227,26 +211,34 @@ namespace SimpleWebDal.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
+                    BasicHealthInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    CallendarId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CalendarId = table.Column<Guid>(type: "uuid", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    AvaibleForAdoption = table.Column<bool>(type: "boolean", nullable: false)
+                    AvaibleForAdoption = table.Column<bool>(type: "boolean", nullable: false),
+                    ShelterId = table.Column<Guid>(type: "uuid", nullable: true),
+                    TempHouseId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Pets_Calendars_CallendarId",
-                        column: x => x.CallendarId,
-                        principalTable: "Calendars",
+                        name: "FK_Pets_BasicHealthInfos_BasicHealthInfoId",
+                        column: x => x.BasicHealthInfoId,
+                        principalTable: "BasicHealthInfos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Pets_Shelters_Id",
-                        column: x => x.Id,
-                        principalTable: "Shelters",
+                        name: "FK_Pets_CalendarActivities_CalendarId",
+                        column: x => x.CalendarId,
+                        principalTable: "CalendarActivities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Pets_Shelters_ShelterId",
+                        column: x => x.ShelterId,
+                        principalTable: "Shelters",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -256,7 +248,9 @@ namespace SimpleWebDal.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CredentialsId = table.Column<Guid>(type: "uuid", nullable: false),
                     BasicInformationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserCalendarId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserCalendarId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PetId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ShelterId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -268,9 +262,9 @@ namespace SimpleWebDal.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Users_Calendars_UserCalendarId",
+                        name: "FK_Users_CalendarActivities_UserCalendarId",
                         column: x => x.UserCalendarId,
-                        principalTable: "Calendars",
+                        principalTable: "CalendarActivities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -280,17 +274,15 @@ namespace SimpleWebDal.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Users_Pets_Id",
-                        column: x => x.Id,
+                        name: "FK_Users_Pets_PetId",
+                        column: x => x.PetId,
                         principalTable: "Pets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Users_Shelters_Id",
-                        column: x => x.Id,
+                        name: "FK_Users_Shelters_ShelterId",
+                        column: x => x.ShelterId,
                         principalTable: "Shelters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -318,8 +310,8 @@ namespace SimpleWebDal.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     AddressId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ShelterId = table.Column<Guid>(type: "uuid", nullable: false),
-                    StartOfTemporaryHouseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    StartOfTemporaryHouseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ShelterId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -334,8 +326,7 @@ namespace SimpleWebDal.Migrations
                         name: "FK_TempHouses_Shelters_ShelterId",
                         column: x => x.ShelterId,
                         principalTable: "Shelters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_TempHouses_Users_UserId",
                         column: x => x.UserId,
@@ -368,44 +359,50 @@ namespace SimpleWebDal.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ProfilePets",
+                columns: table => new
+                {
+                    ProfilePetsId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProfilesId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProfilePets", x => new { x.ProfilePetsId, x.ProfilesId });
+                    table.ForeignKey(
+                        name: "FK_ProfilePets_Pets_ProfilePetsId",
+                        column: x => x.ProfilePetsId,
+                        principalTable: "Pets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProfilePets_Profiles_ProfilesId",
+                        column: x => x.ProfilesId,
+                        principalTable: "Profiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Activities_Id",
+                name: "IX_Activities_CalendarActivityId",
                 table: "Activities",
-                column: "Id",
+                column: "CalendarActivityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Adoptions_PetId",
+                table: "Adoptions",
+                column: "PetId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Addresses_Id",
-                table: "Addresses",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AdoptionInfos_AdoptedPetId",
-                table: "AdoptionInfos",
-                column: "AdoptedPetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AdoptionInfos_AdopterId",
-                table: "AdoptionInfos",
-                column: "AdopterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AdoptionInfos_ShelterId",
-                table: "AdoptionInfos",
+                name: "IX_Adoptions_ShelterId",
+                table: "Adoptions",
                 column: "ShelterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BasicHealthInfos_Id",
-                table: "BasicHealthInfos",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BasicHealthInfos_PetId",
-                table: "BasicHealthInfos",
-                column: "PetId",
-                unique: true);
+                name: "IX_Adoptions_UserId",
+                table: "Adoptions",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BasicInformations_AddressId",
@@ -414,49 +411,36 @@ namespace SimpleWebDal.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BasicInformations_Id",
-                table: "BasicInformations",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Calendars_Id",
-                table: "Calendars",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Credentials_Id",
-                table: "Credentials",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Diseases_BasicHealthInfoId",
                 table: "Diseases",
                 column: "BasicHealthInfoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Diseases_Id",
-                table: "Diseases",
-                column: "Id",
+                name: "IX_Pets_BasicHealthInfoId",
+                table: "Pets",
+                column: "BasicHealthInfoId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pets_CallendarId",
+                name: "IX_Pets_CalendarId",
                 table: "Pets",
-                column: "CallendarId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pets_Id",
-                table: "Pets",
-                column: "Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Profiles_Id",
-                table: "Profiles",
-                column: "Id",
+                column: "CalendarId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pets_ShelterId",
+                table: "Pets",
+                column: "ShelterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pets_TempHouseId",
+                table: "Pets",
+                column: "TempHouseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProfilePets_ProfilesId",
+                table: "ProfilePets",
+                column: "ProfilesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Profiles_UserId",
@@ -471,15 +455,9 @@ namespace SimpleWebDal.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shelters_CalendarActivityId",
+                name: "IX_Shelters_CalendarId",
                 table: "Shelters",
-                column: "CalendarActivityId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Shelters_Id",
-                table: "Shelters",
-                column: "Id",
+                column: "CalendarId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -489,16 +467,9 @@ namespace SimpleWebDal.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TempHouses_Id",
-                table: "TempHouses",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TempHouses_ShelterId",
                 table: "TempHouses",
-                column: "ShelterId",
-                unique: true);
+                column: "ShelterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TempHouses_UserId",
@@ -514,103 +485,89 @@ namespace SimpleWebDal.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Users_BasicInformationId",
                 table: "Users",
-                column: "BasicInformationId");
+                column: "BasicInformationId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_CredentialsId",
                 table: "Users",
-                column: "CredentialsId");
+                column: "CredentialsId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_Id",
+                name: "IX_Users_PetId",
                 table: "Users",
-                column: "Id",
-                unique: true);
+                column: "PetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ShelterId",
+                table: "Users",
+                column: "ShelterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_UserCalendarId",
                 table: "Users",
-                column: "UserCalendarId");
+                column: "UserCalendarId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vaccinations_BasicHealthInfoId",
                 table: "Vaccinations",
                 column: "BasicHealthInfoId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Vaccinations_Id",
-                table: "Vaccinations",
-                column: "Id",
-                unique: true);
-
             migrationBuilder.AddForeignKey(
-                name: "FK_AdoptionInfos_Pets_AdoptedPetId",
-                table: "AdoptionInfos",
-                column: "AdoptedPetId",
-                principalTable: "Pets",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AdoptionInfos_Users_AdopterId",
-                table: "AdoptionInfos",
-                column: "AdopterId",
-                principalTable: "Users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_BasicHealthInfos_Pets_PetId",
-                table: "BasicHealthInfos",
+                name: "FK_Adoptions_Pets_PetId",
+                table: "Adoptions",
                 column: "PetId",
                 principalTable: "Pets",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Pets_Profiles_Id",
-                table: "Pets",
-                column: "Id",
-                principalTable: "Profiles",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                name: "FK_Adoptions_Users_UserId",
+                table: "Adoptions",
+                column: "UserId",
+                principalTable: "Users",
+                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Pets_TempHouses_Id",
+                name: "FK_Pets_TempHouses_TempHouseId",
                 table: "Pets",
-                column: "Id",
+                column: "TempHouseId",
                 principalTable: "TempHouses",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Pets_Calendars_CallendarId",
+                name: "FK_Pets_CalendarActivities_CalendarId",
                 table: "Pets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Shelters_Calendars_CalendarActivityId",
+                name: "FK_Shelters_CalendarActivities_CalendarId",
                 table: "Shelters");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Users_Calendars_UserCalendarId",
+                name: "FK_Users_CalendarActivities_UserCalendarId",
                 table: "Users");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Users_Pets_Id",
+                name: "FK_Users_Pets_PetId",
                 table: "Users");
 
             migrationBuilder.DropTable(
                 name: "Activities");
 
             migrationBuilder.DropTable(
-                name: "AdoptionInfos");
+                name: "Adoptions");
 
             migrationBuilder.DropTable(
                 name: "Diseases");
+
+            migrationBuilder.DropTable(
+                name: "ProfilePets");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");
@@ -619,19 +576,19 @@ namespace SimpleWebDal.Migrations
                 name: "Vaccinations");
 
             migrationBuilder.DropTable(
+                name: "Profiles");
+
+            migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "BasicHealthInfos");
-
-            migrationBuilder.DropTable(
-                name: "Calendars");
+                name: "CalendarActivities");
 
             migrationBuilder.DropTable(
                 name: "Pets");
 
             migrationBuilder.DropTable(
-                name: "Profiles");
+                name: "BasicHealthInfos");
 
             migrationBuilder.DropTable(
                 name: "TempHouses");

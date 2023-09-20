@@ -9,4 +9,6 @@ public class BasicInformation
     public string Email { get; set; }
     public Guid AddressId { get; set; }
     public Address Address { get; set; }
+   
+
 }
