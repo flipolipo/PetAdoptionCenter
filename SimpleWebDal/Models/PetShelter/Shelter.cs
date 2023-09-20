@@ -19,7 +19,4 @@ public class Shelter
     public ICollection<Pet>? ShelterPets { get; set; }
     public ICollection<Adoption>? Adoptions { get; set; }
     public ICollection<TempHouse>?  TempHouses { get; set; }
-    
-
-
 }

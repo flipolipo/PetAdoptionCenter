@@ -10,7 +10,7 @@ public class Pet
     public Guid Id { get; init; }
     public PetType Type { get; init; }
     public Guid BasicHealthInfoId { get; set; }
-    public BasicHealthInfo BasicHealthInfo { get; set; }
+    public BasicHealthInfo? BasicHealthInfo { get; set; }
     public string Description { get; set; }
     public Guid CalendarId { get; set; }
     public CalendarActivity Calendar { get; set; }

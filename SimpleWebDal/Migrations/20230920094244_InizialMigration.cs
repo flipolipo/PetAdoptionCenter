@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SimpleWebDal.Migrations
 {
     /// <inheritdoc />
-    public partial class first : Migration
+    public partial class InizialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

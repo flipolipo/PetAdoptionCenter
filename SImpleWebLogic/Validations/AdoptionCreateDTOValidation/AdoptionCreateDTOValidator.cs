@@ -14,15 +14,7 @@ public class AdoptionCreateDTOValidator : AbstractValidator<AdoptionCreateDTO>
               .NotNull().WithMessage("Adopted pet must be provided.")
               .SetValidator(new PetCreateDTOValidator());
 
-        RuleFor(adoption => adoption.Shelter)
-            .NotNull().WithMessage("Shelter must be provided.")
-            .SetValidator(new ShelterCreateDTOValidator());
-
-        RuleFor(adoption => adoption.Adopter)
-            .NotNull().WithMessage("Adopter must be provided.")
-            .SetValidator(new UserCreateDTOValidator());
-
         RuleFor(adoption => adoption.DateOfAdoption)
-            .NotEmpty().WithMessage("Date of adoption must be provided.");
+            .NotNull().WithMessage("Date of adoption must be provided.");
     }
 }

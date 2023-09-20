@@ -34,7 +34,7 @@ public class PetAdoptionCenterContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=PAC;Username=postgres;Password=rudy102;");
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=PAC;Username=postgres;Password=Baskakisc98;");
         base.OnConfiguring(optionsBuilder);
     }
 
