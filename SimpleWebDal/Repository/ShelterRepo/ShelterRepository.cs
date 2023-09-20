@@ -1,4 +1,6 @@
-﻿using SimpleWebDal.Models.Animal;
+﻿using Microsoft.EntityFrameworkCore;
+using SimpleWebDal.Data;
+using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.PetShelter;
@@ -10,21 +12,69 @@ namespace SimpleWebDal.Repository.ShelterRepo
 {
     public class ShelterRepository : IShelterRepository
     {
-        public Task<CalendarActivity> AddCallendar(int shelterId)
+        private readonly PetAdoptionCenterContext _dbContext;
+        public ShelterRepository(PetAdoptionCenterContext dbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
+        }
+        private async Task<Shelter> FindShelter(Guid shelterId) 
+        {
+            var foundShelter = await _dbContext.Shelters.FirstOrDefaultAsync(e => e.Id == shelterId);
+            return foundShelter;
+
+        }
+        private List<User> FilterUsersByRole(ICollection<User> users, string roleName) 
+        {
+            var filteredUsers = new List<User>();
+            foreach (var user in users)
+            {
+                foreach (var role in user.Roles)
+                {
+                    if (role.RoleName.Equals(roleName))
+                        filteredUsers.Add(user);
+                }
+            }
+            return filteredUsers;
+        }
+        
+
+        public async Task<Activity> AddActivityToCalendar(Guid shelterId, Activity activity)
+        {
+          var foundShelter = await _dbContext.Calendars.FirstOrDefaultAsync(c => c.Id == shelterId);
+            foundShelter.Activities.Add(activity);
+            return activity;
         }
 
-        public Task<User> AddContributor(int shelterId)
+        public async Task<User> AddContributor(Guid shelterId, Guid userId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var foundUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            foundShelter.ShelterUsers.Add(foundUser);
+            return foundUser;
         }
 
-        public Task<Pet> AddPet(int shelterId)
+        public async Task<Pet> AddPet(Guid shelterId, PetType type, string description, PetStatus status, bool avaibleForAdoption)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var pet = new Pet() 
+            {
+                Type = type,
+                Description = description,
+                Status = status,
+                AvaibleForAdoption = avaibleForAdoption
+            };
+            foundShelter.ShelterPets.Add(pet);
+            return pet;
         }
+        public async Task<BasicHealthInfo> AddBasicHelathInfoToAPet(Guid shelterId, Guid petId, string name, int age, Size size,  ) 
+        {
+            var foundShelter = await FindShelter(shelterId);
+            var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == shelterId);
+            var info = new BasicHealthInfo() 
+            {
 
+            }    
+        }
         public Task<TempHouse> AddTempHouse(int shelterId)
         {
             throw new NotImplementedException();
@@ -70,14 +120,26 @@ namespace SimpleWebDal.Repository.ShelterRepo
             throw new NotImplementedException();
         }
 
-        public Task<Pet> GetAdoptedPetsById(int shelterId, int petId)
+        public async Task<Pet> GetAdoptedPetsById(Guid shelterId, Guid petId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            
+
+            return foundPet;
         }
 
-        public Task<IEnumerable<Pet>> GetAllAdoptedPets(int shelterId)
+        public async Task<IEnumerable<Pet>> GetAllAdoptedPets(Guid shelterId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var adopted = new List<Pet>();
+            foreach (var pet in foundShelter.ShelterPets)
+            {
+                if (pet.Status.Equals(PetStatus.Adopted)) 
+                {
+                    adopted.Add(pet);
+                }
+            }
+            return adopted;
         }
 
         public Task<IEnumerable<Pet>> GetAllShelterDogsOrCats(int shelterId, PetType type)
@@ -85,69 +147,102 @@ namespace SimpleWebDal.Repository.ShelterRepo
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Pet>> GetAllShelterPets(int shelterId)
+        public async Task<IEnumerable<Pet>> GetAllShelterPets(Guid shelterId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            return foundShelter.ShelterPets.ToList();
         }
 
-        public Task<IEnumerable<Shelter>> GetAllShelters()
+        public async Task<IEnumerable<Shelter>> GetAllShelters()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Shelters.ToListAsync();    
         }
 
-        public Task<IEnumerable<Pet>> GetAllShelterTempHousesPets(int shelterId)
+        public async Task<IEnumerable<Pet>> GetAllShelterTempHousesPets(Guid shelterId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var pets = new List<Pet>();
+            foreach (var tempHouse in foundShelter.TempHouses)
+            {
+                foreach (var pet in tempHouse.PetsInTemporaryHouse)
+                {
+                    pets.Add(pet);
+                }
+            }
+            return pets.ToList();
         }
 
-        public Task<IEnumerable<Pet>> GetAllTempHousePetsById(int shelterId, int tempHouseId)
+        public async Task<Pet> GetTempHousePetById(Guid shelterId, Guid tempHouseId, Guid petId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var foundTempHouse = foundShelter.TempHouses.FirstOrDefault(e => e.Id == tempHouseId);
+            var pet = foundTempHouse.PetsInTemporaryHouse.FirstOrDefault(e => e.Id == petId);
+            return pet;
+
         }
 
-        public Task<IEnumerable<TempHouse>> GetAllTempHouses(int shelterId)
+        public async Task<IEnumerable<TempHouse>> GetAllTempHouses(Guid shelterId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            return foundShelter.TempHouses;
         }
 
-        public Task<Shelter> GetShelterById(int shelterId)
+        public async Task<Shelter> GetShelterById(Guid shelterId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            return foundShelter;
         }
 
-        public Task<IEnumerable<User>> GetShelterContributors(int shelterId)
+        public async Task<IEnumerable<User>> GetShelterContributors(Guid shelterId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var shelterUsers = foundShelter.ShelterUsers;
+            var contributors = FilterUsersByRole(shelterUsers, "Contributor");
+            return contributors;
+            
         }
 
-        public Task<IEnumerable<User>> GetShelterContributorsById(int shelterId, int workerId)
+        public async Task<User> GetShelterContributorById(Guid shelterId, Guid workerId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var shelterUsers = foundShelter.ShelterUsers;
+            var contributors = FilterUsersByRole(shelterUsers, "Contributor");
+            return contributors.FirstOrDefault(e => e.Id == workerId);
         }
 
-        public Task<Pet> GetShelterPetById(int shelterId, int petId)
+        public async Task<Pet> GetShelterPetById(Guid shelterId, Guid petId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            return foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
         }
 
-        public Task<IEnumerable<User>> GetShelterWorkers(int shelterId)
+        public async Task<IEnumerable<User>> GetShelterWorkers(Guid shelterId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var shelterUsers = foundShelter.ShelterUsers;
+            var contributors = FilterUsersByRole(shelterUsers, "Worker");
+            return contributors;
         }
 
-        public Task<IEnumerable<User>> GetShelterWorkersById(int shelterId, int workerId)
+        public async Task<User> GetShelterWorkerById(Guid shelterId, Guid workerId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var shelterUsers = foundShelter.ShelterUsers;
+            var contributors = FilterUsersByRole(shelterUsers, "Worker");
+            return contributors.FirstOrDefault(e => e.Id == workerId);
         }
 
-        public Task<TempHouse> GetTempHouseById(int shelterId, int tempHouseId)
+        public async Task<TempHouse> GetTempHouseById(Guid shelterId, Guid tempHouseId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            return foundShelter.TempHouses.FirstOrDefault(e => e.Id == tempHouseId);
         }
 
-        public Task<Pet> GetTempHousePetById(int shelterId, int petId, int tempHouseId)
+        public async Task<Pet> GetTempHousePetById(Guid shelterId, Guid petId, Guid tempHouseId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var tempHouse = foundShelter.TempHouses.FirstOrDefault(e => e.Id == tempHouseId);
+            return tempHouse.PetsInTemporaryHouse.FirstOrDefault(e => e.Id == petId);
         }
 
         public void UpdateCallendar(int shelterId, int callendarId)

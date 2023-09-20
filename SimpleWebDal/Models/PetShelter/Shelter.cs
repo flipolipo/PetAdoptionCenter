@@ -16,6 +16,6 @@ public class Shelter
     public ICollection<Pet> ShelterPets { get; set; }
     public Guid CalendarActivityId { get; set; }
     public CalendarActivity ShelterCalendar { get; set; }
-    public TempHouse? TempHouse { get; set; }
+    public ICollection<TempHouse>? TempHouses { get; set; }
 
 }

@@ -30,7 +30,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         //POST
         public Task<Shelter> CreateShelter();
         public Task<Pet> AddPet(int shelterId);
-        public Task<CalendarActivity> AddCallendar(int shelterId);
+        public Task<Activity> AddActivityToCalendar(Guid shelterId, Activity activity);
         public Task<User> AddWorker(int shelterId);
         public Task<User> AddContributor(int shelterId);
         public Task<TempHouse> AddTempHouse(int shelterId);
