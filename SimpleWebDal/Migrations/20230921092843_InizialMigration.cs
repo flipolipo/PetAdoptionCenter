@@ -145,7 +145,7 @@ namespace SimpleWebDal.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    AcctivityDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ActivityDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CalendarActivityId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>

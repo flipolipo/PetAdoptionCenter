@@ -204,7 +204,7 @@ namespace SimpleWebDal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("AcctivityDate")
+                    b.Property<DateTime>("ActivityDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("CalendarActivityId")

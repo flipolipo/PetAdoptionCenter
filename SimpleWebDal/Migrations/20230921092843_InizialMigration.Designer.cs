@@ -12,7 +12,7 @@ using SimpleWebDal.Data;
 namespace SimpleWebDal.Migrations
 {
     [DbContext(typeof(PetAdoptionCenterContext))]
-    [Migration("20230920094244_InizialMigration")]
+    [Migration("20230921092843_InizialMigration")]
     partial class InizialMigration
     {
         /// <inheritdoc />
@@ -207,7 +207,7 @@ namespace SimpleWebDal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("AcctivityDate")
+                    b.Property<DateTime>("ActivityDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("CalendarActivityId")
