@@ -28,6 +28,8 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Activity> GetShelterActivityById(Guid shelterId, Guid activityId);
         public Task<IEnumerable<Disease>> GetAllPetDiseases(Guid shelterId, Guid petId);
         public Task<Disease> GetPetDiseaseById(Guid shelterId, Guid petId, Guid diseaseId);
+        public Task<IEnumerable<Vaccination>> GetAllPetVaccinations(Guid shelterId, Guid petId);
+        public Task<Disease> GetPetVaccinationById(Guid shelterId, Guid petId, Guid vaccinationId);
 
         //POST
         public Task<Shelter> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city);

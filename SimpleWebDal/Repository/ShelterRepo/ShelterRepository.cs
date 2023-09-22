@@ -20,8 +20,11 @@ namespace SimpleWebDal.Repository.ShelterRepo
         private async Task<Shelter> FindShelter(Guid shelterId)
         {
             var foundShelter = await _dbContext.Shelters.FirstOrDefaultAsync(e => e.Id == shelterId);
+            if (foundShelter == null)
+            {
+                throw new InvalidOperationException($"Shelter with ID {shelterId} not found.");
+            }
             return foundShelter;
-
         }
         private List<User> FilterUsersByRole(ICollection<User> users, string roleName)
         {
@@ -40,18 +43,34 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
         public async Task<Activity> AddActivityToCalendar(Guid shelterId, string activityName, DateTime activityDate)
         {
-            var foundShelter = await FindShelter(shelterId);
-            var activity = new Activity()
+            try
             {
-                Id = Guid.NewGuid(),
-                Name = activityName,
-                AcctivityDate = activityDate
-            };
-            foundShelter.ShelterCalendar.Activities.Add(activity);
-            return activity;
+                var foundShelter = await FindShelter(shelterId);
+                if (foundShelter != null && foundShelter.ShelterCalendar != null)
+                {
+
+                    var activity = new Activity()
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = activityName,
+                        AcctivityDate = activityDate
+                    };
+                    foundShelter.ShelterCalendar.Activities.Add(activity);
+                    return activity;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Shelter with ID {shelterId} not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                throw;
+            }
         }
 
-        public async Task<User> AddContributor(Guid shelterId, Guid userId)
+            public async Task<User> AddContributor(Guid shelterId, Guid userId)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
@@ -455,14 +474,36 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return activity;
         }
 
-        public Task<IEnumerable<Disease>> GetAllPetDiseases(Guid shelterId, Guid petId)
+        public async Task<IEnumerable<Disease>> GetAllPetDiseases(Guid shelterId, Guid petId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
+            var diseases = foundPet.BasicHealthInfo.MedicalHistory;
+            return diseases;
         }
 
-        public Task<Disease> GetPetDiseaseById(Guid shelterId, Guid petId, Guid diseaseId)
+        public async Task<Disease> GetPetDiseaseById(Guid shelterId, Guid petId, Guid diseaseId)
         {
-            throw new NotImplementedException();
+            var foundShelter = await FindShelter(shelterId);
+            var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
+            var disease = foundPet.BasicHealthInfo.MedicalHistory.FirstOrDefault(e => e.Id == diseaseId);
+            return disease;
+        }
+
+        public async Task<IEnumerable<Vaccination>> GetAllPetVaccinations(Guid shelterId, Guid petId)
+        {
+            var foundShelter = await FindShelter(shelterId);
+            var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
+            var vaccinations = foundPet.BasicHealthInfo.Vaccinations;
+            return vaccinations;
+        }
+
+        public async Task<Disease> GetPetVaccinationById(Guid shelterId, Guid petId, Guid vaccinationId)
+        {
+            var foundShelter = await FindShelter(shelterId);
+            var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
+            var vaccination = foundPet.BasicHealthInfo.MedicalHistory.FirstOrDefault(e => e.Id == vaccinationId);
+            return vaccination;
         }
     }
 }

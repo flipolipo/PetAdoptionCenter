@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using SimpleWebDal.DTOs.AddressDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
 using SimpleWebDal.DTOs.ShelterDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs;
@@ -9,6 +10,7 @@ using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 using SImpleWebLogic.Repository.ShelterRepo;
+using SImpleWebLogic.Validations.ShelterCreateDTOValidation;
 using System.Xml.Linq;
 
 namespace PetAdoptionCenter.Controllers
@@ -20,14 +22,16 @@ namespace PetAdoptionCenter.Controllers
 
         private IShelterRepository _shelterRepository;
         private IMapper _mapper;
+        private ShelterCreateDTOValidator _validator;
 
-        public SheltersController(IShelterRepository shelterRepository, IMapper mapper)
+        public SheltersController(IShelterRepository shelterRepository, IMapper mapper, ShelterCreateDTOValidator validator)
         {
             _shelterRepository = shelterRepository;
             _mapper = mapper;
+            _validator = validator;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Shelter>>> GetAllShelters() 
+        public async Task<ActionResult<IEnumerable<Shelter>>> GetAllShelters()
         {
             var shelters = await _shelterRepository.GetAllShelters();
             var sheltersDto = _mapper.Map<IEnumerable<ShelterReadDTO>>(shelters);
@@ -321,5 +325,26 @@ namespace PetAdoptionCenter.Controllers
 
             return NotFound();
         }
+        [HttpPost]
+        public async Task<IActionResult> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city)
+        {
+            var shelter = await _shelterRepository.CreateShelter(name, description, street, houseNumber, postalCode, city);
+            var shelterDto = _mapper.Map<ShelterCreateDTO>(shelter);
+
+            if (shelterDto == null)
+            {
+                return BadRequest("Invalid input data");
+            }
+          
+            var validationResult = await _validator.ValidateAsync(shelterDto);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+           
+            return Created(nameof(CreateShelter), shelterDto);
+        }
+
     }
 }
