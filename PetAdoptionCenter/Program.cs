@@ -1,3 +1,4 @@
+using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,11 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.RegisterApplicationDependencies();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.RegisterApplicationDependencies();
+builder.Services.ConfigureAutoMapper();
 
 var app = builder.Build();
 

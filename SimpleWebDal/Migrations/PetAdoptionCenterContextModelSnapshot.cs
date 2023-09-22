@@ -22,6 +22,21 @@ namespace SimpleWebDal.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("PetProfileModel", b =>
+                {
+                    b.Property<Guid>("ProfilePetsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProfilesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ProfilePetsId", "ProfilesId");
+
+                    b.HasIndex("ProfilesId");
+
+                    b.ToTable("ProfilePets", (string)null);
+                });
+
             modelBuilder.Entity("RoleUser", b =>
                 {
                     b.Property<Guid>("RolesId")
@@ -43,27 +58,28 @@ namespace SimpleWebDal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AdoptedPetId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AdopterId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("DateOfAdoption")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("ShelterId")
+                    b.Property<Guid>("PetId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ShelterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdoptedPetId");
-
-                    b.HasIndex("AdopterId");
+                    b.HasIndex("PetId")
+                        .IsUnique();
 
                     b.HasIndex("ShelterId");
 
-                    b.ToTable("AdoptionInfos");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Adoptions");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.BasicHealthInfo", b =>
@@ -79,19 +95,10 @@ namespace SimpleWebDal.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("PetId")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("Size")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("PetId")
-                        .IsUnique();
 
                     b.ToTable("BasicHealthInfos");
                 });
@@ -99,9 +106,10 @@ namespace SimpleWebDal.Migrations
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Disease", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("BasicHealthInfoId")
+                    b.Property<Guid?>("BasicHealthInfoId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("IllnessEnd")
@@ -118,38 +126,51 @@ namespace SimpleWebDal.Migrations
 
                     b.HasIndex("BasicHealthInfoId");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.ToTable("Diseases");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Pet", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<bool>("AvaibleForAdoption")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("CallendarId")
+                    b.Property<Guid>("BasicHealthInfoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CalendarId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("ShelterId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
+
+                    b.Property<Guid?>("TempHouseId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CallendarId");
+                    b.HasIndex("BasicHealthInfoId")
+                        .IsUnique();
 
-                    b.HasIndex("Id");
+                    b.HasIndex("CalendarId")
+                        .IsUnique();
+
+                    b.HasIndex("ShelterId");
+
+                    b.HasIndex("TempHouseId");
 
                     b.ToTable("Pets");
                 });
@@ -157,9 +178,10 @@ namespace SimpleWebDal.Migrations
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Vaccination", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("BasicHealthInfoId")
+                    b.Property<Guid?>("BasicHealthInfoId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("VaccinationName")
@@ -173,19 +195,20 @@ namespace SimpleWebDal.Migrations
 
                     b.HasIndex("BasicHealthInfoId");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.ToTable("Vaccinations");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.CalendarModel.Activity", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("AcctivityDate")
+                    b.Property<DateTime>("ActivityDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("CalendarActivityId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -193,8 +216,7 @@ namespace SimpleWebDal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
+                    b.HasIndex("CalendarActivityId");
 
                     b.ToTable("Activities");
                 });
@@ -210,10 +232,7 @@ namespace SimpleWebDal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.ToTable("Calendars");
+                    b.ToTable("CalendarActivities");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.PetShelter.Shelter", b =>
@@ -225,7 +244,7 @@ namespace SimpleWebDal.Migrations
                     b.Property<Guid>("AddressId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CalendarActivityId")
+                    b.Property<Guid>("CalendarId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -241,10 +260,7 @@ namespace SimpleWebDal.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.HasIndex("CalendarActivityId")
-                        .IsUnique();
-
-                    b.HasIndex("Id")
+                    b.HasIndex("CalendarId")
                         .IsUnique();
 
                     b.ToTable("Shelters");
@@ -261,9 +277,6 @@ namespace SimpleWebDal.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("UserId")
                         .IsUnique();
 
@@ -279,7 +292,7 @@ namespace SimpleWebDal.Migrations
                     b.Property<Guid>("AddressId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ShelterId")
+                    b.Property<Guid?>("ShelterId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("StartOfTemporaryHouseDate")
@@ -293,11 +306,7 @@ namespace SimpleWebDal.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("ShelterId")
-                        .IsUnique();
+                    b.HasIndex("ShelterId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -315,7 +324,7 @@ namespace SimpleWebDal.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("FlatNumber")
+                    b.Property<int?>("FlatNumber")
                         .HasColumnType("integer");
 
                     b.Property<string>("HouseNumber")
@@ -331,9 +340,6 @@ namespace SimpleWebDal.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
 
                     b.ToTable("Addresses");
                 });
@@ -368,9 +374,6 @@ namespace SimpleWebDal.Migrations
                     b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.ToTable("BasicInformations");
                 });
 
@@ -389,9 +392,6 @@ namespace SimpleWebDal.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
 
                     b.ToTable("Credentials");
                 });
@@ -414,6 +414,7 @@ namespace SimpleWebDal.Migrations
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.User", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("BasicInformationId")
@@ -422,21 +423,46 @@ namespace SimpleWebDal.Migrations
                     b.Property<Guid>("CredentialsId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("PetId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ShelterId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("UserCalendarId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BasicInformationId");
-
-                    b.HasIndex("CredentialsId");
-
-                    b.HasIndex("Id")
+                    b.HasIndex("BasicInformationId")
                         .IsUnique();
 
-                    b.HasIndex("UserCalendarId");
+                    b.HasIndex("CredentialsId")
+                        .IsUnique();
+
+                    b.HasIndex("PetId");
+
+                    b.HasIndex("ShelterId");
+
+                    b.HasIndex("UserCalendarId")
+                        .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PetProfileModel", b =>
+                {
+                    b.HasOne("SimpleWebDal.Models.Animal.Pet", null)
+                        .WithMany()
+                        .HasForeignKey("ProfilePetsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SimpleWebDal.Models.ProfileUser.ProfileModel", null)
+                        .WithMany()
+                        .HasForeignKey("ProfilesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RoleUser", b =>
@@ -457,124 +483,81 @@ namespace SimpleWebDal.Migrations
             modelBuilder.Entity("SimpleWebDal.Models.AdoptionProccess.Adoption", b =>
                 {
                     b.HasOne("SimpleWebDal.Models.Animal.Pet", "AdoptedPet")
-                        .WithMany()
-                        .HasForeignKey("AdoptedPetId")
+                        .WithOne()
+                        .HasForeignKey("SimpleWebDal.Models.AdoptionProccess.Adoption", "PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SimpleWebDal.Models.WebUser.User", "Adopter")
-                        .WithMany()
-                        .HasForeignKey("AdopterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("SimpleWebDal.Models.PetShelter.Shelter", null)
+                        .WithMany("Adoptions")
+                        .HasForeignKey("ShelterId");
 
-                    b.HasOne("SimpleWebDal.Models.PetShelter.Shelter", "Shelter")
-                        .WithMany()
-                        .HasForeignKey("ShelterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("SimpleWebDal.Models.WebUser.User", null)
+                        .WithMany("Adoptions")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("AdoptedPet");
-
-                    b.Navigation("Adopter");
-
-                    b.Navigation("Shelter");
-                });
-
-            modelBuilder.Entity("SimpleWebDal.Models.Animal.BasicHealthInfo", b =>
-                {
-                    b.HasOne("SimpleWebDal.Models.Animal.Pet", "Pet")
-                        .WithOne("BasicHealthInfo")
-                        .HasForeignKey("SimpleWebDal.Models.Animal.BasicHealthInfo", "PetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Pet");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Disease", b =>
                 {
-                    b.HasOne("SimpleWebDal.Models.Animal.BasicHealthInfo", "BasicHealthInfo")
-                        .WithMany()
-                        .HasForeignKey("BasicHealthInfoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SimpleWebDal.Models.Animal.BasicHealthInfo", null)
                         .WithMany("MedicalHistory")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BasicHealthInfo");
+                        .HasForeignKey("BasicHealthInfoId");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Pet", b =>
                 {
-                    b.HasOne("SimpleWebDal.Models.CalendarModel.CalendarActivity", "Callendar")
-                        .WithMany()
-                        .HasForeignKey("CallendarId")
+                    b.HasOne("SimpleWebDal.Models.Animal.BasicHealthInfo", "BasicHealthInfo")
+                        .WithOne()
+                        .HasForeignKey("SimpleWebDal.Models.Animal.Pet", "BasicHealthInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SimpleWebDal.Models.CalendarModel.CalendarActivity", "Calendar")
+                        .WithOne()
+                        .HasForeignKey("SimpleWebDal.Models.Animal.Pet", "CalendarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SimpleWebDal.Models.PetShelter.Shelter", null)
                         .WithMany("ShelterPets")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SimpleWebDal.Models.ProfileUser.ProfileModel", null)
-                        .WithMany("ProfilePets")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShelterId");
 
                     b.HasOne("SimpleWebDal.Models.TemporaryHouse.TempHouse", null)
                         .WithMany("PetsInTemporaryHouse")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TempHouseId");
 
-                    b.Navigation("Callendar");
+                    b.Navigation("BasicHealthInfo");
+
+                    b.Navigation("Calendar");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Vaccination", b =>
                 {
-                    b.HasOne("SimpleWebDal.Models.Animal.BasicHealthInfo", "BasicHealthInfo")
-                        .WithMany()
-                        .HasForeignKey("BasicHealthInfoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SimpleWebDal.Models.Animal.BasicHealthInfo", null)
                         .WithMany("Vaccinations")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BasicHealthInfo");
+                        .HasForeignKey("BasicHealthInfoId");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.CalendarModel.Activity", b =>
                 {
                     b.HasOne("SimpleWebDal.Models.CalendarModel.CalendarActivity", null)
                         .WithMany("Activities")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CalendarActivityId");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.PetShelter.Shelter", b =>
                 {
                     b.HasOne("SimpleWebDal.Models.WebUser.Address", "ShelterAddress")
-                        .WithOne("Shelter")
+                        .WithOne()
                         .HasForeignKey("SimpleWebDal.Models.PetShelter.Shelter", "AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SimpleWebDal.Models.CalendarModel.CalendarActivity", "ShelterCalendar")
-                        .WithOne("Shelter")
-                        .HasForeignKey("SimpleWebDal.Models.PetShelter.Shelter", "CalendarActivityId")
+                        .WithOne()
+                        .HasForeignKey("SimpleWebDal.Models.PetShelter.Shelter", "CalendarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -586,7 +569,7 @@ namespace SimpleWebDal.Migrations
             modelBuilder.Entity("SimpleWebDal.Models.ProfileUser.ProfileModel", b =>
                 {
                     b.HasOne("SimpleWebDal.Models.WebUser.User", "UserLogged")
-                        .WithOne("ProfileUser")
+                        .WithOne()
                         .HasForeignKey("SimpleWebDal.Models.ProfileUser.ProfileModel", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -597,24 +580,20 @@ namespace SimpleWebDal.Migrations
             modelBuilder.Entity("SimpleWebDal.Models.TemporaryHouse.TempHouse", b =>
                 {
                     b.HasOne("SimpleWebDal.Models.WebUser.Address", "TemporaryHouseAddress")
-                        .WithOne("TemporaryHouse")
+                        .WithOne()
                         .HasForeignKey("SimpleWebDal.Models.TemporaryHouse.TempHouse", "AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SimpleWebDal.Models.PetShelter.Shelter", "ShelterName")
-                        .WithOne("TempHouse")
-                        .HasForeignKey("SimpleWebDal.Models.TemporaryHouse.TempHouse", "ShelterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("SimpleWebDal.Models.PetShelter.Shelter", null)
+                        .WithMany("TempHouses")
+                        .HasForeignKey("ShelterId");
 
                     b.HasOne("SimpleWebDal.Models.WebUser.User", "TemporaryOwner")
-                        .WithOne("TempHouse")
+                        .WithOne()
                         .HasForeignKey("SimpleWebDal.Models.TemporaryHouse.TempHouse", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ShelterName");
 
                     b.Navigation("TemporaryHouseAddress");
 
@@ -635,32 +614,28 @@ namespace SimpleWebDal.Migrations
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.User", b =>
                 {
                     b.HasOne("SimpleWebDal.Models.WebUser.BasicInformation", "BasicInformation")
-                        .WithMany()
-                        .HasForeignKey("BasicInformationId")
+                        .WithOne()
+                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "BasicInformationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SimpleWebDal.Models.WebUser.Credentials", "Credentials")
-                        .WithMany()
-                        .HasForeignKey("CredentialsId")
+                        .WithOne()
+                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "CredentialsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SimpleWebDal.Models.Animal.Pet", null)
                         .WithMany("PatronUsers")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PetId");
 
                     b.HasOne("SimpleWebDal.Models.PetShelter.Shelter", null)
                         .WithMany("ShelterUsers")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShelterId");
 
                     b.HasOne("SimpleWebDal.Models.CalendarModel.CalendarActivity", "UserCalendar")
-                        .WithMany()
-                        .HasForeignKey("UserCalendarId")
+                        .WithOne()
+                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "UserCalendarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -680,30 +655,23 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Pet", b =>
                 {
-                    b.Navigation("BasicHealthInfo");
-
                     b.Navigation("PatronUsers");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.CalendarModel.CalendarActivity", b =>
                 {
                     b.Navigation("Activities");
-
-                    b.Navigation("Shelter");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.PetShelter.Shelter", b =>
                 {
+                    b.Navigation("Adoptions");
+
                     b.Navigation("ShelterPets");
 
                     b.Navigation("ShelterUsers");
 
-                    b.Navigation("TempHouse");
-                });
-
-            modelBuilder.Entity("SimpleWebDal.Models.ProfileUser.ProfileModel", b =>
-                {
-                    b.Navigation("ProfilePets");
+                    b.Navigation("TempHouses");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.TemporaryHouse.TempHouse", b =>
@@ -711,18 +679,9 @@ namespace SimpleWebDal.Migrations
                     b.Navigation("PetsInTemporaryHouse");
                 });
 
-            modelBuilder.Entity("SimpleWebDal.Models.WebUser.Address", b =>
-                {
-                    b.Navigation("Shelter");
-
-                    b.Navigation("TemporaryHouse");
-                });
-
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.User", b =>
                 {
-                    b.Navigation("ProfileUser");
-
-                    b.Navigation("TempHouse");
+                    b.Navigation("Adoptions");
                 });
 #pragma warning restore 612, 618
         }
