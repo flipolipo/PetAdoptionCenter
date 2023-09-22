@@ -21,13 +21,15 @@ public class BasicHealthInfoCreateDTOValidator : AbstractValidator<BasicHealthIn
         When(info => info.Vaccinations.Any(), () =>
         {
             RuleForEach(info => info.Vaccinations)
-                .SetValidator(new VaccinationCreateDTOValidator());
+            .NotNull();
+                //.SetValidator(new VaccinationCreateDTOValidator());
         });
 
         When(info => info.MedicalHistory.Any(), () =>
         {
             RuleForEach(info => info.MedicalHistory)
-                .SetValidator(new DiseaseCreateDTOValidator());
+            .NotNull();
+                //.SetValidator(new DiseaseCreateDTOValidator());
         });
     }
 }

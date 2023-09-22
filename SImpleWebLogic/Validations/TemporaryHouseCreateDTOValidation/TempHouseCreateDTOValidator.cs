@@ -11,18 +11,19 @@ public class TempHouseCreateDTOValidator : AbstractValidator<TempHouseCreateDTO>
     public TempHouseCreateDTOValidator()
     {
         RuleFor(tempHouse => tempHouse.TemporaryOwner)
-                .NotNull().WithMessage("TemporaryOwner cannot be null.")
-                .SetValidator(new UserCreateDTOValidator());
+                .NotNull().WithMessage("TemporaryOwner cannot be null.");
+        //.SetValidator(new UserCreateDTOValidator());
 
         RuleFor(tempHouse => tempHouse.TemporaryHouseAddress)
-            .NotNull().WithMessage("TemporaryHouseAddress cannot be null.")
-            .SetValidator(new AddressCreateDTOValidator());
+            .NotNull().WithMessage("TemporaryHouseAddress cannot be null.");
+            //.SetValidator(new AddressCreateDTOValidator());
 
         When(tempHouse => tempHouse.PetsInTemporaryHouse != null, () =>
         {
             RuleFor(tempHouse => tempHouse.PetsInTemporaryHouse)
-                .Must(pets => pets.Any()).WithMessage("PetsInTemporaryHouse must contain at least one element.")
-                .ForEach(pet => pet.SetValidator(new PetCreateDTOValidator()));
+            .NotNull();
+                //.Must(pets => pets.Any()).WithMessage("PetsInTemporaryHouse must contain at least one element.");
+                //.ForEach(pet => pet.SetValidator(new PetCreateDTOValidator()));
         });
 
         RuleFor(tempHouse => tempHouse.StartOfTemporaryHouseDate)

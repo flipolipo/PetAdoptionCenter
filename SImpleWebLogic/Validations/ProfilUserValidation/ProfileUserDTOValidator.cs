@@ -13,8 +13,8 @@ public class ProfileUserDTOValidator :AbstractValidator<ProfileModelCreateDTO>
         When(profile => profile.ProfilePets.Any(), () =>
         {
             RuleForEach(profile => profile.ProfilePets)
-                .NotNull().WithMessage("ProfilePets cannot contain null elements.")
-                .SetValidator(new PetCreateDTOValidator());
+                .NotNull().WithMessage("ProfilePets cannot contain null elements.");
+                //.SetValidator(new PetCreateDTOValidator());
         });
     }
 }

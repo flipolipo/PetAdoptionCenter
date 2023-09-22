@@ -13,8 +13,8 @@ public class CalendarValidator : AbstractValidator<CalendarActivityCreateDTO>
         When(calendar => calendar.Activities.Any(), () =>
         {
             RuleForEach(calendar => calendar.Activities)
-                .NotNull().WithMessage("Activities cannot be null when there are activities.")
-                .SetValidator(new ActivityValidator());
+                .NotNull().WithMessage("Activities cannot be null when there are activities.");
+               // .SetValidator(new ActivityValidator());
         });
     }
 }

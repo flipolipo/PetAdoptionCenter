@@ -12,7 +12,7 @@ using SimpleWebDal.Data;
 namespace SimpleWebDal.Migrations
 {
     [DbContext(typeof(PetAdoptionCenterContext))]
-    [Migration("20230921092843_InizialMigration")]
+    [Migration("20230922072444_InizialMigration")]
     partial class InizialMigration
     {
         /// <inheritdoc />
@@ -37,7 +37,7 @@ namespace SimpleWebDal.Migrations
 
                     b.HasIndex("ProfilesId");
 
-                    b.ToTable("ProfilePets", (string)null);
+                    b.ToTable("PetProfileModel");
                 });
 
             modelBuilder.Entity("RoleUser", b =>
@@ -52,7 +52,7 @@ namespace SimpleWebDal.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("UserRoles", (string)null);
+                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.AdoptionProccess.Adoption", b =>

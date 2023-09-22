@@ -26,6 +26,7 @@ public class BasicInformationDTOValidator : AbstractValidator<BasicInformationCr
             .EmailAddress().WithMessage("Invalid email format.");
 
         RuleFor(info => info.Address)
-            .SetValidator(new AddressCreateDTOValidator());
+            .NotNull();
+           // .SetValidator(new AddressCreateDTOValidator());
     }
 }

@@ -18,9 +18,9 @@ namespace SimpleWebDal.Configuration
             builder.HasOne(pm => pm.UserLogged)
                 .WithOne()
                 .HasForeignKey<ProfileModel>(p => p.UserId);
-            builder.HasMany(pm => pm.ProfilePets)
-              .WithMany(p => p.Profiles)
-              .UsingEntity(j => j.ToTable("ProfilePets"));
+            //builder.HasMany(pm => pm.ProfilePets)
+            //  .WithMany(p => p.Profiles)
+            //  .UsingEntity(j => j.ToTable("ProfilePets"));
 
         }
     }

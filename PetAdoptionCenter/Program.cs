@@ -1,5 +1,9 @@
+using SimpleWebDal.Data;
+using SimpleWebDal.Repository.ShelterRepo;
 using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Extensions;
+using SImpleWebLogic.Repository.ShelterRepo;
+using SImpleWebLogic.Validations.ShelterCreateDTOValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +17,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.RegisterApplicationDependencies();
 builder.Services.ConfigureAutoMapper();
-
+builder.Services.AddDbContext<PetAdoptionCenterContext>();
+builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
+builder.Services.AddScoped<ValidatorFactory>();
+//builder.Services.AddScoped<ShelterCreateDTOValidator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

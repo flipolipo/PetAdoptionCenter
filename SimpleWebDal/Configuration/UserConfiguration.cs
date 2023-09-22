@@ -20,9 +20,9 @@ namespace SimpleWebDal.Configuration
                 .WithOne()
                 .HasForeignKey<User>(u => u.UserCalendarId);
             builder.HasMany(u => u.Adoptions);
-            builder.HasMany(u => u.Roles)
-               .WithMany(r => r.Users)
-               .UsingEntity(e => e.ToTable("UserRoles"));
+            //builder.HasMany(u => u.Roles)
+            //   .WithMany(r => r.Users)
+            //   .UsingEntity(e => e.ToTable("UserRoles"));
         }
     }
 }

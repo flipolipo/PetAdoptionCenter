@@ -1,4 +1,6 @@
-﻿using SimpleWebDal.Models.Animal;
+﻿using Microsoft.EntityFrameworkCore;
+using SimpleWebDal.Data;
+using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.PetShelter;
@@ -10,6 +12,38 @@ namespace SimpleWebDal.Repository.ShelterRepo
 {
     public class ShelterRepository : IShelterRepository
     {
+        private readonly PetAdoptionCenterContext _dbContext;
+
+        public ShelterRepository(PetAdoptionCenterContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public async Task<IEnumerable<Shelter>> GetAllShelters()
+        {
+            return await _dbContext.Shelters.ToListAsync();
+        }
+
+        public async Task<Shelter> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city)
+        {
+            var shelter = new Shelter()
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                ShelterCalendar = new CalendarActivity(),
+                ShelterDescription = description,
+                ShelterAddress = new Address()
+                {
+                    Id = Guid.NewGuid(),
+                    City = city,
+                    Street = street,
+                    HouseNumber = houseNumber,
+                    PostalCode = postalCode
+                },
+            };
+            _dbContext.Shelters.Add(shelter);
+            return shelter;
+        }
         public Task<CalendarActivity> AddCallendar(int shelterId)
         {
             throw new NotImplementedException();
@@ -31,11 +65,6 @@ namespace SimpleWebDal.Repository.ShelterRepo
         }
 
         public Task<User> AddWorker(int shelterId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Shelter> CreateShelter()
         {
             throw new NotImplementedException();
         }
@@ -90,10 +119,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Shelter>> GetAllShelters()
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public Task<IEnumerable<Pet>> GetAllShelterTempHousesPets(int shelterId)
         {

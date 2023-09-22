@@ -34,7 +34,7 @@ namespace SimpleWebDal.Migrations
 
                     b.HasIndex("ProfilesId");
 
-                    b.ToTable("ProfilePets", (string)null);
+                    b.ToTable("PetProfileModel");
                 });
 
             modelBuilder.Entity("RoleUser", b =>
@@ -49,7 +49,7 @@ namespace SimpleWebDal.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("UserRoles", (string)null);
+                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.AdoptionProccess.Adoption", b =>

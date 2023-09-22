@@ -26,13 +26,15 @@ public class PetCreateDTOValidator : AbstractValidator<PetCreateDTO>
         When(pet => pet.BasicHealthInfo != null, () =>
         {
             RuleFor(pet => pet.BasicHealthInfo)
-                .SetValidator(new BasicHealthInfoCreateDTOValidator());
+            .NotNull();
+                //.SetValidator(new BasicHealthInfoCreateDTOValidator());
         });
 
         When(pet => pet.PatronUsers.Any(), () =>
         {
             RuleForEach(pet => pet.PatronUsers)
-                .SetValidator(new UserCreateDTOValidator());
+            .NotNull();
+                //.SetValidator(new UserCreateDTOValidator());
         });
     }
 }
