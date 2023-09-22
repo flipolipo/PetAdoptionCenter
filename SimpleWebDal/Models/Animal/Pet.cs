@@ -8,7 +8,7 @@ namespace SimpleWebDal.Models.Animal;
 public class Pet
 {
     public Guid Id { get; init; }
-    public PetType Type { get; init; }
+    public PetType Type { get; set; }
     public Guid BasicHealthInfoId { get; set; }
     public BasicHealthInfo? BasicHealthInfo { get; set; }
     public string Description { get; set; }

@@ -184,12 +184,12 @@ namespace SimpleWebDal.Migrations
                     b.Property<Guid?>("BasicHealthInfoId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("VaccinationName")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateTime>("date")
-                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 

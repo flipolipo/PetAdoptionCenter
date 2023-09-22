@@ -20,7 +20,6 @@ builder.Services.ConfigureAutoMapper();
 builder.Services.AddDbContext<PetAdoptionCenterContext>();
 builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
 builder.Services.AddScoped<ValidatorFactory>();
-//builder.Services.AddScoped<ShelterCreateDTOValidator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
