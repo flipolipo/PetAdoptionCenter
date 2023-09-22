@@ -1,7 +1,9 @@
 using SimpleWebDal.Data;
 using SimpleWebDal.Repository.ShelterRepo;
+using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Extensions;
 using SImpleWebLogic.Repository.ShelterRepo;
+using SImpleWebLogic.Validations.ShelterCreateDTOValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,15 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.RegisterApplicationDependencies();
-
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.RegisterApplicationDependencies();
+builder.Services.ConfigureAutoMapper();
 builder.Services.AddDbContext<PetAdoptionCenterContext>();
 builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
-
+builder.Services.AddScoped<ValidatorFactory>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

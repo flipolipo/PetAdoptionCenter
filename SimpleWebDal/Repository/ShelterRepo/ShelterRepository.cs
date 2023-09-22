@@ -53,7 +53,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                     {
                         Id = Guid.NewGuid(),
                         Name = activityName,
-                        AcctivityDate = activityDate
+                        ActivityDate = activityDate
                     };
                     foundShelter.ShelterCalendar.Activities.Add(activity);
                     return activity;
@@ -178,7 +178,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             {
                 Id = Guid.NewGuid(),
                 Name = name,
-                ShelterCalendar = new CalendarActivity(),
+                ShelterCalendar = new CalendarActivity() {DateWithTime = DateTime.UtcNow },
                 ShelterDescription = description,
                 ShelterAddress = new Address()
                 {
@@ -190,6 +190,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 },
             };
             _dbContext.Shelters.Add(shelter);
+            _dbContext.SaveChanges();
             return shelter;
         }
 
@@ -399,7 +400,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
             if (foundActivity != null)
             {
-                foundActivity.AcctivityDate = date;
+                foundActivity.ActivityDate = date;
                 foundActivity.Name = name;
                 await _dbContext.SaveChangesAsync();
                 return true; 

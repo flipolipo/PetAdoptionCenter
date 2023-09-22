@@ -1,20 +1,27 @@
 ﻿using AutoMapper;
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SimpleWebDal.DTOs.AddressDTOs;
+using SimpleWebDal.DTOs.CalendarDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
 using SimpleWebDal.DTOs.ShelterDTOs;
+using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.DTOs.WebUserDTOs;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
+using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Repository.ShelterRepo;
 using SImpleWebLogic.Validations.ShelterCreateDTOValidation;
 using System.Xml.Linq;
 
 namespace PetAdoptionCenter.Controllers
 {
+    
     [ApiController]
     [Route("[controller]")]
     public class SheltersController : ControllerBase
@@ -22,14 +29,16 @@ namespace PetAdoptionCenter.Controllers
 
         private IShelterRepository _shelterRepository;
         private IMapper _mapper;
-        private ShelterCreateDTOValidator _validator;
+        private readonly ValidatorFactory _validatorFactory;
 
-        public SheltersController(IShelterRepository shelterRepository, IMapper mapper, ShelterCreateDTOValidator validator)
+        public SheltersController(IShelterRepository shelterRepository, IMapper mapper, ValidatorFactory validatorFactory)
         {
             _shelterRepository = shelterRepository;
             _mapper = mapper;
-            _validator = validator;
+            _validatorFactory = validatorFactory;
+
         }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Shelter>>> GetAllShelters()
         {
@@ -326,25 +335,53 @@ namespace PetAdoptionCenter.Controllers
             return NotFound();
         }
         [HttpPost]
-        public async Task<IActionResult> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city)
+        public async Task<ActionResult<Shelter>> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city)
         {
-            var shelter = await _shelterRepository.CreateShelter(name, description, street, houseNumber, postalCode, city);
-            var shelterDto = _mapper.Map<ShelterCreateDTO>(shelter);
-
-            if (shelterDto == null)
+            var shelterCreateDTO = new ShelterCreateDTO()
             {
-                return BadRequest("Invalid input data");
-            }
-          
-            var validationResult = await _validator.ValidateAsync(shelterDto);
+                Name = name,
+                ShelterCalendar = new CalendarActivityCreateDTO()
+                {
+                    DateWithTime = DateTime.UtcNow
+                },
+                ShelterDescription = description,
+                ShelterAddress = new AddressCreateDTO()
+                {
+                    City = city,
+                    Street = street,
+                    HouseNumber = houseNumber,
+                    PostalCode = postalCode
+                },
+            };
 
-            if (!validationResult.IsValid)
+            var shelterValidator = _validatorFactory.GetValidator<ShelterCreateDTO>();
+            var shelterAddress = _validatorFactory.GetValidator<AddressCreateDTO>();
+            var validationResult = shelterValidator.Validate(shelterCreateDTO);
+            var validationResultAddress = shelterAddress.Validate(shelterCreateDTO.ShelterAddress);
+
+
+            if (!validationResult.IsValid || !validationResultAddress.IsValid)
             {
                 return BadRequest(validationResult.Errors);
             }
-           
-            return Created(nameof(CreateShelter), shelterDto);
+
+            var shelter = _mapper.Map<Shelter>(shelterCreateDTO);
+
+            try
+            {
+
+                await _shelterRepository.CreateShelter(name, description, street, houseNumber, postalCode, city);
+                
+                return Ok(shelter);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Błąd podczas tworzenia schroniska: " + ex.Message);
+            }
         }
 
     }
+
+
 }
+

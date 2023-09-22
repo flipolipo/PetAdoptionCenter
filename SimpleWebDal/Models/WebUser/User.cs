@@ -1,7 +1,5 @@
 ﻿using SimpleWebDal.Models.AdoptionProccess;
 using SimpleWebDal.Models.CalendarModel;
-using SimpleWebDal.Models.ProfileUser;
-using SimpleWebDal.Models.TemporaryHouse;
 
 namespace SimpleWebDal.Models.WebUser;
 

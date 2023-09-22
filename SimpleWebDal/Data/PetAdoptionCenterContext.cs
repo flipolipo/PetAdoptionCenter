@@ -7,6 +7,7 @@ using SimpleWebDal.Models.ProfileUser;
 using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
 
 
 namespace SimpleWebDal.Data;
@@ -34,10 +35,22 @@ public class PetAdoptionCenterContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=9999;Database=PAC;Username=postgres;Password=filipple123;");
+        var configuration = new ConfigurationBuilder()
+     .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../SimpleWebDal"))
+     .AddJsonFile("secrets.json")
+     .Build();
+
+        //Do sprawdzenia czy widzi secret.json
+        Console.WriteLine($"Full JSON: {configuration.GetDebugView()}");
+
+        var connectionString = configuration["ConnectionStrings:MyConnection"];
+
+        //Do sprawdzenia czy widzi ConnectonString
+        Console.WriteLine($"Connection String: {connectionString}");
+
+        optionsBuilder.UseNpgsql(connectionString);
         base.OnConfiguring(optionsBuilder);
     }
-
 
 
     protected override void OnModelCreating(ModelBuilder builder)

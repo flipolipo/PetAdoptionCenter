@@ -11,8 +11,8 @@ namespace SImpleWebLogic.Validations.WebUserValidation.RoleCreateValidations
                 .NotEmpty().WithMessage("Role name cannot be empty.")
                 .MaximumLength(30).WithMessage("Role name cannot exceed 30 characters.");
 
-            RuleForEach(role => role.Users)
-                .SetValidator(new UserCreateDTOValidator());
+            //RuleForEach(role => role.Users)
+            //    .SetValidator(new UserCreateDTOValidator());
         }
     }
 }

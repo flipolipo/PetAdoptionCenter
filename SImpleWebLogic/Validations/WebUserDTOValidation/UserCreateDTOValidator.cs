@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using SimpleWebDal.DTOs.WebUserDTOs;
+using SImpleWebLogic.Validations.AdoptionCreateDTOValidation;
 using SImpleWebLogic.Validations.CalendarCreateValidation;
 using SImpleWebLogic.Validations.WebUserDTOValidation.BasicInformationDTOValidation;
 using SImpleWebLogic.Validations.WebUserValidation.CredentialsCreateValidations;
@@ -11,9 +12,15 @@ public class UserCreateDTOValidator : AbstractValidator<UserCreateDTO>
 {
     public UserCreateDTOValidator()
     {
-        RuleFor(user => user.Credentials).SetValidator(new CredentialsCreateDTOValidator());
-        RuleFor(user => user.BasicInformation).SetValidator(new BasicInformationDTOValidator());
-        RuleFor(user => user.UserCalendar).SetValidator(new CalendarValidator());
-        RuleForEach(user => user.Roles).SetValidator(new RoleCreateDTOValidator());
+        RuleFor(user => user.Credentials).NotNull();
+        RuleFor(user => user.BasicInformation).NotNull();
+        RuleFor(user => user.UserCalendar).NotNull();
+        RuleForEach(user => user.Roles).NotNull();
+        When(user => user.Adoptions != null && user.Adoptions.Any(), () =>
+        {
+            RuleForEach(user => user.Adoptions)
+            .NotNull();
+                //.SetValidator(new AdoptionCreateDTOValidator());
+        });
     }
 }
