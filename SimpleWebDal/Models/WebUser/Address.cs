@@ -11,6 +11,6 @@ public class Address
     public int? FlatNumber { get; set; }
     public string PostalCode { get; set; }
     public string City { get; set; }
-    public Shelter? Shelter { get; set; }
-    public TempHouse? TemporaryHouse { get; set; }
+
+
 }

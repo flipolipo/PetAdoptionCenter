@@ -10,4 +10,5 @@ public class BasicHealthInfo
     public Size Size { get; set; }
     public ICollection<Vaccination>? Vaccinations { get; set; }
     public ICollection<Disease>? MedicalHistory { get; set; }
+
 }
