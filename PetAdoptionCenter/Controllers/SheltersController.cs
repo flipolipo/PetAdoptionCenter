@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
-using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SimpleWebDal.DTOs.AddressDTOs;
 using SimpleWebDal.DTOs.CalendarDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
@@ -16,12 +13,12 @@ using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Repository.ShelterRepo;
-using SImpleWebLogic.Validations.ShelterCreateDTOValidation;
-using System.Xml.Linq;
+using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
+using SimpleWebDal.DTOs.TemporaryHouseDTOs;
 
 namespace PetAdoptionCenter.Controllers
 {
-    
+
     [ApiController]
     [Route("[controller]")]
     public class SheltersController : ControllerBase
@@ -334,7 +331,7 @@ namespace PetAdoptionCenter.Controllers
 
             return NotFound();
         }
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<ActionResult<Shelter>> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city)
         {
             var shelterCreateDTO = new ShelterCreateDTO()
@@ -353,12 +350,10 @@ namespace PetAdoptionCenter.Controllers
                     PostalCode = postalCode
                 },
             };
-
             var shelterValidator = _validatorFactory.GetValidator<ShelterCreateDTO>();
             var shelterAddress = _validatorFactory.GetValidator<AddressCreateDTO>();
             var validationResult = shelterValidator.Validate(shelterCreateDTO);
             var validationResultAddress = shelterAddress.Validate(shelterCreateDTO.ShelterAddress);
-
 
             if (!validationResult.IsValid || !validationResultAddress.IsValid)
             {
@@ -369,9 +364,7 @@ namespace PetAdoptionCenter.Controllers
 
             try
             {
-
                 await _shelterRepository.CreateShelter(name, description, street, houseNumber, postalCode, city);
-                
                 return Ok(shelter);
             }
             catch (Exception ex)
@@ -379,7 +372,107 @@ namespace PetAdoptionCenter.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Błąd podczas tworzenia schroniska: " + ex.Message);
             }
         }
+        [HttpPost("{id}/pets/create")]
+        public async Task<ActionResult<Pet>> AddPet(Guid shelterId, PetType type, string description, PetStatus status, bool avaibleForAdoption)
+        {
+            var petDto = new PetCreateDTO()
+            {
+                Id = Guid.NewGuid(),
+                Type = type,
+                Description = description,
+                Status = status,
+                AvaibleForAdoption = avaibleForAdoption
+            };
+            var petValidator = _validatorFactory.GetValidator<PetCreateDTO>();
+            var validationResult = petValidator.Validate(petDto);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+            var pet = _mapper.Map<Pet>(petDto);
+            try
+            {
+                await _shelterRepository.AddPet(shelterId, type, description, status, avaibleForAdoption);
+                return Ok(pet);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error while creating a pet: " + ex.Message);
+            }
+        }
+        [HttpPost("{id}/calendar/activities/create")]
+        public async Task<ActionResult<Activity>> AddActivityToCalendar(Guid shelterId, string activityName, DateTime activityDate)
+        {
+            var activityDto = new ActivityCreateDTO()
+            {
+                ActivityDate = activityDate,
+                Name = activityName
+            };
+            var activityValidator = _validatorFactory.GetValidator<ActivityCreateDTO>();
+            var validationResult = activityValidator.Validate(activityDto);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+            var activity = _mapper.Map<Pet>(activityDto);
+            try
+            {
+                await _shelterRepository.AddActivityToCalendar(shelterId, activityName, activityDate);
+                return Ok(activity);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error while creating an activity: " + ex.Message);
+            }
+        }
+        [HttpPost("{id}/temphouses/create")]
+        public async Task<ActionResult<TempHouse>> AddTempHouse(Guid shelterId, Guid userId, DateTime startDate) 
+        {
+            var tempHouseDto = new TempHouseCreateDTO()
+            {
+                StartOfTemporaryHouseDate = startDate
+            };
+            var tempHouseValidator = _validatorFactory.GetValidator<TempHouseCreateDTO>();
+            var validationResult = tempHouseValidator.Validate(tempHouseDto);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+            var tempHouse = _mapper.Map<Pet>(tempHouseDto);
+            try
+            {
+                await _shelterRepository.AddTempHouse(shelterId, userId, startDate);
+                return Ok(tempHouse);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error while creating an activity: " + ex.Message);
+            }
+        }
+        [HttpPut("{id}/users/{workerId}")]
+        public async Task<IActionResult> AddWorker(Guid shelterId, Guid userId) 
+        {
+            var updated = await _shelterRepository.AddWorker(shelterId, userId);
+            if (updated)
+            {
+                var updatedWorker = await _shelterRepository.GetShelterWorkerById(shelterId, userId);
+                return Ok(updatedWorker);
+            }
 
+            return NotFound();
+        }
+        [HttpPut("{id}/users/{contributorId}")]
+        public async Task<IActionResult> AddContributor(Guid shelterId, Guid userId)
+        {
+            var updated = await _shelterRepository.AddContributor(shelterId, userId);
+            if (updated)
+            {
+                var updatedWorker = await _shelterRepository.GetShelterContributorById(shelterId, userId);
+                return Ok(updatedWorker);
+            }
+
+            return NotFound();
+        }
     }
 
 

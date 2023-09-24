@@ -35,11 +35,11 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Shelter> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city);
         public Task<Pet> AddPet(Guid shelterId, PetType type, string description, PetStatus status, bool avaibleForAdoption);
         public Task<Activity> AddActivityToCalendar(Guid shelterId, string activityName, DateTime activityDate);
-        public Task<User> AddWorker(Guid shelterId, Guid userId);
-        public Task<User> AddContributor(Guid shelterId, Guid userId);
         public Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, DateTime startDate);
 
         //PUT
+        public Task<bool> AddWorker(Guid shelterId, Guid userId);
+        public Task<bool> AddContributor(Guid shelterId, Guid userId);
         public Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city);
         public Task<bool> UpdateShelterPet(Guid shelterId, Guid petId, PetType type, string description, PetStatus status, bool avaibleForAdoption);
         public Task<bool> UpdateActivity(Guid shelterId, Guid activityId, string name, DateTime date);

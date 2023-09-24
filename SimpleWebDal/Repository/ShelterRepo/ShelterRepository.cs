@@ -65,17 +65,23 @@ namespace SimpleWebDal.Repository.ShelterRepo
             }
             catch (Exception ex)
             {
-                
+
                 throw;
             }
         }
 
-            public async Task<User> AddContributor(Guid shelterId, Guid userId)
+        public async Task<bool> AddContributor(Guid shelterId, Guid userId)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            foundShelter.ShelterUsers.Add(foundUser);
-            return foundUser;
+            if (foundUser != null)
+            {
+                foundShelter.ShelterUsers.Add(foundUser);
+                _dbContext.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<Pet> AddPet(Guid shelterId, PetType type, string description, PetStatus status, bool avaibleForAdoption)
@@ -83,7 +89,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var foundShelter = await FindShelter(shelterId);
             var pet = new Pet()
             {
-                Id= Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 Type = type,
                 Description = description,
                 Status = status,
@@ -92,6 +98,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
             };
             foundShelter.ShelterPets.Add(pet);
+            _dbContext.SaveChanges();
             return pet;
         }
         public async Task<BasicHealthInfo> AddBasicHelathInfoToAPet(Guid shelterId, Guid petId, string name, int age, Size size)
@@ -156,20 +163,23 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
         }
 
-        public async Task<User> AddWorker(Guid shelterId, Guid userId)
+        public async Task<bool> AddWorker(Guid shelterId, Guid userId)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundUser = await _dbContext.Users.FirstOrDefaultAsync(e => e.Id == userId);
-            var role = new Role()
+            if (foundUser != null)
             {
-                Id = Guid.NewGuid(),
-                RoleName = "Worker"
-            };
+                var role = new Role()
+                {
+                    Id = Guid.NewGuid(),
+                    RoleName = "Worker"
+                };
 
-            foundUser.Roles.Add(role);
-            foundShelter.ShelterUsers.Add(foundUser);
-            return foundUser;
-
+                foundUser.Roles.Add(role);
+                foundShelter.ShelterUsers.Add(foundUser);
+                return true;
+            }
+            return false;
         }
 
         public async Task<Shelter> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city)
@@ -178,7 +188,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             {
                 Id = Guid.NewGuid(),
                 Name = name,
-                ShelterCalendar = new CalendarActivity() {DateWithTime = DateTime.UtcNow },
+                ShelterCalendar = new CalendarActivity() { DateWithTime = DateTime.UtcNow },
                 ShelterDescription = description,
                 ShelterAddress = new Address()
                 {
@@ -202,10 +212,11 @@ namespace SimpleWebDal.Repository.ShelterRepo
             if (foundActivity != null)
             {
                 foundShelter.ShelterCalendar.Activities.Remove(foundActivity);
-                return true; 
+                _dbContext.SaveChanges();
+                return true;
             }
 
-            return false; 
+            return false;
         }
 
         public async Task<bool> DeleteContributor(Guid shelterId, Guid userId)
@@ -216,10 +227,11 @@ namespace SimpleWebDal.Repository.ShelterRepo
             if (contributor != null)
             {
                 foundShelter.ShelterUsers.Remove(contributor);
-                return true; 
+                _dbContext.SaveChanges();
+                return true;
             }
 
-            return false; 
+            return false;
         }
 
         public async Task<bool> DeleteShelter(Guid shelterId)
@@ -229,10 +241,11 @@ namespace SimpleWebDal.Repository.ShelterRepo
             if (foundShelter != null)
             {
                 _dbContext.Shelters.Remove(foundShelter);
-                return true; 
+                _dbContext.SaveChanges();
+                return true;
             }
 
-            return false; 
+            return false;
         }
 
         public async Task<bool> DeleteShelterPet(Guid shelterId, Guid petId)
@@ -243,10 +256,11 @@ namespace SimpleWebDal.Repository.ShelterRepo
             if (pet != null)
             {
                 foundShelter.ShelterPets.Remove(pet);
-                return true; 
+                _dbContext.SaveChanges();
+                return true;
             }
 
-            return false; 
+            return false;
         }
 
         public async Task<bool> DeleteTempHouse(Guid tempHouseId, Guid shelterId)
@@ -257,10 +271,11 @@ namespace SimpleWebDal.Repository.ShelterRepo
             if (temphouse != null)
             {
                 foundShelter.TempHouses.Remove(temphouse);
-                return true; 
+                _dbContext.SaveChanges();
+                return true;
             }
 
-            return false; 
+            return false;
         }
 
         public async Task<bool> DeleteWorker(Guid shelterId, Guid userId)
@@ -271,10 +286,11 @@ namespace SimpleWebDal.Repository.ShelterRepo
             if (contributor != null)
             {
                 foundShelter.ShelterUsers.Remove(contributor);
-                return true; 
+                _dbContext.SaveChanges();
+                return true;
             }
 
-            return false; 
+            return false;
         }
 
         public async Task<IEnumerable<Pet>> GetAllAdoptedPets(Guid shelterId)
@@ -403,9 +419,9 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 foundActivity.ActivityDate = date;
                 foundActivity.Name = name;
                 await _dbContext.SaveChangesAsync();
-                return true; 
+                return true;
             }
-            return false; 
+            return false;
         }
 
         public async Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city)
@@ -421,9 +437,9 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 foundShelter.ShelterAddress.HouseNumber = houseNumber;
                 foundShelter.ShelterAddress.City = city;
                 await _dbContext.SaveChangesAsync();
-                return true; 
+                return true;
             }
-            return false; 
+            return false;
         }
 
         public async Task<bool> UpdateShelterPet(Guid shelterId, Guid petId, PetType type, string description, PetStatus status, bool avaibleForAdoption)
