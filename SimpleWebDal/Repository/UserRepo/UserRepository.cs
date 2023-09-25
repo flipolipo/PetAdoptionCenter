@@ -3,7 +3,10 @@ using SimpleWebDal.Data;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
+using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.WebUser;
+using SimpleWebDal.Models.ProfileUser;
+using SimpleWebDal.Models.ProfileUser.Enums;
 
 namespace SimpleWebDal.Repository.UserRepo;
 
@@ -15,24 +18,109 @@ public class UserRepository : IUserRepository
     {
         _dbContext = dbContext;
     }
-    public Task<Activity> AddActivity(Activity activity, int timeTableId)
+
+    private async Task<User> FindUser(Guid userId)
+    {
+        var foundUser = await _dbContext.Users.FirstOrDefaultAsync(e => e.Id == userId);
+        if (foundUser == null)
+        {
+            throw new InvalidOperationException($"User with ID {userId} not found.");
+        }
+        return foundUser;
+    }
+
+    private async Task<Shelter> FindShelter(Guid shelterId)
+    {
+        var foundShelter = await _dbContext.Shelters.FirstOrDefaultAsync(e => e.Id == shelterId);
+        if (foundShelter == null)
+        {
+            throw new InvalidOperationException($"Shelter with ID {shelterId} not found.");
+        }
+        return foundShelter;
+    }
+
+    public async Task<Activity> AddActivity(Guid userId, string activityName, DateTime activityDate)
+    {
+        try
+        {
+            var foundUser = await FindUser(userId);
+            if (foundUser != null && foundUser.UserCalendar != null)
+            {
+
+                var activity = new Activity()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = activityName,
+                    ActivityDate = activityDate
+                };
+                foundUser.UserCalendar.Activities.Add(activity);
+                return activity;
+            }
+            else
+            {
+                throw new InvalidOperationException($"Shelter with ID {userId} not found.");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+
+    public async Task<ProfileModel> AddFavouritePet(Guid userId, Guid petId, UserProfilePets favouritePet)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Pet> AddFavouritePet(int petId)
+    public async Task<User> AddUser(string username, string password, string name, string surname, string phone, string email,
+        string street, string houseNumber, int flatNumber, string postalCode, string city)
     {
-        throw new NotImplementedException();
+        var user = new User()
+        {
+            Id = Guid.NewGuid(),
+            Credentials = new Credentials()
+            {
+                Id = Guid.NewGuid(),
+                Username = username,
+                Password = password
+            },
+            BasicInformation = new BasicInformation()
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                Surname = surname,
+                Phone = phone,
+                Email = email,
+                Address = new Address()
+                {
+                    Id = Guid.NewGuid(),
+                    Street = street,
+                    HouseNumber = houseNumber,
+                    FlatNumber = flatNumber,
+                    PostalCode = postalCode,
+                    City = city
+                }
+            },
+            UserCalendar = new CalendarActivity() { DateWithTime = DateTime.UtcNow },
+        };
+        _dbContext.Users.Add(user);
+        _dbContext.SaveChanges();
+        return user;
     }
 
-    public Task<User> AddUser(string name, string userName)
+    public async Task<bool> DeleteActivity(Guid userId, Guid activityId)
     {
-        throw new NotImplementedException();
-    }
+        var foundUser = await FindUser(userId);
+        var foundActivity = foundUser.UserCalendar.Activities.FirstOrDefault(e => e.Id == activityId);
 
-    public void DeleteActivity(int ActivityId)
-    {
-        throw new NotImplementedException();
+        if (foundActivity != null)
+        {
+            foundUser.UserCalendar.Activities.Remove(foundActivity);
+            return true;
+        }
+
+        return false;
     }
 
     public Task<Pet> DeleteFavouritePet(int petId)
@@ -40,19 +128,31 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public void DeleteUser(int userId)
+    public async Task<bool> DeleteUser(Guid userId)
     {
-        throw new NotImplementedException();
+        var foundUser = await FindUser(userId);
+
+        if (foundUser != null)
+        {
+            _dbContext.Users.Remove(foundUser);
+            return true;
+        }
+
+        return false;
     }
 
-    public Task<CalendarActivity> GetActivityForUserById(int userId, int activityId)
+    public async Task<Activity> GetUserActivityById(Guid userId, Guid activityId)
     {
-        throw new NotImplementedException();
+        var foundUser = await FindShelter(userId);
+        var activity = foundUser.ShelterCalendar.Activities.FirstOrDefault(e => e.Id == activityId);
+        return activity;
     }
 
-    public Task<CalendarActivity> GetAllActivitiesForUser(int userId)
+    public async Task<IEnumerable<Activity>> GetUserActivities(Guid userId)
     {
-        throw new NotImplementedException();
+        var foundUser = await FindUser(userId);
+        var activities = foundUser.UserCalendar.Activities.ToList();
+        return activities;
     }
 
     public Task<IEnumerable<Pet>> GetAllFavouritePets()
@@ -60,34 +160,32 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Pet>> GetAllPets()
+    public async Task<IEnumerable<Pet>> GetAllPets()
     {
-        throw new NotImplementedException();
+        return await _dbContext.Pets.ToListAsync();
     }
 
-    public Task<IEnumerable<Pet>> GetAllShelterCats(int shelterId)
+    public async Task<IEnumerable<Pet>> GetAllShelterDogsOrCats(Guid shelterId, PetType type)
     {
-        throw new NotImplementedException();
+        var foundShelter = await FindShelter(shelterId);
+        var pets = new List<Pet>();
+        foreach (var pet in foundShelter.ShelterPets)
+        {
+            if (pet.Type.Equals(type))
+                pets.Add(pet);
+        }
+        return pets;
     }
 
-    public Task<IEnumerable<Pet>> GetAllShelterDogs(int shelterId)
+    public async Task<IEnumerable<Pet>> GetAllShelterPets(Guid shelterId)
     {
-        throw new NotImplementedException();
+        var foundShelter = await FindShelter(shelterId);
+        return foundShelter.ShelterPets.ToList();
     }
 
-    public Task<IEnumerable<Pet>> GetAllShelterDogsOrCats(int shelterId, PetType petType)
+    public async Task<IEnumerable<Shelter>> GetAllShelters()
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<Pet>> GetAllShelterPets(int shelterId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<Pet>> GetAllShelters()
-    {
-        throw new NotImplementedException();
+        return await _dbContext.Shelters.ToListAsync();
     }
 
     public async Task<IEnumerable<User>> GetAllUsers()
@@ -110,14 +208,16 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public Task<Pet> GetShelterPetById(int shelterId, int petId)
+    public async Task<Pet> GetShelterPetById(Guid shelterId, Guid petId)
     {
-        throw new NotImplementedException();
+        var foundShelter = await FindShelter(shelterId);
+        return foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
     }
 
-    public Task<User> GetUserById(int userId)
+    public async Task<User> GetUserById(Guid userId)
     {
-        throw new NotImplementedException();
+        var foundUser = await FindUser(userId);
+        return foundUser;
     }
 
     public Task<Pet> GetVirtualAdoptedPetById(int favouriteId)
@@ -131,13 +231,44 @@ public class UserRepository : IUserRepository
         return (dbContext.SaveChanges() >= 0);
     }
 
-    public void UpdateActivity(Activity activity)
+    public async Task<bool> UpdateActivity(Guid userId, Guid activityId, string name, DateTime date)
     {
-        throw new NotImplementedException();
+        var foundUser = await FindUser(userId);
+        var foundActivity = foundUser.UserCalendar.Activities.FirstOrDefault(e => e.Id == activityId);
+
+        if (foundActivity != null)
+        {
+            foundActivity.ActivityDate = date;
+            foundActivity.Name = name;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        return false;
     }
 
-    public void UpdateUser(User user)
+    public async Task<bool> UpdateUser(Guid userId, string username, string password, string name, string surname, string phone, string email,
+        string street, string houseNumber, int flatNumber, string postalCode, string city)
     {
-        throw new NotImplementedException();
+        var foundUser = await FindUser(userId);
+
+        if (foundUser != null)
+        {
+            foundUser.Credentials.Username = username;
+            foundUser.Credentials.Password = password;
+            foundUser.BasicInformation.Name = name;
+            foundUser.BasicInformation.Surname = surname;
+            foundUser.BasicInformation.Phone = phone;
+            foundUser.BasicInformation.Email = email;
+            foundUser.BasicInformation.Address.Street = street;
+            foundUser.BasicInformation.Address.HouseNumber = houseNumber;
+            foundUser.BasicInformation.Address.FlatNumber = flatNumber;
+            foundUser.BasicInformation.Address.PostalCode = postalCode;
+            foundUser.BasicInformation.Address.City = city;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        return false;
     }
 }
+
+
