@@ -22,7 +22,7 @@ namespace SimpleWebDal.Configuration
             builder.HasMany(u => u.Adoptions);
             //builder.HasMany(u => u.Roles)
             //   .WithMany(r => r.Users)
-            //   .UsingEntity(e => e.ToTable("UserRoles"));
+            //   .UsingEntity("UserRoles");
         }
     }
 }

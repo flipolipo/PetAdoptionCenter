@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleWebDal.Data;
+using SimpleWebDal.Models.AdoptionProccess;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
@@ -7,6 +8,7 @@ using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 using SImpleWebLogic.Repository.ShelterRepo;
+using System.Text;
 
 namespace SimpleWebDal.Repository.ShelterRepo
 {
@@ -19,14 +21,19 @@ namespace SimpleWebDal.Repository.ShelterRepo
         }
         private async Task<Shelter> FindShelter(Guid shelterId)
         {
-            var foundShelter = await _dbContext.Shelters.FirstOrDefaultAsync(e => e.Id == shelterId);
+            var foundShelter = await _dbContext.Shelters.Include(x => x.ShelterCalendar)
+                .ThenInclude(a => a.Activities).Include(y => y.ShelterAddress)
+                .Include(b => b.ShelterUsers)
+                .Include(c => c.Adoptions)
+                .Include(d => d.TempHouses)
+                .Include(f => f.ShelterPets).FirstOrDefaultAsync(e => e.Id == shelterId);
             if (foundShelter == null)
             {
                 throw new InvalidOperationException($"Shelter with ID {shelterId} not found.");
             }
             return foundShelter;
         }
-        private List<User> FilterUsersByRole(ICollection<User> users, string roleName)
+        private List<User> FilterUsersByRole(ICollection<User> users, RoleName roleName)
         {
             var filteredUsers = new List<User>();
             foreach (var user in users)
@@ -40,22 +47,28 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return filteredUsers;
         }
 
-
+        //TO FIX!!!!!!!
         public async Task<Activity> AddActivityToCalendar(Guid shelterId, string activityName, DateTime activityDate)
         {
             try
             {
                 var foundShelter = await FindShelter(shelterId);
-                if (foundShelter != null && foundShelter.ShelterCalendar != null)
+                if (foundShelter != null)
                 {
-
+                    DateTime activityDateUtc = activityDate.ToUniversalTime();
                     var activity = new Activity()
                     {
                         Id = Guid.NewGuid(),
                         Name = activityName,
-                        ActivityDate = activityDate
+                        ActivityDate = activityDateUtc,
+                        CalendarActivityId = foundShelter.ShelterCalendar.Id
                     };
-                    foundShelter.ShelterCalendar.Activities.Add(activity);
+
+
+                   // foundShelter.ShelterCalendar.Activities.Add(activity);
+                   // _dbContext.Shelters.Update(foundShelter);
+                    _dbContext.Add(activity);
+                    _dbContext.SaveChanges();
                     return activity;
                 }
                 else
@@ -84,7 +97,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return false;
         }
 
-        public async Task<Pet> AddPet(Guid shelterId, PetType type, string description, PetStatus status, bool avaibleForAdoption)
+        public async Task<Pet> AddPet(Guid shelterId, PetType type, string description, PetStatus status, bool avaibleForAdoption, string name, Size size, int age)
         {
             var foundShelter = await FindShelter(shelterId);
             var pet = new Pet()
@@ -94,10 +107,20 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 Description = description,
                 Status = status,
                 AvaibleForAdoption = avaibleForAdoption,
-                Calendar = new CalendarActivity()
-
+                Calendar = new CalendarActivity(),
+                ShelterId = foundShelter.Id,
+                PatronUsers = new List<PatronUsers>(),
+                BasicHealthInfo = new BasicHealthInfo()
+                {
+                    Name = name,
+                    Age = age,
+                    Size = size,
+                    Vaccinations = new List<Vaccination>(),
+                    MedicalHistory = new List<Disease>()
+                }
             };
-            foundShelter.ShelterPets.Add(pet);
+            //foundShelter.ShelterPets.Add(pet);
+            _dbContext.Add(pet);
             _dbContext.SaveChanges();
             return pet;
         }
@@ -172,7 +195,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 var role = new Role()
                 {
                     Id = Guid.NewGuid(),
-                    RoleName = "Worker"
+                    RoleName = RoleName.ShelterWorker
                 };
 
                 foundUser.Roles.Add(role);
@@ -188,7 +211,9 @@ namespace SimpleWebDal.Repository.ShelterRepo
             {
                 Id = Guid.NewGuid(),
                 Name = name,
-                ShelterCalendar = new CalendarActivity() { DateWithTime = DateTime.UtcNow },
+                ShelterCalendar = new CalendarActivity() { 
+                    Id = Guid.NewGuid()
+                    },
                 ShelterDescription = description,
                 ShelterAddress = new Address()
                 {
@@ -198,6 +223,10 @@ namespace SimpleWebDal.Repository.ShelterRepo
                     HouseNumber = houseNumber,
                     PostalCode = postalCode
                 },
+                ShelterPets = new List<Pet>(),
+                ShelterUsers = new List<User>(),
+                TempHouses = new List<TempHouse>(),
+                Adoptions = new List<Adoption>()
             };
             _dbContext.Shelters.Add(shelter);
             _dbContext.SaveChanges();
@@ -327,7 +356,13 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
         public async Task<IEnumerable<Shelter>> GetAllShelters()
         {
-            return await _dbContext.Shelters.ToListAsync();
+            return await _dbContext.Shelters.Include(x => x.ShelterCalendar)
+                 .ThenInclude(a => a.Activities).Include(y => y.ShelterAddress)
+                .Include(b => b.ShelterUsers)
+                .Include(c => c.Adoptions)
+                .Include(d => d.TempHouses)
+                .Include(f => f.ShelterPets)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Pet>> GetAllShelterTempHousesPets(Guid shelterId)
@@ -369,7 +404,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
         {
             var foundShelter = await FindShelter(shelterId);
             var shelterUsers = foundShelter.ShelterUsers;
-            var contributors = FilterUsersByRole(shelterUsers, "Contributor");
+        
+            var contributors = FilterUsersByRole(shelterUsers, RoleName.Contributor);
             return contributors;
 
         }
@@ -378,7 +414,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
         {
             var foundShelter = await FindShelter(shelterId);
             var shelterUsers = foundShelter.ShelterUsers;
-            var contributors = FilterUsersByRole(shelterUsers, "Contributor");
+            var contributors = FilterUsersByRole(shelterUsers, RoleName.Contributor);
             return contributors.FirstOrDefault(e => e.Id == workerId);
         }
 
@@ -392,7 +428,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
         {
             var foundShelter = await FindShelter(shelterId);
             var shelterUsers = foundShelter.ShelterUsers;
-            var contributors = FilterUsersByRole(shelterUsers, "Worker");
+            var contributors = FilterUsersByRole(shelterUsers, RoleName.ShelterWorker);
             return contributors;
         }
 
@@ -400,7 +436,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
         {
             var foundShelter = await FindShelter(shelterId);
             var shelterUsers = foundShelter.ShelterUsers;
-            var contributors = FilterUsersByRole(shelterUsers, "Worker");
+            var contributors = FilterUsersByRole(shelterUsers, RoleName.ShelterWorker);
             return contributors.FirstOrDefault(e => e.Id == workerId);
         }
 
