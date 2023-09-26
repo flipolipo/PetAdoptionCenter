@@ -8,7 +8,6 @@ using SImpleWebLogic.Profiles.MapAnimalProfile.MapDiseaseProfile;
 using SImpleWebLogic.Profiles.MapAnimalProfile.MapVaccinationProfile;
 using SImpleWebLogic.Profiles.MapCalendarProfile;
 using SImpleWebLogic.Profiles.MapCalendarProfile.MapActivityProfile;
-using SImpleWebLogic.Profiles.MapProfileUserProfile;
 using SImpleWebLogic.Profiles.MapShelterProfile;
 using SImpleWebLogic.Profiles.MapTemporaryHouseProfile;
 using SImpleWebLogic.Profiles.MapWebUserProfile;
@@ -32,7 +31,6 @@ public static class AutoMapperConfiguration
             mc.AddProfile(new MapPet());
             mc.AddProfile(new MapActivity());
             mc.AddProfile(new MapCalendarActivity());
-            mc.AddProfile(new MapProfileModel());
             mc.AddProfile(new MapShelter());
             mc.AddProfile(new MapTempHouse());
             mc.AddProfile(new MapBasicInformation());

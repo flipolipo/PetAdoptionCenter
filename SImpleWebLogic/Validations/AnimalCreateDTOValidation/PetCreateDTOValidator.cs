@@ -23,18 +23,18 @@ public class PetCreateDTOValidator : AbstractValidator<PetCreateDTO>
         RuleFor(pet => pet.Status)
             .IsInEnum().WithMessage("Invalid PetStatus value.");
 
-        When(pet => pet.BasicHealthInfo != null, () =>
-        {
-            RuleFor(pet => pet.BasicHealthInfo)
-            .NotNull();
-                //.SetValidator(new BasicHealthInfoCreateDTOValidator());
-        });
+        //When(pet => pet.BasicHealthInfo != null, () =>
+        //{
+        //    RuleFor(pet => pet.BasicHealthInfo)
+        //    .NotNull();
+        //        //.SetValidator(new BasicHealthInfoCreateDTOValidator());
+        //});
 
-        When(pet => pet.PatronUsers.Any(), () =>
-        {
-            RuleForEach(pet => pet.PatronUsers)
-            .NotNull();
-                //.SetValidator(new UserCreateDTOValidator());
-        });
+        //When(pet => pet.PatronUsers.Any(), () =>
+        //{
+        //    RuleForEach(pet => pet.PatronUsers)
+        //    .NotNull();
+        //        //.SetValidator(new UserCreateDTOValidator());
+        //});
     }
 }

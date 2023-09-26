@@ -7,7 +7,6 @@ namespace SimpleWebDal.DTOs.AnimalDTOs;
 
 public class PetCreateDTO
 {
-    public Guid Id { get; init; }
     public PetType Type { get; init; }
     public BasicHealthInfoCreateDTO? BasicHealthInfo { get; set; }
     public string Description { get; set; }
@@ -15,4 +14,5 @@ public class PetCreateDTO
     public PetStatus Status { get; set; }
     public bool AvaibleForAdoption { get; set; }
     public ICollection<UserCreateDTO> PatronUsers { get; set; }
+    public Guid ShelterId { get; set; }
 }

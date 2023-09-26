@@ -11,9 +11,9 @@ namespace SimpleWebDal.Configuration
         public void Configure(EntityTypeBuilder<Adoption> builder)
         {
             builder.HasKey(a => a.Id);
-            builder.HasOne(a => a.AdoptedPet)
-                .WithOne()
-                .HasForeignKey<Adoption>(a => a.PetId);
+            //builder.HasOne(a => a.AdoptedPet)
+            //    .WithOne()
+            //    .HasForeignKey<Adoption>(a => a.PetId);
 
         }
     }

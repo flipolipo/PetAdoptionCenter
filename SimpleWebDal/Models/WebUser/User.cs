@@ -14,5 +14,6 @@ public class User
     public CalendarActivity UserCalendar { get; set; }
     public ICollection<Role> Roles { get; set; }
     public ICollection<Adoption>? Adoptions { get; set; }
+    
 
 }

@@ -3,12 +3,11 @@ using SimpleWebDal.Models.AdoptionProccess;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.PetShelter;
-using SimpleWebDal.Models.ProfileUser;
 using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
-
+using System.Text;
 
 namespace SimpleWebDal.Data;
 
@@ -19,7 +18,6 @@ public class PetAdoptionCenterContext : DbContext
     public DbSet<BasicInformation> BasicInformations { get; set; }
     public DbSet<Credentials> Credentials { get; set; }
     public DbSet<Role> Roles { get; set; }
-    public DbSet<ProfileModel> Profiles { get; set; }
     public DbSet<TempHouse> TempHouses { get; set; }
     public DbSet<Shelter> Shelters { get; set; }
     public DbSet<Adoption> Adoptions { get; set; }
@@ -29,6 +27,7 @@ public class PetAdoptionCenterContext : DbContext
     public DbSet<Pet> Pets { get; set; }
     public DbSet<Activity> Activities { get; set; }
     public DbSet<CalendarActivity> CalendarActivities { get; set; }
+    public DbSet<PatronUsers> PatronsUsers { get; set; }
 
 
 
@@ -41,12 +40,12 @@ public class PetAdoptionCenterContext : DbContext
      .Build();
 
         //Do sprawdzenia czy widzi secret.json
-        Console.WriteLine($"Full JSON: {configuration.GetDebugView()}");
+        //Console.WriteLine($"Full JSON: {configuration.GetDebugView()}");
 
         var connectionString = configuration["ConnectionStrings:MyConnection"];
 
         //Do sprawdzenia czy widzi ConnectonString
-        Console.WriteLine($"Connection String: {connectionString}");
+        //Console.WriteLine($"Connection String: {connectionString}");
 
         optionsBuilder.UseNpgsql(connectionString);
         base.OnConfiguring(optionsBuilder);
