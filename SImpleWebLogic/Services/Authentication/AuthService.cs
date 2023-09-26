@@ -51,10 +51,14 @@ public class AuthService : IAuthService
             return InvalidPassword(email, managedUser.UserName);
         }
 
-        var accessToken = _tokenService.CreateToken(managedUser, "User");
+        var userRoles = await _userManager.GetRolesAsync(managedUser);
+        var primaryRole = userRoles.FirstOrDefault(); // Take the first role; Adjust if you have other needs
+
+        var accessToken = _tokenService.CreateToken(managedUser, primaryRole);
 
         return new AuthResult(true, managedUser.Email, managedUser.UserName, accessToken);
     }
+
 
     private static AuthResult InvalidEmail(string email)
     {
