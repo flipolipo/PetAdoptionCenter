@@ -44,11 +44,20 @@ namespace SimpleWebDal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("DateOfAdoption")
+                    b.Property<bool>("ContractAdoption")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("DateOfAdoption")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("Meetings")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid>("PetId")
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("PreAdoptionPoll")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid?>("ShelterId")
                         .HasColumnType("uuid");
@@ -57,9 +66,6 @@ namespace SimpleWebDal.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PetId")
-                        .IsUnique();
 
                     b.HasIndex("ShelterId");
 
@@ -388,9 +394,8 @@ namespace SimpleWebDal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("RoleName")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -448,12 +453,6 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.AdoptionProccess.Adoption", b =>
                 {
-                    b.HasOne("SimpleWebDal.Models.Animal.Pet", "AdoptedPet")
-                        .WithOne()
-                        .HasForeignKey("SimpleWebDal.Models.AdoptionProccess.Adoption", "PetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SimpleWebDal.Models.PetShelter.Shelter", null)
                         .WithMany("Adoptions")
                         .HasForeignKey("ShelterId");
@@ -461,8 +460,6 @@ namespace SimpleWebDal.Migrations
                     b.HasOne("SimpleWebDal.Models.WebUser.User", null)
                         .WithMany("Adoptions")
                         .HasForeignKey("UserId");
-
-                    b.Navigation("AdoptedPet");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Disease", b =>

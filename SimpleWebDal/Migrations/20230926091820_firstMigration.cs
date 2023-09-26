@@ -71,7 +71,7 @@ namespace SimpleWebDal.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    RoleName = table.Column<string>(type: "text", nullable: false)
+                    RoleName = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -225,6 +225,34 @@ namespace SimpleWebDal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Adoptions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    PetId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PreAdoptionPoll = table.Column<bool>(type: "boolean", nullable: false),
+                    ContractAdoption = table.Column<bool>(type: "boolean", nullable: false),
+                    Meetings = table.Column<bool>(type: "boolean", nullable: false),
+                    DateOfAdoption = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ShelterId = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Adoptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Adoptions_Shelters_ShelterId",
+                        column: x => x.ShelterId,
+                        principalTable: "Shelters",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Adoptions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RoleUser",
                 columns: table => new
                 {
@@ -323,37 +351,6 @@ namespace SimpleWebDal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Adoptions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    PetId = table.Column<Guid>(type: "uuid", nullable: false),
-                    DateOfAdoption = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ShelterId = table.Column<Guid>(type: "uuid", nullable: true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Adoptions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Adoptions_Pets_PetId",
-                        column: x => x.PetId,
-                        principalTable: "Pets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Adoptions_Shelters_ShelterId",
-                        column: x => x.ShelterId,
-                        principalTable: "Shelters",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Adoptions_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PatronsUsers",
                 columns: table => new
                 {
@@ -376,12 +373,6 @@ namespace SimpleWebDal.Migrations
                 name: "IX_Activities_CalendarActivityId",
                 table: "Activities",
                 column: "CalendarActivityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Adoptions_PetId",
-                table: "Adoptions",
-                column: "PetId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Adoptions_ShelterId",
