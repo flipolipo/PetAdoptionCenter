@@ -19,7 +19,7 @@ namespace PetAdoptionCenter.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast"), Authorize]
+        [HttpGet(Name = "GetWeatherForecast"),Authorize(Roles = "User, Admin")]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -30,5 +30,16 @@ namespace PetAdoptionCenter.Controllers
             })
             .ToArray();
         }
+
+        [HttpGet("GetCurrent"), Authorize(Roles = "Admin")]
+        public ActionResult<WeatherForecast> Get(DateTime date)
+        {
+            return new WeatherForecast() {
+                Date = DateTime.Now,
+                TemperatureC = 52,
+                Summary = "Sunny",
+                                       };
+    }
+
     }
 }

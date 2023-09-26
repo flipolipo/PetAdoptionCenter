@@ -32,6 +32,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+AddRoles();
 
 app.Run();
 
@@ -79,22 +80,22 @@ void AddDbContext() {
     builder.Services.AddDbContext<UsersContext>();
 
 };
-void AddIdentity() {
-
+void AddIdentity()
+{
     builder.Services
-    .AddIdentityCore<IdentityUser>(options =>
-    {
-        options.SignIn.RequireConfirmedAccount = false;
-        options.User.RequireUniqueEmail = true;
-        options.Password.RequireDigit = false;
-        options.Password.RequiredLength = 6;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequireUppercase = false;
-        options.Password.RequireLowercase = false;
-    })
-    .AddEntityFrameworkStores<UsersContext>();
-
-};
+        .AddIdentityCore<IdentityUser>(options =>
+        {
+            options.SignIn.RequireConfirmedAccount = false;
+            options.User.RequireUniqueEmail = true;
+            options.Password.RequireDigit = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireLowercase = false;
+        })
+        .AddRoles<IdentityRole>() //Enable Identity roles 
+        .AddEntityFrameworkStores<UsersContext>();
+}
 void  AddAuthentication() {
 
 
@@ -118,3 +119,36 @@ void  AddAuthentication() {
         });
 
 };
+
+void AddRoles()
+{
+    using var scope = app.Services.CreateScope();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var tAdmin = CreateAdminRole(roleManager);
+    tAdmin.Wait();
+
+    var tUser = CreateUserRole(roleManager);
+    tUser.Wait();
+
+    var tShelterAdmin = CreateShelterAdminRole(roleManager);
+    tShelterAdmin.Wait();
+}
+
+async Task CreateAdminRole(RoleManager<IdentityRole> roleManager)
+{
+    await roleManager.CreateAsync(new IdentityRole("Admin")); //The role string should better be stored as a constant or a value in appsettings
+}
+
+async Task CreateUserRole(RoleManager<IdentityRole> roleManager)
+{
+    await roleManager.CreateAsync(new IdentityRole("User")); //The role string should better be stored as a constant or a value in appsettings
+}
+
+async Task CreateShelterAdminRole(RoleManager<IdentityRole> roleManager)
+{
+    await roleManager.CreateAsync(new IdentityRole("ShelterAdmin")); //The role string should better be stored as a constant or a value in appsettings
+}
+
+
+
