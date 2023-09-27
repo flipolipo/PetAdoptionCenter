@@ -1,18 +1,22 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SimpleWebDal.Data;
 using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Extensions;
+
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("secrets.json", optional: false, reloadOnChange: true);
 
+
 AddServices();
 ConfigureSwagger();
-AddDbContext();
+AddDbContext(builder.Configuration);
 AddAuthentication();
 AddIdentity();
 
@@ -24,18 +28,20 @@ builder.Services.ConfigureAutoMapper();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
-
+    app.UseDeveloperExceptionPage();
+}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-AddRoles();
-AddAdmin();
+await AddRoles();
+await AddAdmin();
 app.Run();
 
 
@@ -46,7 +52,8 @@ void AddServices()
     builder.Services.AddScoped<ITokenService, TokenService>();
 
 };
-void ConfigureSwagger() {
+void ConfigureSwagger()
+{
 
     builder.Services.AddSwaggerGen(option =>
     {
@@ -77,9 +84,10 @@ void ConfigureSwagger() {
     });
 
 };
-void AddDbContext() {
-
-    builder.Services.AddDbContext<UsersContext>();
+void AddDbContext(ConfigurationManager dbConfig)
+{
+    builder.Services.AddDbContext<PetAdoptionCenterContext>(options => options.UseNpgsql(dbConfig.GetConnectionString("MyConnection")));
+    builder.Services.AddDbContext<UsersContext>(options => options.UseNpgsql(dbConfig.GetConnectionString("MyConnection")));
 
 };
 void AddIdentity()
@@ -98,44 +106,45 @@ void AddIdentity()
         .AddRoles<IdentityRole>() //Enable Identity roles 
         .AddEntityFrameworkStores<UsersContext>();
 }
-void  AddAuthentication() {
+void AddAuthentication()
+{
 
 
-  builder.Services
-     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-     .AddJwtBearer(options =>
-     {
-         options.TokenValidationParameters = new TokenValidationParameters()
-         {
-             ClockSkew = TimeSpan.Zero,
-             ValidateIssuer = true,
-             ValidateAudience = true,
-             ValidateLifetime = true,
-             ValidateIssuerSigningKey = true,
-             ValidIssuer = "apiWithAuthBackend",
-             ValidAudience = "apiWithAuthBackend",
-             IssuerSigningKey = new SymmetricSecurityKey(
-                 Encoding.UTF8.GetBytes("!SomethingSecret!")
-             ),
-         };
-     });
+    builder.Services
+       .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+       .AddJwtBearer(options =>
+       {
+           options.TokenValidationParameters = new TokenValidationParameters()
+           {
+               ClockSkew = TimeSpan.Zero,
+               ValidateIssuer = true,
+               ValidateAudience = true,
+               ValidateLifetime = true,
+               ValidateIssuerSigningKey = true,
+               ValidIssuer = "apiWithAuthBackend",
+               ValidAudience = "apiWithAuthBackend",
+               IssuerSigningKey = new SymmetricSecurityKey(
+                   Encoding.UTF8.GetBytes("!SomethingSecret!")
+               ),
+           };
+       });
 
 };
 
 
-void AddRoles()
+async Task AddRoles()
 {
     using var scope = app.Services.CreateScope();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    var tAdmin = CreateAdminRole(roleManager);
-    tAdmin.Wait();
+    await CreateAdminRole(roleManager);
 
-    var tUser = CreateUserRole(roleManager);
-    tUser.Wait();
 
-    var tShelterAdmin = CreateShelterAdminRole(roleManager);
-    tShelterAdmin.Wait();
+    await CreateUserRole(roleManager);
+
+
+    await CreateShelterAdminRole(roleManager);
+
 }
 
 async Task CreateAdminRole(RoleManager<IdentityRole> roleManager)
@@ -153,10 +162,9 @@ async Task CreateShelterAdminRole(RoleManager<IdentityRole> roleManager)
     await roleManager.CreateAsync(new IdentityRole("ShelterAdmin")); //The role string should better be stored as a constant or a value in appsettings
 }
 
-void AddAdmin()
+async Task AddAdmin()
 {
-    var tAdmin = CreateAdminIfNotExists();
-    tAdmin.Wait();
+    await CreateAdminIfNotExists();
 }
 
 async Task CreateAdminIfNotExists()
@@ -167,7 +175,7 @@ async Task CreateAdminIfNotExists()
     if (adminInDb == null)
     {
         var admin = new IdentityUser { UserName = "admin", Email = "admin@admin.com" };
-        var adminCreated = await userManager.CreateAsync(admin, builder.Configuration.GetConnectionString("AdminPassword"));
+        var adminCreated = await userManager.CreateAsync(admin, builder.Configuration.GetValue<string>("AdminPassword"));
 
         if (adminCreated.Succeeded)
         {

@@ -30,28 +30,12 @@ public class PetAdoptionCenterContext : DbContext
     public DbSet<Activity> Activities { get; set; }
     public DbSet<CalendarActivity> CalendarActivities { get; set; }
 
+    private readonly IConfiguration _configuration;
 
-
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public PetAdoptionCenterContext(DbContextOptions<PetAdoptionCenterContext> options) : base(options)
     {
-        var configuration = new ConfigurationBuilder()
-     .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../SimpleWebDal"))
-     .AddJsonFile("secrets.json")
-     .Build();
 
-        //Do sprawdzenia czy widzi secret.json
-        //Console.WriteLine($"Full JSON: {configuration.GetDebugView()}");
-
-        var connectionString = configuration["ConnectionStrings:MyConnection"];
-
-        //Do sprawdzenia czy widzi ConnectonString
-        //Console.WriteLine($"Connection String: {connectionString}");
-
-        optionsBuilder.UseNpgsql(connectionString);
-        base.OnConfiguring(optionsBuilder);
     }
-
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
