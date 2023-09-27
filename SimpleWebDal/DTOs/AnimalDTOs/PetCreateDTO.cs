@@ -2,6 +2,8 @@
 using SimpleWebDal.DTOs.WebUserDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs.BasicHealthInfoDTOs;
 using SimpleWebDal.DTOs.CalendarDTOs;
+using SimpleWebDal.Models.Animal;
+using SimpleWebDal.DTOs.AnimalDTOs.PatronUsersDTOs;
 
 namespace SimpleWebDal.DTOs.AnimalDTOs;
 
@@ -13,6 +15,5 @@ public class PetCreateDTO
     public CalendarActivityCreateDTO Calendar { get; set; }
     public PetStatus Status { get; set; }
     public bool AvaibleForAdoption { get; set; }
-    public ICollection<UserCreateDTO> PatronUsers { get; set; }
-    public Guid ShelterId { get; set; }
+    //public ICollection<PatronUsersCreateDTO> PatronUsers { get; set; } = new List<PatronUsersCreateDTO>();
 }

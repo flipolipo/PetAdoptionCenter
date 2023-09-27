@@ -39,7 +39,7 @@ public class SheltersController : ControllerBase
     //SHELTER 
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Shelter>>> GetAllShelters()
+    public async Task<ActionResult<IEnumerable<ShelterReadDTO>>> GetAllShelters()
     {
         var shelters = await _shelterRepository.GetAllShelters();
         var sheltersDto = _mapper.Map<IEnumerable<ShelterReadDTO>>(shelters);
@@ -62,50 +62,29 @@ public class SheltersController : ControllerBase
         var shelterDto = _mapper.Map<ShelterReadDTO>(shelter);
         return Ok(shelterDto);
     }
-    [HttpGet("{shelterId}/users/workers")]
-    public async Task<ActionResult<IEnumerable<User>>> GetShelterWorkers(Guid shelterId)
+    [HttpGet("{shelterId}/users")]
+    public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetShelterUsers(Guid shelterId)
     {
-        var workers = await _shelterRepository.GetShelterWorkers(shelterId);
-        var workersDto = _mapper.Map<IEnumerable<UserReadDTO>>(workers);
-        if (workersDto != null)
+        var users = await _shelterRepository.GetShelterUsers(shelterId);
+        var usersDto = _mapper.Map<IEnumerable<UserReadDTO>>(users);
+        if (usersDto != null)
         {
-            return Ok(workersDto);
+            return Ok(usersDto);
         }
         return NotFound();
     }
-    [HttpGet("{shelterId}/users/workers/{workerId}")]
-    public async Task<ActionResult<User>> GetShelterWorkerById(Guid shelterId, Guid workerId)
+    [HttpGet("{shelterId}/users/{userId}")]
+    public async Task<ActionResult<UserReadDTO>> GetShelterWorkerById(Guid shelterId, Guid userId)
     {
-        var worker = await _shelterRepository.GetShelterWorkerById(shelterId, workerId);
-        var workerDto = _mapper.Map<UserReadDTO>(worker);
-        if (workerDto != null)
+        var user = await _shelterRepository.GetShelterUserById(shelterId, userId);
+        var userDto = _mapper.Map<UserReadDTO>(user);
+        if (userDto != null)
         {
-            return Ok(workerDto);
+            return Ok(userDto);
         }
         return NotFound();
     }
-    [HttpGet("{shelterId}/users/contributors")]
-    public async Task<ActionResult<IEnumerable<User>>> GetShelterContributors(Guid shelterId)
-    {
-        var contributors = await _shelterRepository.GetShelterContributors(shelterId);
-        var contributorsDTO = _mapper.Map<IEnumerable<UserReadDTO>>(contributors);
-        if (contributorsDTO != null)
-        {
-            return Ok(contributorsDTO);
-        }
-        return NotFound();
-    }
-    [HttpGet("{shelterId}/users/contributors/{contributorId}")]
-    public async Task<ActionResult<User>> GetShelterContributorById(Guid shelterId, Guid contributorId)
-    {
-        var contributor = await _shelterRepository.GetShelterContributorById(shelterId, contributorId);
-        var contributorDto = _mapper.Map<UserReadDTO>(contributor);
-        if (contributorDto != null)
-        {
-            return Ok(contributorDto);
-        }
-        return NotFound();
-    }
+
     [HttpDelete("{shelterId}/activities/{activityId}")]
     public async Task<IActionResult> DeleteActivity(Guid shelterId, Guid activityId)
     {
@@ -122,9 +101,9 @@ public class SheltersController : ControllerBase
     }
 
     [HttpDelete("{shelterId}/contributors/{contributorId}")]
-    public async Task<IActionResult> DeleteContributor(Guid shelterId, Guid userId)
+    public async Task<IActionResult> DeleteUser(Guid shelterId, Guid userId)
     {
-        bool deleted = await _shelterRepository.DeleteContributor(shelterId, userId);
+        bool deleted = await _shelterRepository.DeleteShelterUser(shelterId, userId);
 
         if (deleted)
         {
@@ -165,20 +144,7 @@ public class SheltersController : ControllerBase
             return NotFound();
         }
     }
-    [HttpDelete("{shelterId}/workers/{userId}")]
-    public async Task<IActionResult> DeleteWorker(Guid shelterId, Guid userId)
-    {
-        bool deleted = await _shelterRepository.DeleteWorker(shelterId, userId);
 
-        if (deleted)
-        {
-            return NoContent();
-        }
-        else
-        {
-            return NotFound();
-        }
-    }
     [HttpPut("{shelterId}/activities/{activityId}")]
     public async Task<IActionResult> UpdateActivity(Guid shelterId, Guid activityId, string name, DateTime date)
     {
@@ -206,38 +172,29 @@ public class SheltersController : ControllerBase
 
         return NotFound();
     }
-    [HttpPost("create")]
-    public async Task<ActionResult<Shelter>> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city)
+    [HttpPost("create"), ActionName(nameof(CreateShelter))]
+    public async Task<ActionResult<ShelterReadDTO>> CreateShelter([FromBody] ShelterCreateDTO shelterCreateDTO)
     {
-        var shelterCreateDTO = new ShelterCreateDTO()
-        {
-            Name = name,
-            ShelterCalendar = new CalendarActivityCreateDTO(),
-            ShelterDescription = description,
-            ShelterAddress = new AddressCreateDTO()
-            {
-                City = city,
-                Street = street,
-                HouseNumber = houseNumber,
-                PostalCode = postalCode
-            },
-        };
+
         var shelterValidator = _validatorFactory.GetValidator<ShelterCreateDTO>();
         var shelterAddress = _validatorFactory.GetValidator<AddressCreateDTO>();
         var validationResult = shelterValidator.Validate(shelterCreateDTO);
         var validationResultAddress = shelterAddress.Validate(shelterCreateDTO.ShelterAddress);
 
-        if (!validationResult.IsValid || !validationResultAddress.IsValid)
+         if (!validationResult.IsValid || !validationResultAddress.IsValid)
         {
             return BadRequest(validationResult.Errors);
-        }
+         }
 
         var shelter = _mapper.Map<Shelter>(shelterCreateDTO);
 
         try
         {
-            await _shelterRepository.CreateShelter(name, description, street, houseNumber, postalCode, city);
-            return Ok(shelter);
+        var newShelter = await _shelterRepository.CreateShelter(shelter);
+
+        var readDto = _mapper.Map<ShelterReadDTO>(shelter);
+        return CreatedAtRoute(nameof(GetShelterById), new { shelterId = readDto.Id }, readDto);
+           
         }
         catch (Exception ex)
         {
@@ -245,7 +202,7 @@ public class SheltersController : ControllerBase
         }
     }
     [HttpPost("{shelterId}/calendar/activities/create")]
-    public async Task<ActionResult<Activity>> AddActivityToCalendar(Guid shelterId, string activityName, DateTime activityDate)
+    public async Task<ActionResult<ActivityReadDTO>> AddActivityToCalendar(Guid shelterId, string activityName, DateTime activityDate)
     {
         DateTime activityDateUtc = activityDate.ToUniversalTime();
         var activityDto = new ActivityCreateDTO()
@@ -272,34 +229,23 @@ public class SheltersController : ControllerBase
     }
 
     [HttpPut("{shelterId}/users/{workerId}")]
-    public async Task<IActionResult> AddWorker(Guid shelterId, Guid userId)
+    public async Task<IActionResult> AddUser(Guid shelterId, Guid userId, RoleName role)
     {
-        var updated = await _shelterRepository.AddWorker(shelterId, userId);
+        var updated = await _shelterRepository.AddShelterUser(shelterId, userId, role);
         if (updated)
         {
-            var updatedWorker = await _shelterRepository.GetShelterWorkerById(shelterId, userId);
+            var updatedWorker = await _shelterRepository.GetShelterUserById(shelterId, userId);
             return Ok(updatedWorker);
         }
 
         return NotFound();
     }
-    [HttpPut("{shelterId}/users/{contributorId}")]
-    public async Task<IActionResult> AddContributor(Guid shelterId, Guid userId)
-    {
-        var updated = await _shelterRepository.AddContributor(shelterId, userId);
-        if (updated)
-        {
-            var updatedWorker = await _shelterRepository.GetShelterContributorById(shelterId, userId);
-            return Ok(updatedWorker);
-        }
 
-        return NotFound();
-    }
 
 
     //PETS
     [HttpGet("{shelterId}/pets/type")]
-    public async Task<ActionResult<IEnumerable<Pet>>> GetAllShelterDogsOrCats(Guid shelterId, PetType type)
+    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllShelterDogsOrCats(Guid shelterId, PetType type)
     {
         var pets = await _shelterRepository.GetAllShelterDogsOrCats(shelterId, type);
         if (pets != null)
@@ -310,7 +256,7 @@ public class SheltersController : ControllerBase
     }
 
     [HttpGet("{shelterId}/pets")]
-    public async Task<ActionResult<IEnumerable<Pet>>> GetAllShelterPets(Guid shelterId)
+    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllShelterPets(Guid shelterId)
     {
         var pets = await _shelterRepository.GetAllShelterPets(shelterId);
         var petsDto = _mapper.Map<IEnumerable<Pet>>(pets);
@@ -320,7 +266,7 @@ public class SheltersController : ControllerBase
         }
         return BadRequest();
     }
-    [HttpGet("{shelterId}/pets/{petId}")]
+    [HttpGet("{shelterId}/pets/{petId}", Name = "GetShelterPetById")]
     public async Task<ActionResult<Pet>> GetShelterPetById(Guid shelterId, Guid petId)
     {
         var pet = await _shelterRepository.GetShelterPetById(shelterId, petId);
@@ -333,7 +279,7 @@ public class SheltersController : ControllerBase
     }
 
     [HttpGet("{shelterId}/pets/adopted")]
-    public async Task<ActionResult<IEnumerable<Pet>>> GetAllAdoptedPets(Guid shelterId)
+    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllAdoptedPets(Guid shelterId)
     {
         var pets = await _shelterRepository.GetAllAdoptedPets(shelterId);
         var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
@@ -344,7 +290,7 @@ public class SheltersController : ControllerBase
         return BadRequest();
     }
     [HttpGet("{shelterId}/tempHouses")]
-    public async Task<ActionResult<IEnumerable<TempHouse>>> GetAllTempHouses(Guid shelterId)
+    public async Task<ActionResult<IEnumerable<TempHouseReadDTO>>> GetAllTempHouses(Guid shelterId)
     {
         var tempHouses = await _shelterRepository.GetAllTempHouses(shelterId);
         var temphousesDto = _mapper.Map<IEnumerable<TempHouseReadDTO>>(tempHouses);
@@ -355,7 +301,7 @@ public class SheltersController : ControllerBase
         return NotFound();
     }
     [HttpGet("{shelterId}/tempHouse/{temphouseId}")]
-    public async Task<ActionResult<TempHouse>> GetTempHouseById(Guid shelterId, Guid tempHouseId)
+    public async Task<ActionResult<TempHouseReadDTO>> GetTempHouseById(Guid shelterId, Guid tempHouseId)
     {
         var tempHouse = await _shelterRepository.GetTempHouseById(shelterId, tempHouseId);
         var temphouseDto = _mapper.Map<UserReadDTO>(tempHouse);
@@ -377,7 +323,7 @@ public class SheltersController : ControllerBase
         return NotFound();
     }
     [HttpGet("{shelterId}/tempHouse/{tempHouseId}/pets/{petId}")]
-    public async Task<ActionResult<Pet>> GetTempHousePetById(Guid shelterId, Guid petId, Guid tempHouseId)
+    public async Task<ActionResult<PetReadDTO>> GetTempHousePetById(Guid shelterId, Guid petId, Guid tempHouseId)
     {
         var pet = await _shelterRepository.GetTempHousePetById(shelterId, tempHouseId, petId);
         var petDto = _mapper.Map<UserReadDTO>(pet);
@@ -432,28 +378,24 @@ public class SheltersController : ControllerBase
     }
 
     [HttpPost("{shelterId}/pets/create")]
-    public async Task<ActionResult<Pet>> AddPet(Guid shelterId, PetType type, string description, PetStatus status, bool avaibleForAdoption, string name, Size size, int age)
+    public async Task<ActionResult<PetReadDTO>> AddPet([FromBody] PetCreateDTO petCreateDTO, Guid shelterId)
     {
-        var petDto = new PetCreateDTO()
-        {
-            Calendar = new CalendarActivityCreateDTO(),
-            Type = type,
-            Description = description,
-            Status = status,
-            AvaibleForAdoption = avaibleForAdoption,
-            ShelterId = shelterId
-        };
+        
         var petValidator = _validatorFactory.GetValidator<PetCreateDTO>();
-        var validationResult = petValidator.Validate(petDto);
+        var validationResult = petValidator.Validate(petCreateDTO);
         if (!validationResult.IsValid)
         {
             return BadRequest(validationResult.Errors);
         }
-        var pet = _mapper.Map<Pet>(petDto);
+        var pet = _mapper.Map<Pet>(petCreateDTO);
+        
         try
         {
-            await _shelterRepository.AddPet(shelterId, type, description, status, avaibleForAdoption, name, size, age);
-            return Ok(pet);
+            await _shelterRepository.AddPet(shelterId, pet);
+            var map = _mapper.Map<PetReadDTO>(pet);
+
+            return CreatedAtRoute(nameof(GetShelterPetById), new { shelterId = map.ShelterId, petId = map.Id }, map);
+            //return Ok(map);
         }
         catch (Exception ex)
         {
@@ -462,7 +404,7 @@ public class SheltersController : ControllerBase
     }
 
     [HttpPost("{shelterId}/temphouses/create")]
-    public async Task<ActionResult<TempHouse>> AddTempHouse(Guid shelterId, Guid userId, DateTime startDate)
+    public async Task<ActionResult<TempHouseReadDTO>> AddTempHouse(Guid shelterId, Guid userId, DateTime startDate)
     {
         var tempHouseDto = new TempHouseCreateDTO()
         {
@@ -474,7 +416,7 @@ public class SheltersController : ControllerBase
         {
             return BadRequest(validationResult.Errors);
         }
-        var tempHouse = _mapper.Map<Pet>(tempHouseDto);
+        var tempHouse = _mapper.Map<PetReadDTO>(tempHouseDto);
         try
         {
             await _shelterRepository.AddTempHouse(shelterId, userId, startDate);
@@ -486,5 +428,5 @@ public class SheltersController : ControllerBase
         }
     }
 }
-  
+
 

@@ -3,7 +3,6 @@
 public class Role
 {
     public Guid Id { get; set; }
-    public RoleName RoleName { get; set; }
-    public ICollection<User>? Users { get; set;}
+    public RoleName Title { get; set; }
 
 }

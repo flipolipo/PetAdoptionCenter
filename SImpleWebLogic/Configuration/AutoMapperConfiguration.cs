@@ -5,6 +5,7 @@ using SImpleWebLogic.Profiles.MapAdoptionProfile;
 using SImpleWebLogic.Profiles.MapAnimalProfile;
 using SImpleWebLogic.Profiles.MapAnimalProfile.MapBasicHealthInfoProfile;
 using SImpleWebLogic.Profiles.MapAnimalProfile.MapDiseaseProfile;
+using SImpleWebLogic.Profiles.MapAnimalProfile.MapUserProfiles;
 using SImpleWebLogic.Profiles.MapAnimalProfile.MapVaccinationProfile;
 using SImpleWebLogic.Profiles.MapCalendarProfile;
 using SImpleWebLogic.Profiles.MapCalendarProfile.MapActivityProfile;
@@ -37,6 +38,7 @@ public static class AutoMapperConfiguration
             mc.AddProfile(new MapCredentials());
             mc.AddProfile(new MapRole());
             mc.AddProfile(new MapUser());
+            mc.AddProfile(new MapPatronUsers());
         });
 
         IMapper mapper = mappingConfig.CreateMapper();

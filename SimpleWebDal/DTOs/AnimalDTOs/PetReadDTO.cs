@@ -2,6 +2,7 @@
 using SimpleWebDal.DTOs.AnimalDTOs.BasicHealthInfoDTOs;
 using SimpleWebDal.DTOs.CalendarDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs;
+using SimpleWebDal.DTOs.AnimalDTOs.PatronUsersDTOs;
 
 namespace SimpleWebDal.DTOs.AnimalDTOs;
 
@@ -14,5 +15,6 @@ public class PetReadDTO
     public CalendarActivityReadDTO Calendar { get; set; }
     public PetStatus Status { get; set; }
     public bool AvaibleForAdoption { get; set; }
-    public ICollection<UserReadDTO>? PatronUsers { get; set; }
+    public Guid ShelterId { get; set; }
+    public ICollection<PatronUsersReadDTO>? PatronUsers { get; set; }
 }
