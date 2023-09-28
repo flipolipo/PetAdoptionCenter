@@ -26,11 +26,11 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 .ThenInclude(a => a.Activities).Include(y => y.ShelterAddress)
                 .Include(b => b.ShelterUsers)
                 .Include(c => c.Adoptions)
-                .Include(d => d.TempHouses)
+                .Include(d => d.TempHouses).ThenInclude(h => h.TemporaryOwner)
+                .Include(d => d.TempHouses).ThenInclude(h => h.TemporaryHouseAddress)
+                .Include(d => d.TempHouses).ThenInclude(h => h.PetsInTemporaryHouse)
                 .Include(f => f.ShelterPets)
                 .FirstOrDefaultAsync(e => e.Id == shelterId);
-                
-            
             return foundShelter;
         }
         private List<User> FilterUsersByRole(ICollection<User> users, RoleName roleName)
@@ -162,22 +162,26 @@ namespace SimpleWebDal.Repository.ShelterRepo
             foundPet.BasicHealthInfo.MedicalHistory.Add(disease);
             return disease;
         }
-        public async Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, DateTime startDate)
+        public async Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, TempHouse tempHouse)
         {
             var foundShelter = await FindShelter(shelterId);
-            var foundUser = await _dbContext.Users.FirstOrDefaultAsync(e => e.Id == userId);
-            var userAddress = foundUser.BasicInformation.Address;
-            var userAddressId = userAddress.Id;
-            var tempHouse = new TempHouse()
+            var foundUser = await _dbContext.Users.Include(a => a.Credentials)
+            .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
+            .Include(d => d.Roles)
+            .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
+            .Include(g => g.Adoptions)
+            .Include(h => h.PetList).FirstOrDefaultAsync(e => e.Id == userId);
+            var newTempHouse = new TempHouse()
             {
-                Id = Guid.NewGuid(),
-                UserId = userId,
+                Id = tempHouse.Id,
                 TemporaryOwner = foundUser,
-                AddressId = userAddressId,
-                TemporaryHouseAddress = userAddress,
-                StartOfTemporaryHouseDate = startDate,
+                TemporaryHouseAddress = foundUser.BasicInformation.Address,
+                PetsInTemporaryHouse = new List<Pet>(),
+                StartOfTemporaryHouseDate = tempHouse.StartOfTemporaryHouseDate
             };
-            return tempHouse;
+            foundShelter.TempHouses.Add(newTempHouse);
+            _dbContext.SaveChanges();
+            return newTempHouse;
 
         }
         public async Task<bool> AddUserToShelter(Guid shelterId, Guid userId, RoleName role) 

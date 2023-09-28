@@ -405,23 +405,24 @@ public class SheltersController : ControllerBase
     }
 
     [HttpPost("{shelterId}/temphouses/create")]
-    public async Task<ActionResult<TempHouseReadDTO>> AddTempHouse(Guid shelterId, Guid userId, DateTime startDate)
+    public async Task<ActionResult<TempHouseReadDTO>> AddTempHouse(Guid shelterId, Guid userId, TempHouseCreateDTO tempHouseCreateDTO)
     {
-        var tempHouseDto = new TempHouseCreateDTO()
-        {
-            StartOfTemporaryHouseDate = startDate
-        };
-        var tempHouseValidator = _validatorFactory.GetValidator<TempHouseCreateDTO>();
-        var validationResult = tempHouseValidator.Validate(tempHouseDto);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
-        var tempHouse = _mapper.Map<PetReadDTO>(tempHouseDto);
+        //var tempHouseDto = new TempHouseCreateDTO()
+        //{
+        //    StartOfTemporaryHouseDate = startDate
+        //};
+        //var tempHouseValidator = _validatorFactory.GetValidator<TempHouseCreateDTO>();
+        //var validationResult = tempHouseValidator.Validate(tempHouseDto);
+        //if (!validationResult.IsValid)
+        //{
+        //    return BadRequest(validationResult.Errors);
+        //}
+        var tempHouse = _mapper.Map<TempHouse>(tempHouseCreateDTO);
         try
         {
-            await _shelterRepository.AddTempHouse(shelterId, userId, startDate);
-            return Ok(tempHouse);
+            await _shelterRepository.AddTempHouse(shelterId, userId, tempHouse);
+            var tempHouseReadDto = _mapper.Map<TempHouseReadDTO>(tempHouse);
+            return Ok(tempHouseReadDto);
         }
         catch (Exception ex)
         {

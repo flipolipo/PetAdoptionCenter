@@ -16,6 +16,8 @@ namespace SimpleWebDal.Configuration
             .WithOne()
             .HasForeignKey<TempHouse>(t => t.UserId);
             builder.HasMany(t => t.PetsInTemporaryHouse);
+            builder.HasIndex(b => b.AddressId).IsUnique(false);
+
 
         }
     }

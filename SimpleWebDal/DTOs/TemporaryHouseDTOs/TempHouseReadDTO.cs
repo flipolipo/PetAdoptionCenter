@@ -10,6 +10,6 @@ public class TempHouseReadDTO
     public UserReadDTO TemporaryOwner { get; set; }
     public AddressReadDTO TemporaryHouseAddress { get; set; }
     public ICollection<PetReadDTO>? PetsInTemporaryHouse { get; set; }
-    public DateTime StartOfTemporaryHouseDate { get; set; }
+    public DateTimeOffset StartOfTemporaryHouseDate { get; set; }
 }
 

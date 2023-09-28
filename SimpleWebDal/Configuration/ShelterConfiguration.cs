@@ -21,6 +21,8 @@ namespace SimpleWebDal.Configuration
             builder.HasMany(s => s.ShelterPets);
             builder.HasMany(s => s.Adoptions);
             builder.HasMany(s => s.TempHouses);
+            builder.HasIndex(b => b.AddressId).IsUnique(false);
+
 
         }
     }

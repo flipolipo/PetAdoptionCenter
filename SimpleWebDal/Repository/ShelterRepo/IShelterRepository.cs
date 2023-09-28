@@ -37,7 +37,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
 
         public Task<Pet> AddPet(Guid shelterId, Pet pet);
         public Task<Activity> AddActivityToCalendar(Guid shelterId, string activityName, DateTime activityDate);
-        public Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, DateTime startDate);
+        public Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, TempHouse tempHouse);
 
         //PUT
         public Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city);

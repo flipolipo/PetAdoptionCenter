@@ -13,5 +13,5 @@ public class TempHouse
     public Guid AddressId { get; set; }
     public Address TemporaryHouseAddress { get; set; }
     public ICollection<Pet>? PetsInTemporaryHouse { get; set; }
-    public DateTime StartOfTemporaryHouseDate { get; set; }
+    public DateTimeOffset StartOfTemporaryHouseDate { get; set; }
 }
