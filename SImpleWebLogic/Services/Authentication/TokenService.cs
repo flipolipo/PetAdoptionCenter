@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,6 +9,12 @@ using System.Text;
 public class TokenService : ITokenService
 {
     private const int ExpirationMinutes = 30;
+
+    private readonly IConfiguration _configuration;
+    public TokenService(IConfiguration configuration) 
+    {
+        _configuration = configuration;
+    }
 
     public string CreateToken(IdentityUser user, string role)
     {
@@ -22,14 +29,19 @@ public class TokenService : ITokenService
     }
 
     private JwtSecurityToken CreateJwtToken(List<Claim> claims, SigningCredentials credentials,
-        DateTime expiration) =>
-        new(
-            "apiWithAuthBackend",
-            "apiWithAuthBackend",
-            claims,
+        DateTime expiration)
+    {
+        var audience = _configuration.GetValue<string>("ValidAudience");
+        var issuer = _configuration.GetValue<string>("ValidIssuer");
+
+        return new JwtSecurityToken(
+            issuer: issuer,
+            audience: audience,
+            claims: claims,
             expires: expiration,
             signingCredentials: credentials
         );
+    }
 
     private List<Claim> CreateClaims(IdentityUser user, string? role)
     {
@@ -61,9 +73,12 @@ public class TokenService : ITokenService
 
     private SigningCredentials CreateSigningCredentials()
     {
+        var jwt = _configuration.GetValue<string>("IssuerSigningKey");
+
+
         return new SigningCredentials(
             new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("!SomethingSecret!")
+                Encoding.UTF8.GetBytes(jwt)
             ),
             SecurityAlgorithms.HmacSha256
         );

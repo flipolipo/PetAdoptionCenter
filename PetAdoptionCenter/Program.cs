@@ -6,13 +6,11 @@ using Microsoft.OpenApi.Models;
 using SimpleWebDal.Data;
 using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Extensions;
-
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("secrets.json", optional: false, reloadOnChange: true);
-
 
 AddServices();
 ConfigureSwagger();
@@ -27,7 +25,6 @@ builder.Services.ConfigureAutoMapper();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -38,12 +35,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 await AddRoles();
 await AddAdmin();
-app.Run();
 
+app.Run();
 
 void AddServices()
 {
@@ -103,13 +99,14 @@ void AddIdentity()
             options.Password.RequireUppercase = false;
             options.Password.RequireLowercase = false;
         })
-        .AddRoles<IdentityRole>() //Enable Identity roles 
+        .AddRoles<IdentityRole>() 
         .AddEntityFrameworkStores<UsersContext>();
 }
 void AddAuthentication()
 {
-
-
+    var jwtValidation = builder.Configuration.GetValue<string>("IssuerSigningKey");
+    var audience = builder.Configuration.GetValue<string>("ValidAudience");
+    var issuer = builder.Configuration.GetValue<string>("ValidIssuer");
     builder.Services
        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer(options =>
@@ -121,17 +118,15 @@ void AddAuthentication()
                ValidateAudience = true,
                ValidateLifetime = true,
                ValidateIssuerSigningKey = true,
-               ValidIssuer = "apiWithAuthBackend",
-               ValidAudience = "apiWithAuthBackend",
+               ValidIssuer =issuer, 
+               ValidAudience = audience, 
                IssuerSigningKey = new SymmetricSecurityKey(
-                   Encoding.UTF8.GetBytes("!SomethingSecret!")
+                   Encoding.UTF8.GetBytes(jwtValidation)
                ),
            };
        });
 
 };
-
-
 async Task AddRoles()
 {
     using var scope = app.Services.CreateScope();
@@ -146,27 +141,22 @@ async Task AddRoles()
     await CreateShelterAdminRole(roleManager);
 
 }
-
 async Task CreateAdminRole(RoleManager<IdentityRole> roleManager)
 {
     await roleManager.CreateAsync(new IdentityRole("Admin")); //The role string should better be stored as a constant or a value in appsettings
 }
-
 async Task CreateUserRole(RoleManager<IdentityRole> roleManager)
 {
     await roleManager.CreateAsync(new IdentityRole("User")); //The role string should better be stored as a constant or a value in appsettings
 }
-
 async Task CreateShelterAdminRole(RoleManager<IdentityRole> roleManager)
 {
     await roleManager.CreateAsync(new IdentityRole("ShelterAdmin")); //The role string should better be stored as a constant or a value in appsettings
 }
-
 async Task AddAdmin()
 {
     await CreateAdminIfNotExists();
 }
-
 async Task CreateAdminIfNotExists()
 {
     using var scope = app.Services.CreateScope();
