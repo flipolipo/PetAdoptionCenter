@@ -52,7 +52,6 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
     {
         var userModel = _mapper.Map<User>(userCreateDTO);
-        var addedUser = await _userRepository.AddUser(userModel);
         var userCredentialsValidator = _validatorFactory.GetValidator<CredentialsCreateDTO>();
         var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
         var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
@@ -67,6 +66,7 @@ public class UsersController : ControllerBase
             return BadRequest();
         }
 
+        var addedUser = await _userRepository.AddUser(userModel);
         var userReadDTO = _mapper.Map<UserReadDTO>(userModel);
 
         return CreatedAtRoute(nameof(GetUserById), new { id = userReadDTO.Id }, userReadDTO);
@@ -140,6 +140,7 @@ public class UsersController : ControllerBase
         }
         return NotFound();
     }
+
     [HttpGet("{id}/calendar/activities/{activityId}", Name = "GetActivityById")]
     public async Task<ActionResult<ActivityReadDTO>> GetActivityById(Guid id, Guid activityId)
     {
@@ -156,14 +157,15 @@ public class UsersController : ControllerBase
     {
         var foundUser = await _userRepository.GetUserById(id);
         var activityModel = _mapper.Map<Activity>(activityCreateDTO);
-        var addedActivity = await _userRepository.AddActivity(id, activityModel);
 
         var activityValidator = _validatorFactory.GetValidator<ActivityCreateDTO>();
         var validationResult = activityValidator.Validate(activityCreateDTO);
         if (!validationResult.IsValid)
         {
-            return BadRequest(validationResult.Errors);
+            return BadRequest();
         }
+
+        var addedActivity = await _userRepository.AddActivity(id, activityModel);
         var activityReadDTO = _mapper.Map<ActivityReadDTO>(activityModel);
 
         return CreatedAtRoute(nameof(GetActivityById), new { id = foundUser.Id, activityId = addedActivity.Id }, activityReadDTO);
