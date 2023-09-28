@@ -40,5 +40,7 @@ public interface IUserRepository
     public Task<bool> DeleteUser(Guid userId);
     public Task<bool> DeleteActivity(Guid userId, Guid activityId);
     public Task<Pet> DeleteFavouritePet(int petId);
+    
+
 
 }

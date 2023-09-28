@@ -229,14 +229,16 @@ public class SheltersController : ControllerBase
         }
     }
 
-    [HttpPut("{shelterId}/users/{workerId}")]
-    public async Task<IActionResult> AddUser(Guid shelterId, Guid userId, RoleName role)
+    [HttpPost("{shelterId}/users")]
+    public async Task<ActionResult<UserReadDTO>> AddUser(Guid shelterId, Guid userId, RoleName role)
     {
+        var foundUser = await _shelterRepository.FindUserById(userId);
+        var userReadDto = _mapper.Map<UserReadDTO>(foundUser);
         var updated = await _shelterRepository.AddShelterUser(shelterId, userId, role);
         if (updated)
         {
-            var updatedWorker = await _shelterRepository.GetShelterUserById(shelterId, userId);
-            return Ok(updatedWorker);
+           // var updatedWorker = await _shelterRepository.GetShelterUserById(shelterId, userId);
+            return Ok(userReadDto);
         }
 
         return NotFound();

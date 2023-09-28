@@ -51,6 +51,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<bool> DeleteTempHouse(Guid tempHouseId, Guid shelterId);
         public Task<bool> DeleteShelter(Guid shelterId);
         public Task<bool> DeleteShelterUser(Guid shelterId, Guid userId);
-
+        //UTILITY
+        public Task<User> FindUserById(Guid userId);
     }
 }

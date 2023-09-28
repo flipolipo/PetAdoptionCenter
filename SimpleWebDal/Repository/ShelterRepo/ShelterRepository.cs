@@ -33,6 +33,16 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 .FirstOrDefaultAsync(e => e.Id == shelterId);
             return foundShelter;
         }
+        public async Task<User> FindUserById(Guid userId)
+        {
+            var foundUser = await _dbContext.Users.Include(a => a.Credentials)
+            .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
+            .Include(d => d.Roles)
+            .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
+            .Include(g => g.Adoptions)
+            .Include(h => h.PetList).FirstOrDefaultAsync(z => z.Id == userId);
+            return foundUser;
+        }
         private List<User> FilterUsersByRole(ICollection<User> users, RoleName roleName)
         {
             var filteredUsers = new List<User>();
@@ -50,34 +60,34 @@ namespace SimpleWebDal.Repository.ShelterRepo
         //TO FIX!!!!!!!
         public async Task<Activity> AddActivityToCalendar(Guid shelterId, string activityName, DateTime activityDate)
         {
-            
-            
-                var foundShelter = await FindShelter(shelterId);
 
 
-                DateTime activityDateUtc = activityDate.ToUniversalTime();
-                var activity = new Activity()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = activityName,
-                    ActivityDate = activityDateUtc,
-                    CalendarActivityId = foundShelter.ShelterCalendar.Id
-                };
+            var foundShelter = await FindShelter(shelterId);
 
 
-                // foundShelter.ShelterCalendar.Activities.Add(activity);
-                // _dbContext.Shelters.Update(foundShelter);
-                _dbContext.Add(activity);
-                _dbContext.SaveChanges();
-                return activity;
-            
-                
+            DateTime activityDateUtc = activityDate.ToUniversalTime();
+            var activity = new Activity()
+            {
+                Id = Guid.NewGuid(),
+                Name = activityName,
+                ActivityDate = activityDateUtc,
+                CalendarActivityId = foundShelter.ShelterCalendar.Id
+            };
+
+
+            // foundShelter.ShelterCalendar.Activities.Add(activity);
+            // _dbContext.Shelters.Update(foundShelter);
+            _dbContext.Add(activity);
+            _dbContext.SaveChanges();
+            return activity;
+
+
         }
-        public async Task<bool> AddShelterUser(Guid shelterId, Guid userId, RoleName roleName) 
+        public async Task<bool> AddShelterUser(Guid shelterId, Guid userId, RoleName roleName)
         {
             var foundShelter = await FindShelter(shelterId);
-            var foundUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            if (foundUser != null) 
+            var foundUser = await _dbContext.Users.Include(r => r.Roles).FirstOrDefaultAsync(u => u.Id == userId);
+            if (foundUser != null)
             {
                 var role = new Role()
                 {
@@ -85,6 +95,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
                     Title = roleName
                 };
                 foundUser.Roles.Add(role);
+                foundShelter.ShelterUsers.Add(foundUser);
+                _dbContext.SaveChanges();
                 return true;
             }
             return false;
@@ -112,8 +124,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
             //        MedicalHistory = new List<Disease>()
             //    }
             //};
-           
-            
+
+
             pet.ShelterId = shelterId;
             _dbContext.Pets.Add(pet);
             _dbContext.SaveChanges();
@@ -184,7 +196,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return newTempHouse;
 
         }
-        public async Task<bool> AddUserToShelter(Guid shelterId, Guid userId, RoleName role) 
+        public async Task<bool> AddUserToShelter(Guid shelterId, Guid userId, RoleName role)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundUser = await _dbContext.Users.FirstOrDefaultAsync(e => e.Id == userId);
@@ -193,7 +205,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 Title = role,
                 Id = Guid.NewGuid()
             };
-            if (foundUser != null) 
+            if (foundUser != null)
             {
                 foundUser.Roles.Add(newRole);
                 foundShelter.ShelterUsers.Add(foundUser);
@@ -204,9 +216,9 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
         public async Task<Shelter> CreateShelter(Shelter shelter)
         {
-            
+
             _dbContext.Shelters.Add(shelter);
-            
+
             _dbContext.SaveChanges();
             return shelter;
         }
@@ -362,7 +374,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var foundShelter = await FindShelter(shelterId);
             return foundShelter;
         }
-        public async Task<IEnumerable<User>> GetShelterUsers(Guid shelterId) 
+        public async Task<IEnumerable<User>> GetShelterUsers(Guid shelterId)
         {
             var foundShelter = await FindShelter(shelterId);
             return foundShelter.ShelterUsers;
@@ -371,19 +383,19 @@ namespace SimpleWebDal.Repository.ShelterRepo
         {
             var foundShelter = await FindShelter(shelterId);
             var shelterUsers = foundShelter.ShelterUsers;
-            
-                var filteredUsers = FilterUsersByRole(shelterUsers, role);
-                return filteredUsers;
-            
-           
+
+            var filteredUsers = FilterUsersByRole(shelterUsers, role);
+            return filteredUsers;
+
+
         }
 
         public async Task<User> GetShelterUserById(Guid shelterId, Guid userId)
         {
             var foundShelter = await FindShelter(shelterId);
             var shelterUsers = foundShelter.ShelterUsers;
-           
-                return shelterUsers.FirstOrDefault(e => e.Id == userId);
+
+            return shelterUsers.FirstOrDefault(e => e.Id == userId);
         }
 
         public async Task<Pet> GetShelterPetById(Guid shelterId, Guid petId)
@@ -510,9 +522,9 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var vaccination = foundPet.BasicHealthInfo.MedicalHistory.FirstOrDefault(e => e.Id == vaccinationId);
             return vaccination;
         }
-        public async Task<Disease> AddPetDisease(Guid shelterId,Guid petId, string name, DateTime start, DateTime end) 
+        public async Task<Disease> AddPetDisease(Guid shelterId, Guid petId, string name, DateTime start, DateTime end)
         {
-            var disease = new Disease() 
+            var disease = new Disease()
             {
                 Id = Guid.NewGuid(),
                 NameOfdisease = name,
@@ -521,21 +533,26 @@ namespace SimpleWebDal.Repository.ShelterRepo
             };
             var foundShelter = await FindShelter(shelterId);
             var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
-                foundPet.BasicHealthInfo.MedicalHistory.Add(disease);
-                return disease;
+            foundPet.BasicHealthInfo.MedicalHistory.Add(disease);
+            return disease;
         }
-        public async Task<Vaccination> AddPetVaccination(Guid shelterId, Guid petId, string name, DateTime date) 
+        public async Task<Vaccination> AddPetVaccination(Guid shelterId, Guid petId, string name, DateTime date)
         {
             var vaccination = new Vaccination()
             {
                 Id = Guid.NewGuid(),
                 Date = date,
                 VaccinationName = name,
-            }; 
+            };
             var foundShelter = await FindShelter(shelterId);
             var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
-                foundPet.BasicHealthInfo.Vaccinations.Add(vaccination); 
-                return vaccination;
+            foundPet.BasicHealthInfo.Vaccinations.Add(vaccination);
+            return vaccination;
+        }
+
+        public Task<User> GetUserById(Guid userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
