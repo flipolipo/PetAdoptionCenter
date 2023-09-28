@@ -1,7 +1,8 @@
-﻿namespace SimpleWebDal.DTOs.WebUserDTOs.RoleDTOs;
+﻿using SimpleWebDal.Models.WebUser.Enums;
+
+namespace SimpleWebDal.DTOs.WebUserDTOs.RoleDTOs;
 
 public class RoleReadDTO
 {
-    public string RoleName { get; set; }
-    public ICollection<UserReadDTO> Users { get; set; }
+    public RoleName Title { get; set; }
 }

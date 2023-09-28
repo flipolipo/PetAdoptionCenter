@@ -7,7 +7,6 @@ using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
-using System.Text;
 
 namespace SimpleWebDal.Data;
 

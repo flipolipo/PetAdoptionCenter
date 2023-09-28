@@ -13,7 +13,8 @@ namespace SimpleWebDal.Configuration
             builder.HasKey(b => b.Id);
             builder.HasOne(b=>b.Address)
                 .WithOne()
-                .HasForeignKey<BasicInformation>(b=>b.AddressId);
+                .HasForeignKey<BasicInformation>(b => b.AddressId);
+            builder.HasIndex(b => b.AddressId).IsUnique(false);
         }
     }
 }

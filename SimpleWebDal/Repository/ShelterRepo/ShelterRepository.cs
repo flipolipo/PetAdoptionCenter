@@ -7,6 +7,7 @@ using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
+using SimpleWebDal.Models.WebUser.Enums;
 using SImpleWebLogic.Repository.ShelterRepo;
 using System.Text;
 
@@ -40,7 +41,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             {
                 foreach (var role in user.Roles)
                 {
-                    if (role.RoleName.Equals(roleName))
+                    if (role.Title.Equals(roleName))
                         filteredUsers.Add(user);
                 }
             }
@@ -195,7 +196,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 var role = new Role()
                 {
                     Id = Guid.NewGuid(),
-                    RoleName = RoleName.ShelterWorker
+                    Title = RoleName.ShelterWorker
                 };
 
                 foundUser.Roles.Add(role);

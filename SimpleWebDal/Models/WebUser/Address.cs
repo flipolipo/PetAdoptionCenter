@@ -1,7 +1,4 @@
-﻿using SimpleWebDal.Models.PetShelter;
-using SimpleWebDal.Models.TemporaryHouse;
-
-namespace SimpleWebDal.Models.WebUser;
+﻿namespace SimpleWebDal.Models.WebUser;
 
 public class Address
 {
@@ -11,6 +8,4 @@ public class Address
     public int? FlatNumber { get; set; }
     public string PostalCode { get; set; }
     public string City { get; set; }
-
-
 }

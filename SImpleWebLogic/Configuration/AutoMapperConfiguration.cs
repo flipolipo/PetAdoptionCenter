@@ -10,6 +10,7 @@ using SImpleWebLogic.Profiles.MapCalendarProfile;
 using SImpleWebLogic.Profiles.MapCalendarProfile.MapActivityProfile;
 using SImpleWebLogic.Profiles.MapShelterProfile;
 using SImpleWebLogic.Profiles.MapTemporaryHouseProfile;
+using SImpleWebLogic.Profiles.MapUserPetsProfile;
 using SImpleWebLogic.Profiles.MapWebUserProfile;
 using SImpleWebLogic.Profiles.MapWebUserProfile.MapBasicInformationProfile;
 using SImpleWebLogic.Profiles.MapWebUserProfile.MapCredentialsProfile;
@@ -36,6 +37,7 @@ public static class AutoMapperConfiguration
             mc.AddProfile(new MapBasicInformation());
             mc.AddProfile(new MapCredentials());
             mc.AddProfile(new MapRole());
+            mc.AddProfile(new MapUserPets());
             mc.AddProfile(new MapUser());
         });
 

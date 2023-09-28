@@ -17,5 +17,4 @@ public class ShelterCreateDTO
     public ICollection<PetCreateDTO>? ShelterPets { get; set; }
     public ICollection<AdoptionCreateDTO>? Adoptions { get; set; }
     public ICollection<TempHouseCreateDTO>? TempHouses { get; set; }
-    public Guid ShelterId { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿namespace SimpleWebDal.Models.WebUser;
+﻿namespace SimpleWebDal.Models.WebUser.Enums;
 
 public enum RoleName
 {
@@ -6,7 +6,6 @@ public enum RoleName
     ShelterWorker,
     Contributor,
     Adopter,
-    UserLogger,
-    TempHouseOwner,
-    Other
+    User,
+    TempHouseOwner
 }

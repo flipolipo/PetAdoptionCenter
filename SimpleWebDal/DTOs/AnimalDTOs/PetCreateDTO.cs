@@ -14,5 +14,4 @@ public class PetCreateDTO
     public PetStatus Status { get; set; }
     public bool AvaibleForAdoption { get; set; }
     public ICollection<UserCreateDTO> PatronUsers { get; set; }
-    public Guid ShelterId { get; set; }
 }
