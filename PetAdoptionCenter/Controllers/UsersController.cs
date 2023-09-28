@@ -53,20 +53,18 @@ public class UsersController : ControllerBase
     {
         var userModel = _mapper.Map<User>(userCreateDTO);
         var addedUser = await _userRepository.AddUser(userModel);
-        var userValidator = _validatorFactory.GetValidator<UserCreateDTO>();
         var userCredentialsValidator = _validatorFactory.GetValidator<CredentialsCreateDTO>();
         var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
         var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
 
-        var validationResult = userValidator.Validate(userCreateDTO);
         var validationResultCredentials = userCredentialsValidator.Validate(userCreateDTO.Credentials);
         var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
         var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
 
-        if (!validationResult.IsValid || !validationResultCredentials.IsValid ||
+        if (!validationResultCredentials.IsValid ||
             !validationResultBasicInformation.IsValid || !validationResultAddress.IsValid)
         {
-            return BadRequest(validationResult.Errors);
+            return BadRequest();
         }
 
         var userReadDTO = _mapper.Map<UserReadDTO>(userModel);

@@ -181,11 +181,41 @@ public class UserRepository : IUserRepository
         return false;
     }
 
-    //DO SKONCZENIA
-    public Task<Pet> AddFavouritePet(Guid userId, Guid petId)
+    public async Task<Pet> AddFavouritePet(Guid userId, Guid petId)
     {
-        throw new ();
+        var foundUser = await GetUserById(userId);
+        var foundPet = await GetPetById(petId);
+
+        if (foundUser != null && foundPet != null)
+        {
+            if (foundUser.PetList == null)
+            {
+                foundUser.PetList = new List<UserPets>();
+            }
+
+            if (!foundUser.PetList.Any(userPet => userPet.Id == petId))
+            {
+                foundUser.PetList.Add(new UserPets
+                {
+                    Id = petId,
+                    UserId = userId
+                });
+
+                 _dbContext.SaveChanges();
+
+                return foundPet; 
+            }
+            else
+            {
+                throw new Exception("Ten zwierzak jest już na liście ulubionych użytkownika.");
+            }
+        }
+        else
+        {
+            throw new Exception("Nie znaleziono użytkownika lub zwierzaka.");
+        }
     }
+
     public Task<Pet> DeleteFavouritePet(int petId)
     {
         throw new NotImplementedException();
@@ -197,8 +227,13 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
+    public Task<Pet> GetFavouritePetById(Guid favouriteId)
+    {
+        throw new NotImplementedException();
 
-   
+    }
+
+
     public Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets()
     {
         throw new NotImplementedException();
