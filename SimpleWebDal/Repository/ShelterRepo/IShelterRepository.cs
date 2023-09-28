@@ -4,6 +4,7 @@ using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
+using SimpleWebDal.Models.WebUser.Enums;
 
 namespace SImpleWebLogic.Repository.ShelterRepo
 {

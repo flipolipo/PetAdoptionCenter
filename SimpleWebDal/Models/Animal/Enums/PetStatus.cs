@@ -6,6 +6,7 @@ public enum PetStatus
     AtShelter,
     OnAWalk,
     Adopted,
-    OnAdoptionProccess
-
+    OnAdoptionProccess,
+    VirtualAdopted,
+    Favourite
 }

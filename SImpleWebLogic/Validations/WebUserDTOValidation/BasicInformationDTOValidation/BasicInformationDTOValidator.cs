@@ -25,8 +25,5 @@ public class BasicInformationDTOValidator : AbstractValidator<BasicInformationCr
             .MaximumLength(100).WithMessage("The maximum email length is 100 characters.")
             .EmailAddress().WithMessage("Invalid email format.");
 
-        RuleFor(info => info.Address)
-            .NotNull();
-           // .SetValidator(new AddressCreateDTOValidator());
     }
 }

@@ -16,11 +16,5 @@ public class UserCreateDTOValidator : AbstractValidator<UserCreateDTO>
         RuleFor(user => user.BasicInformation).NotNull();
         RuleFor(user => user.UserCalendar).NotNull();
         RuleForEach(user => user.Roles).NotNull();
-        When(user => user.Adoptions != null && user.Adoptions.Any(), () =>
-        {
-            RuleForEach(user => user.Adoptions)
-            .NotNull();
-                //.SetValidator(new AdoptionCreateDTOValidator());
-        });
     }
 }

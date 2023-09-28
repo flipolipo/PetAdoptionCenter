@@ -4,6 +4,8 @@ namespace SimpleWebDal.DTOs.AdoptionDTOs;
 
 public class AdoptionCreateDTO
 {
-    public PetCreateDTO AdoptedPet { get; set; }
-    public DateTime DateOfAdoption { get; set; }
+    public bool PreAdoptionPoll { get; set; }
+    public bool ContractAdoption { get; set; }
+    public bool Meetings { get; set; }
+    public DateTime? DateOfAdoption { get; set; }
 }

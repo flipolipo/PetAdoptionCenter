@@ -7,37 +7,38 @@ namespace SimpleWebDal.Repository.UserRepo;
 
 public interface IUserRepository
 {
-    bool SaveChange();
     //GET
     public Task<IEnumerable<User>> GetAllUsers();
-    public Task<User> GetUserById(int userId);
+    public Task<User> GetUserById(Guid userId);
     public Task<IEnumerable<Pet>> GetAllPets();
-    public Task<IEnumerable<Pet>> GetAllShelters();
-    public Task<IEnumerable<Pet>> GetAllShelterPets(int shelterId);
-    public Task<IEnumerable<Pet>> GetAllShelterDogsOrCats(int shelterId, PetType petType);
-    public Task<Pet> GetShelterPetById(int shelterId, int petId);
-    public Task<CalendarActivity> GetCalendarForUser(int userId);
-    public Task<CalendarActivity> GetAllActivitiesForUser(int userId);
-    public Task<CalendarActivity> GetActivityForUserById(int userId, int activityId);
+    public Task<Pet> GetPetById(Guid id);
+    
+    //public Task<IEnumerable<Pet>> GetAllShelters();
+    //public Task<IEnumerable<Pet>> GetAllShelterPets(Guid shelterId);
+    // public Task<IEnumerable<Pet>> GetAllShelterDogsOrCats(Guid shelterId, PetType type);
+    public Task<Pet> GetShelterPetById(Guid shelterId, Guid petId);
+    //public Task<CalendarActivity> GetCalendarForUser(Guid userId);
+    public Task<IEnumerable<Activity>> GetUserActivities(Guid userId);
+    public Task<Activity> GetUserActivityById(Guid userId, Guid activityId);
     public Task<IEnumerable<Pet>> GetAllFavouritePets();
-    public Task<Pet> GetFavouritePetById(int favouriteId);
+    //public Task<Pet> GetFavouritePetById(Guid favouriteId);
     public Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets();
-    public Task<Pet> GetVirtualAdoptedPetById(int favouriteId);
+    public Task<Pet> GetVirtualAdoptedPetById(Guid favouriteId);
 
     //POST
-    public Task<Activity> AddActivity(Activity activity, int timeTableId);
-    public Task<User> AddUser(string name, string userName);
-    public Task<Pet> AddFavouritePet(int petId);
+    public Task<Activity> AddActivity(Guid userId, Activity activity);
+    public Task<User> AddUser(User user);
+    public Task<Pet> AddFavouritePet(Guid userId, Guid petId);
 
 
     //PUT or PATCH
-    public void UpdateUser(User user);
-    public void UpdateActivity(Activity activity);
- 
+    public Task<bool> UpdateUser(User user);
+    public Task<bool> UpdateActivity(Guid userId, Activity activity);
+
 
     //DELETE
-    public void DeleteUser(int userId);
-    public void DeleteActivity(int ActivityId);
+    public Task<bool> DeleteUser(Guid userId);
+    public Task<bool> DeleteActivity(Guid userId, Guid activityId);
     public Task<Pet> DeleteFavouritePet(int petId);
 
 }

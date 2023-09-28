@@ -15,6 +15,7 @@ using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Repository.ShelterRepo;
 using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
 using SimpleWebDal.DTOs.TemporaryHouseDTOs;
+using SimpleWebDal.Models.WebUser.Enums;
 
 namespace PetAdoptionCenter.Controllers;
 
@@ -181,20 +182,20 @@ public class SheltersController : ControllerBase
         var validationResult = shelterValidator.Validate(shelterCreateDTO);
         var validationResultAddress = shelterAddress.Validate(shelterCreateDTO.ShelterAddress);
 
-         if (!validationResult.IsValid || !validationResultAddress.IsValid)
+        if (!validationResult.IsValid || !validationResultAddress.IsValid)
         {
             return BadRequest(validationResult.Errors);
-         }
+        }
 
         var shelter = _mapper.Map<Shelter>(shelterCreateDTO);
 
         try
         {
-        var newShelter = await _shelterRepository.CreateShelter(shelter);
+            var newShelter = await _shelterRepository.CreateShelter(shelter);
 
-        var readDto = _mapper.Map<ShelterReadDTO>(shelter);
-        return CreatedAtRoute(nameof(GetShelterById), new { shelterId = readDto.Id }, readDto);
-           
+            var readDto = _mapper.Map<ShelterReadDTO>(shelter);
+            return CreatedAtRoute(nameof(GetShelterById), new { shelterId = readDto.Id }, readDto);
+
         }
         catch (Exception ex)
         {
@@ -380,7 +381,7 @@ public class SheltersController : ControllerBase
     [HttpPost("{shelterId}/pets/create")]
     public async Task<ActionResult<PetReadDTO>> AddPet([FromBody] PetCreateDTO petCreateDTO, Guid shelterId)
     {
-        
+
         var petValidator = _validatorFactory.GetValidator<PetCreateDTO>();
         var validationResult = petValidator.Validate(petCreateDTO);
         if (!validationResult.IsValid)
@@ -388,7 +389,7 @@ public class SheltersController : ControllerBase
             return BadRequest(validationResult.Errors);
         }
         var pet = _mapper.Map<Pet>(petCreateDTO);
-        
+
         try
         {
             await _shelterRepository.AddPet(shelterId, pet);

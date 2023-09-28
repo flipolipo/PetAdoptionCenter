@@ -1,4 +1,6 @@
-﻿namespace SimpleWebDal.Models.WebUser;
+﻿using SimpleWebDal.Models.WebUser.Enums;
+
+namespace SimpleWebDal.Models.WebUser;
 
 public class Role
 {

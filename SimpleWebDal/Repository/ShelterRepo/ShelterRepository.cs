@@ -7,6 +7,7 @@ using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
+using SimpleWebDal.Models.WebUser.Enums;
 using SImpleWebLogic.Repository.ShelterRepo;
 using System.Text;
 
