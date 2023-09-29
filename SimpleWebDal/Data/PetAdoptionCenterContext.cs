@@ -26,7 +26,6 @@ public class PetAdoptionCenterContext : DbContext
     public DbSet<Pet> Pets { get; set; }
     public DbSet<Activity> Activities { get; set; }
     public DbSet<CalendarActivity> CalendarActivities { get; set; }
-    public DbSet<PatronUsers> PatronsUsers { get; set; }
 
 
 

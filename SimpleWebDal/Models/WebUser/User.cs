@@ -1,4 +1,5 @@
 ﻿using SimpleWebDal.Models.AdoptionProccess;
+using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.CalendarModel;
 
 namespace SimpleWebDal.Models.WebUser;
@@ -14,5 +15,5 @@ public class User
     public CalendarActivity UserCalendar { get; set; }
     public ICollection<Role> Roles { get; set; }
     public ICollection<Adoption>? Adoptions { get; set; }
-    public ICollection<UserPets>? PetList { get; set; }
+    public ICollection<Pet>? Pets { get; set; }
 }

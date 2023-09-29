@@ -2,5 +2,6 @@
 
 public class UserPetsCreateDTO
 {
-    public List<string>? Pets { get; set; }
+   // public List<string>? Pets { get; set; }
+    public Guid? UserId { get; set; }
 }

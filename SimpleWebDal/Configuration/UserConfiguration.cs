@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SimpleWebDal.Models.WebUser;
+using System.Reflection.Emit;
 
 
 namespace SimpleWebDal.Configuration
@@ -21,9 +22,9 @@ namespace SimpleWebDal.Configuration
                 .HasForeignKey<User>(u => u.UserCalendarId);
             builder.HasMany(u => u.Adoptions);
             builder.HasMany(u => u.Roles);
-            builder.HasMany(u => u.PetList)
-                .WithOne()
-                .HasForeignKey(up => up.UserId);
+           builder.HasMany(e => e.Pets)
+        .WithMany(e => e.Users)
+        .UsingEntity("UserPetsJoinTable");
         }
     }
 }

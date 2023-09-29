@@ -16,5 +16,5 @@ public class PetReadDTO
     public PetStatus Status { get; set; }
     public bool AvaibleForAdoption { get; set; }
     public Guid ShelterId { get; set; }
-    public ICollection<PatronUsersReadDTO>? PatronUsers { get; set; }
+    public ICollection<UserReadDTO>? PatronUsers { get; set; }
 }

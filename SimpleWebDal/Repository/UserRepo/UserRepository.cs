@@ -26,7 +26,7 @@ public class UserRepository : IUserRepository
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
             .Include(g => g.Adoptions)
-            .Include(h => h.PetList).FirstOrDefaultAsync(z => z.Id == userId);
+            .Include(h => h.Pets).FirstOrDefaultAsync(z => z.Id == userId);
         return foundUser;
     }
     public async Task<User> AddUser(User user)
@@ -55,7 +55,7 @@ public class UserRepository : IUserRepository
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
             .Include(g => g.Adoptions)
-            .Include(h => h.PetList).ToListAsync();
+            .Include(h => h.Pets).ToListAsync();
     }
     public async Task<bool> DeleteUser(Guid userId)
     {
@@ -104,27 +104,27 @@ public class UserRepository : IUserRepository
         }
         return false;
     }
-    public async Task<bool> PartialUpdateUser(User user)
-    {
-        var foundUser = await GetUserById(user.Id);
+    //public async Task<bool> PartialUpdateUser(User user)
+    //{
+    //    var foundUser = await GetUserById(user.Id);
 
-        if (foundUser != null)
-        {
-            if(foundUser.PetList != null)
-            {
-                foreach(var pet in foundUser.PetList)
-                {
-                   foreach (var petU in user.PetList)
-                    {
-                        pet.Pets = petU.Pets;
-                    }
-                }
-            }
-            await _dbContext.SaveChangesAsync();
-            return true;
-        }
-        return false;
-    }
+    //    if (foundUser != null)
+    //    {
+    //        if(foundUser.PetList != null)
+    //        {
+    //            foreach(var pet in foundUser.PetList)
+    //            {
+    //               foreach (var petU in user.PetList)
+    //                {
+    //                    pet.Pets = petU.Pets;
+    //                }
+    //            }
+    //        }
+    //        await _dbContext.SaveChangesAsync();
+    //        return true;
+    //    }
+    //    return false;
+    //}
 
 
 
@@ -204,111 +204,111 @@ public class UserRepository : IUserRepository
         return false;
     }
 
-    public async Task<string> AddFavouritePet(Guid userId, Guid petId)
-    {
-        var foundUser = await GetUserById(userId);
-        var foundPet = await GetPetById(petId);
+    //public async Task<string> AddFavouritePet(Guid userId, Guid petId)
+    //{
+    //    var foundUser = await GetUserById(userId);
+    //    var foundPet = await GetPetById(petId);
 
-        if (foundUser == null || foundPet == null)
-        {
-            throw new Exception("User or pet not found.");
-        }
+    //    if (foundUser == null || foundPet == null)
+    //    {
+    //        throw new Exception("User or pet not found.");
+    //    }
 
-        if (foundUser.PetList == null)
-        {
-            foundUser.PetList = new List<UserPets>();
-        }
+    //    if (foundUser.PetList == null)
+    //    {
+    //        foundUser.PetList = new List<UserPets>();
+    //    }
 
-        var userPets = foundUser.PetList.SingleOrDefault(userPet => userPet.UserId == userId);
+    //    var userPets = foundUser.PetList.SingleOrDefault(userPet => userPet.UserId == userId);
 
-        if (userPets == null)
-        {
-            userPets = new UserPets
-            {
-                Id = Guid.NewGuid(),
-                UserId = userId,
-                Pets = new List<string> { petId.ToString() }
-            };
+    //    if (userPets == null)
+    //    {
+    //        userPets = new UserPets
+    //        {
+    //            Id = Guid.NewGuid(),
+    //            UserId = userId,
+    //            Pets = new List<string> { petId.ToString() }
+    //        };
 
-            foundUser.PetList.Add(userPets);
-        }
-        else
-        {
-            if (userPets.Pets == null)
-            {
-                userPets.Pets = new List<string>();
-            }
+    //        foundUser.PetList.Add(userPets);
+    //    }
+    //    else
+    //    {
+    //        if (userPets.Pets == null)
+    //        {
+    //            userPets.Pets = new List<string>();
+    //        }
 
-            if (userPets.Pets.Contains(petId.ToString()))
-            {
-                throw new Exception("This pet is already on the user's favorites list.");
-            }
+    //        if (userPets.Pets.Contains(petId.ToString()))
+    //        {
+    //            throw new Exception("This pet is already on the user's favorites list.");
+    //        }
 
-            userPets.Pets.Add(petId.ToString());
-        }
+    //        userPets.Pets.Add(petId.ToString());
+    //    }
 
-        await _dbContext.SaveChangesAsync();
+    //    await _dbContext.SaveChangesAsync();
 
-        return petId.ToString();
-    }
-
-
-    public async Task<bool> DeleteFavouritePet(Guid id, Guid petId)
-    {
-        var foundUser = await GetUserById(id);
-        var foundPet = await GetFavouritePetById(id, petId);
-
-        if (foundPet != null && foundUser != null)
-        {
-            foreach (var pet in foundUser.PetList)
-            {
-                pet.Pets.Remove(foundPet);
-            }
-           await _dbContext.SaveChangesAsync();
-            return true;
-        }
-
-        return false;
-    }
+    //    return petId.ToString();
+    //}
 
 
-    public async Task<IEnumerable<string>> GetAllFavouritePets(Guid id)
-    {
-        var foundUser = await GetUserById(id);
+    //public async Task<bool> DeleteFavouritePet(Guid id, Guid petId)
+    //{
+    //    var foundUser = await GetUserById(id);
+    //    var foundPet = await GetFavouritePetById(id, petId);
 
-        if (foundUser != null && foundUser.PetList != null)
-        {
-            var favoritePets = foundUser.PetList
-                .Where(userPets => userPets.UserId == id)
-                .SelectMany(userPets => userPets.Pets)
-                .ToList();
+    //    if (foundPet != null && foundUser != null)
+    //    {
+    //        foreach (var pet in foundUser.PetList)
+    //        {
+    //            pet.Pets.Remove(foundPet);
+    //        }
+    //       await _dbContext.SaveChangesAsync();
+    //        return true;
+    //    }
 
-            return favoritePets;
-        }
-
-        return Enumerable.Empty<string>();
-    }
+    //    return false;
+    //}
 
 
-    public async Task<string> GetFavouritePetById(Guid userId, Guid petId)
-    {
-        var foundUser = await GetUserById(userId);
+    //public async Task<IEnumerable<string>> GetAllFavouritePets(Guid id)
+    //{
+    //    var foundUser = await GetUserById(id);
 
-        if (foundUser != null && foundUser.PetList != null)
-        {
-            var userPets = foundUser.PetList.SingleOrDefault(userPet => userPet.UserId == userId);
+    //    if (foundUser != null && foundUser.PetList != null)
+    //    {
+    //        var favoritePets = foundUser.PetList
+    //            .Where(userPets => userPets.UserId == id)
+    //            .SelectMany(userPets => userPets.Pets)
+    //            .ToList();
 
-            if (userPets != null && userPets.Pets != null)
-            {
-                if (userPets.Pets.Contains(petId.ToString()))
-                {
-                    return petId.ToString();
-                }
-            }
-        }
+    //        return favoritePets;
+    //    }
 
-        return null;
-    }
+    //    return Enumerable.Empty<string>();
+    //}
+
+
+    //public async Task<string> GetFavouritePetById(Guid userId, Guid petId)
+    //{
+    //    var foundUser = await GetUserById(userId);
+
+    //    if (foundUser != null && foundUser.PetList != null)
+    //    {
+    //        var userPets = foundUser.PetList.SingleOrDefault(userPet => userPet.UserId == userId);
+
+    //        if (userPets != null && userPets.Pets != null)
+    //        {
+    //            if (userPets.Pets.Contains(petId.ToString()))
+    //            {
+    //                return petId.ToString();
+    //            }
+    //        }
+    //    }
+
+    //    return null;
+    //}
 
 
 

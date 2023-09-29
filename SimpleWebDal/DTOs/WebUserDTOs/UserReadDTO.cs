@@ -1,4 +1,5 @@
 ﻿using SimpleWebDal.DTOs.AdoptionDTOs;
+using SimpleWebDal.DTOs.AnimalDTOs;
 using SimpleWebDal.DTOs.CalendarDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.BasicInformationDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.CredentialsDTOs;
@@ -14,5 +15,5 @@ public class UserReadDTO
     public CalendarActivityReadDTO UserCalendar { get; set; }
     public ICollection<RoleReadDTO> Roles { get; set; }
     public ICollection<AdoptionReadDTO>? Adoptions { get; set; }
-    public ICollection<UserPetsReadDTO>? PetList { get; set; }
+    public ICollection<PetReadDTO>? PetList { get; set; }
 }

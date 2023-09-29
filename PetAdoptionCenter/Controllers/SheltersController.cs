@@ -406,8 +406,8 @@ public class SheltersController : ControllerBase
         }
     }
 
-    [HttpPost("{shelterId}/temphouses/create")]
-    public async Task<ActionResult<TempHouseReadDTO>> AddTempHouse(Guid shelterId, Guid userId, TempHouseCreateDTO tempHouseCreateDTO)
+    [HttpPost("{shelterId}/temphouses")]
+    public async Task<ActionResult<TempHouseReadDTO>> AddTempHouse(Guid shelterId, Guid userId, Guid petId, TempHouseCreateDTO tempHouseCreateDTO)
     {
         //var tempHouseDto = new TempHouseCreateDTO()
         //{
@@ -422,7 +422,7 @@ public class SheltersController : ControllerBase
         var tempHouse = _mapper.Map<TempHouse>(tempHouseCreateDTO);
         try
         {
-            await _shelterRepository.AddTempHouse(shelterId, userId, tempHouse);
+            await _shelterRepository.AddTempHouse(shelterId, userId, petId, tempHouse);
             var tempHouseReadDto = _mapper.Map<TempHouseReadDTO>(tempHouse);
             return Ok(tempHouseReadDto);
         }

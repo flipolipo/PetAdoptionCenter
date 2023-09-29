@@ -213,74 +213,74 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
-    [HttpGet("{id}/pets")]
-    public async Task<ActionResult<IEnumerable<string>>> GetAllFavouritePets(Guid id)
-    {
-        var pets = await _userRepository.GetAllFavouritePets(id);
-        if (pets != null)
-        {
-            return Ok(pets);
-        }
-        return NotFound();
-    }
+    //[HttpGet("{id}/pets")]
+    //public async Task<ActionResult<IEnumerable<string>>> GetAllFavouritePets(Guid id)
+    //{
+    //    var pets = await _userRepository.GetAllFavouritePets(id);
+    //    if (pets != null)
+    //    {
+    //        return Ok(pets);
+    //    }
+    //    return NotFound();
+    //}
 
-    [HttpGet("{id}/pets/{petId}", Name = "GetFavouritePetById")]
-    public async Task<ActionResult<string>> GetFavouritePetById(Guid id, Guid petId)
-    {
-        var pet = await _userRepository.GetFavouritePetById(id, petId);
-        if (pet != null)
-        {
-            return Ok(pet);
-        }
-        return NotFound();
-    }
+    //[HttpGet("{id}/pets/{petId}", Name = "GetFavouritePetById")]
+    //public async Task<ActionResult<string>> GetFavouritePetById(Guid id, Guid petId)
+    //{
+    //    var pet = await _userRepository.GetFavouritePetById(id, petId);
+    //    if (pet != null)
+    //    {
+    //        return Ok(pet);
+    //    }
+    //    return NotFound();
+    //}
 
-    [HttpDelete("{id}/pets/{petId}")]
-    public async Task<IActionResult> DeleteFavouritePet(Guid id, Guid petId)
-    {
-        bool deleted = await _userRepository.DeleteFavouritePet(id, petId);
+    //[HttpDelete("{id}/pets/{petId}")]
+    //public async Task<IActionResult> DeleteFavouritePet(Guid id, Guid petId)
+    //{
+    //    bool deleted = await _userRepository.DeleteFavouritePet(id, petId);
 
-        if (deleted)
-        {
-            return NoContent();
-        }
-        else
-        {
-            return NotFound();
-        }
-    }
-   
+    //    if (deleted)
+    //    {
+    //        return NoContent();
+    //    }
+    //    else
+    //    {
+    //        return NotFound();
+    //    }
+    //}
 
-    [HttpPatch("{id}")]
-    public async Task<ActionResult> PartialUserUpdate(Guid id, JsonPatchDocument<IEnumerable<string>> patchDoc)
-    {
-        var user = await _userRepository.GetUserById(id);
-        var petsList = await _userRepository.GetAllFavouritePets(id);
 
-        if (petsList == null)
-        {
-            return NotFound();
-        }
+    //[HttpPatch("{id}")]
+    //public async Task<ActionResult> PartialUserUpdate(Guid id, JsonPatchDocument<IEnumerable<string>> patchDoc)
+    //{
+    //    var user = await _userRepository.GetUserById(id);
+    //    var petsList = await _userRepository.GetAllFavouritePets(id);
 
-        patchDoc.ApplyTo(petsList, ModelState);
+    //    if (petsList == null)
+    //    {
+    //        return NotFound();
+    //    }
 
-        foreach (var operation in patchDoc.Operations)
-        {
-            if (operation.op == "add" && operation.path == "/Id")
-            {
-                var newId = operation.value.ToString();
-                petsList.Append(newId);
-            }
-        }
+    //    patchDoc.ApplyTo(petsList, ModelState);
 
-        if (!TryValidateModel(patchDoc))
-        {
-            return ValidationProblem(ModelState);
-        }
-        await _userRepository.PartialUpdateUser(user);
+    //    foreach (var operation in patchDoc.Operations)
+    //    {
+    //        if (operation.op == "add" && operation.path == "/Id")
+    //        {
+    //            var newId = operation.value.ToString();
+    //            petsList.Append(newId);
+    //        }
+    //    }
 
-        return NoContent();
-    }
+    //    if (!TryValidateModel(patchDoc))
+    //    {
+    //        return ValidationProblem(ModelState);
+    //    }
+    //    await _userRepository.PartialUpdateUser(user);
+
+    //    return NoContent();
+    //}
 }
 
 

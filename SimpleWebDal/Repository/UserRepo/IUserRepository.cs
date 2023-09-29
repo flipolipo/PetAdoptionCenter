@@ -20,20 +20,20 @@ public interface IUserRepository
     //public Task<CalendarActivity> GetCalendarForUser(Guid userId);
     public Task<IEnumerable<Activity>> GetUserActivities(Guid userId);
     public Task<Activity> GetUserActivityById(Guid userId, Guid activityId);
-    public Task<IEnumerable<string>> GetAllFavouritePets(Guid id);
-    public Task<string> GetFavouritePetById(Guid userId, Guid petId);
+  //  public Task<IEnumerable<string>> GetAllFavouritePets(Guid id);
+  //  public Task<string> GetFavouritePetById(Guid userId, Guid petId);
     public Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets();
     public Task<Pet> GetVirtualAdoptedPetById(Guid favouriteId);
 
     //POST
     public Task<Activity> AddActivity(Guid userId, Activity activity);
     public Task<User> AddUser(User user);
-    public Task<string> AddFavouritePet(Guid userId, Guid petId);
+  //  public Task<string> AddFavouritePet(Guid userId, Guid petId);
 
 
     //PUT or PATCH
     public Task<bool> UpdateUser(User user);
-    public Task<bool> PartialUpdateUser(User user);
+   // public Task<bool> PartialUpdateUser(User user);
 
     public Task<bool> UpdateActivity(Guid userId, Activity activity);
 
@@ -41,7 +41,7 @@ public interface IUserRepository
     //DELETE
     public Task<bool> DeleteUser(Guid userId);
     public Task<bool> DeleteActivity(Guid userId, Guid activityId);
-    public Task<bool> DeleteFavouritePet(Guid id, Guid petId);
+   // public Task<bool> DeleteFavouritePet(Guid id, Guid petId);
     
 
 
