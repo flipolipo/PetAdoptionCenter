@@ -235,7 +235,7 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
-    [HttpDelete("{id}/pets/{id}")]
+    [HttpDelete("{id}/pets/{petId}")]
     public async Task<IActionResult> DeleteFavouritePet(Guid id, Guid petId)
     {
         bool deleted = await _userRepository.DeleteFavouritePet(id, petId);
