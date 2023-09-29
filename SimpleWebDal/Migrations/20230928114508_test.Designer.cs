@@ -13,19 +13,189 @@ using SimpleWebDal.Data;
 namespace SimpleWebDal.Migrations
 {
     [DbContext(typeof(PetAdoptionCenterContext))]
+<<<<<<<< HEAD:SimpleWebDal/Migrations/20230928114508_test.Designer.cs
     [Migration("20230928114508_test")]
     partial class test
+========
+    [Migration("20230929115147_addRoles")]
+    partial class addRoles
+>>>>>>>> Roles:SimpleWebDal/Migrations/20230929115147_addRoles.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+<<<<<<<< HEAD:SimpleWebDal/Migrations/20230928114508_test.Designer.cs
+========
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("text");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("PetProfileModel", b =>
+                {
+                    b.Property<Guid>("ProfilePetsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProfilesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ProfilePetsId", "ProfilesId");
+
+                    b.HasIndex("ProfilesId");
+
+                    b.ToTable("ProfilePets", (string)null);
+                });
+
+            modelBuilder.Entity("RoleUser", b =>
+                {
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("text");
+
+                    b.HasKey("RolesId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("UserRoles", (string)null);
+                });
+
+>>>>>>>> Roles:SimpleWebDal/Migrations/20230929115147_addRoles.Designer.cs
             modelBuilder.Entity("SimpleWebDal.Models.AdoptionProccess.Adoption", b =>
                 {
                     b.Property<Guid>("Id")
@@ -50,8 +220,8 @@ namespace SimpleWebDal.Migrations
                     b.Property<Guid?>("ShelterId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -204,14 +374,17 @@ namespace SimpleWebDal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+<<<<<<<< HEAD:SimpleWebDal/Migrations/20230928114508_test.Designer.cs
                     b.Property<DateTimeOffset>("ActivityDate")
+========
+                    b.Property<DateTime?>("ActivityDate")
+>>>>>>>> Roles:SimpleWebDal/Migrations/20230929115147_addRoles.Designer.cs
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("CalendarActivityId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -227,6 +400,12 @@ namespace SimpleWebDal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+<<<<<<<< HEAD:SimpleWebDal/Migrations/20230928114508_test.Designer.cs
+========
+                    b.Property<DateTime?>("DateWithTime")
+                        .HasColumnType("timestamp with time zone");
+
+>>>>>>>> Roles:SimpleWebDal/Migrations/20230929115147_addRoles.Designer.cs
                     b.HasKey("Id");
 
                     b.ToTable("CalendarActivities");
@@ -262,6 +441,27 @@ namespace SimpleWebDal.Migrations
                     b.ToTable("Shelters");
                 });
 
+<<<<<<<< HEAD:SimpleWebDal/Migrations/20230928114508_test.Designer.cs
+========
+            modelBuilder.Entity("SimpleWebDal.Models.ProfileUser.ProfileModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Profiles");
+                });
+
+>>>>>>>> Roles:SimpleWebDal/Migrations/20230929115147_addRoles.Designer.cs
             modelBuilder.Entity("SimpleWebDal.Models.TemporaryHouse.TempHouse", b =>
                 {
                     b.Property<Guid>("Id")
@@ -277,8 +477,9 @@ namespace SimpleWebDal.Migrations
                     b.Property<DateTimeOffset>("StartOfTemporaryHouseDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -299,22 +500,18 @@ namespace SimpleWebDal.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int?>("FlatNumber")
                         .HasColumnType("integer");
 
                     b.Property<string>("HouseNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PostalCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -328,23 +525,16 @@ namespace SimpleWebDal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AddressId")
+                    b.Property<Guid?>("AddressId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Surname")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -352,25 +542,6 @@ namespace SimpleWebDal.Migrations
                     b.HasIndex("AddressId");
 
                     b.ToTable("BasicInformations");
-                });
-
-            modelBuilder.Entity("SimpleWebDal.Models.WebUser.Credentials", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Credentials");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.Role", b =>
@@ -394,36 +565,140 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.User", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("BasicInformationId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("BasicInformationId")
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+<<<<<<<< HEAD:SimpleWebDal/Migrations/20230928114508_test.Designer.cs
+========
+                    b.Property<Guid?>("PetId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CredentialsId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
 
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+>>>>>>>> Roles:SimpleWebDal/Migrations/20230929115147_addRoles.Designer.cs
                     b.Property<Guid?>("ShelterId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UserCalendarId")
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid?>("UserCalendarId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BasicInformationId")
                         .IsUnique();
 
-                    b.HasIndex("CredentialsId")
-                        .IsUnique();
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
 
                     b.HasIndex("ShelterId");
 
                     b.HasIndex("UserCalendarId")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("SimpleWebDal.Models.WebUser.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("SimpleWebDal.Models.WebUser.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SimpleWebDal.Models.WebUser.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("SimpleWebDal.Models.WebUser.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.WebUser.UserPets", b =>
@@ -563,9 +838,7 @@ namespace SimpleWebDal.Migrations
                 {
                     b.HasOne("SimpleWebDal.Models.WebUser.Address", "Address")
                         .WithOne()
-                        .HasForeignKey("SimpleWebDal.Models.WebUser.BasicInformation", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SimpleWebDal.Models.WebUser.BasicInformation", "AddressId");
 
                     b.Navigation("Address");
                 });
@@ -581,15 +854,7 @@ namespace SimpleWebDal.Migrations
                 {
                     b.HasOne("SimpleWebDal.Models.WebUser.BasicInformation", "BasicInformation")
                         .WithOne()
-                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "BasicInformationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SimpleWebDal.Models.WebUser.Credentials", "Credentials")
-                        .WithOne()
-                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "CredentialsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "BasicInformationId");
 
                     b.HasOne("SimpleWebDal.Models.PetShelter.Shelter", null)
                         .WithMany("ShelterUsers")
@@ -597,13 +862,9 @@ namespace SimpleWebDal.Migrations
 
                     b.HasOne("SimpleWebDal.Models.CalendarModel.CalendarActivity", "UserCalendar")
                         .WithOne()
-                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "UserCalendarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "UserCalendarId");
 
                     b.Navigation("BasicInformation");
-
-                    b.Navigation("Credentials");
 
                     b.Navigation("UserCalendar");
                 });
