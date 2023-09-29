@@ -30,14 +30,16 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Disease> GetPetDiseaseById(Guid shelterId, Guid petId, Guid diseaseId);
         public Task<IEnumerable<Vaccination>> GetAllPetVaccinations(Guid shelterId, Guid petId);
         public Task<Disease> GetPetVaccinationById(Guid shelterId, Guid petId, Guid vaccinationId);
+        public Task<IEnumerable<Activity>> GetAllActivities(Guid shelterId);
+        public Task<Activity> GetActivityById(Guid shelterId, Guid activityId);
 
         //POST
         // public Task<Shelter> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city);
         public Task<Shelter> CreateShelter(Shelter shelter);
-
-        public Task<Pet> AddPet(Guid shelterId, Pet pet);
-        public Task<Activity> AddActivityToCalendar(Guid shelterId, string activityName, DateTime activityDate);
         public Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, TempHouse tempHouse);
+        public Task<Pet> AddPet(Guid shelterId, Pet pet);
+        public Task<Activity> AddActivityToCalendar(Guid shelterId, Activity activity);
+        
 
         //PUT
         public Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city);

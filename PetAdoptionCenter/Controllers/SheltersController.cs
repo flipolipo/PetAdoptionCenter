@@ -203,24 +203,19 @@ public class SheltersController : ControllerBase
         }
     }
     [HttpPost("{shelterId}/calendar/activities/create")]
-    public async Task<ActionResult<ActivityReadDTO>> AddActivityToCalendar(Guid shelterId, string activityName, DateTime activityDate)
+    public async Task<ActionResult<ActivityReadDTO>> AddActivityToCalendar(Guid shelterId, ActivityCreateDTO activityCreateDTO)
     {
-        DateTime activityDateUtc = activityDate.ToUniversalTime();
-        var activityDto = new ActivityCreateDTO()
-        {
-            ActivityDate = activityDateUtc,
-            Name = activityName
-        };
+
         //var activityValidator = _validatorFactory.GetValidator<ActivityCreateDTO>();
         //var validationResult = activityValidator.Validate(activityDto);
         //if (!validationResult.IsValid)
         //{
         //    return BadRequest(validationResult.Errors);
         //}
-        var activity = _mapper.Map<Activity>(activityDto);
+        var activity = _mapper.Map<Activity>(activityCreateDTO);
         try
         {
-            await _shelterRepository.AddActivityToCalendar(shelterId, activityName, activityDate);
+            await _shelterRepository.AddActivityToCalendar(shelterId, activity);
             return Ok(activity);
         }
         catch (Exception ex)
@@ -237,7 +232,7 @@ public class SheltersController : ControllerBase
         var updated = await _shelterRepository.AddShelterUser(shelterId, userId, role);
         if (updated)
         {
-           // var updatedWorker = await _shelterRepository.GetShelterUserById(shelterId, userId);
+            // var updatedWorker = await _shelterRepository.GetShelterUserById(shelterId, userId);
             return Ok(userReadDto);
         }
 
@@ -430,6 +425,28 @@ public class SheltersController : ControllerBase
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Error while creating an activity: " + ex.Message);
         }
+    }
+    [HttpGet("{shelterId}/calendar/activities")]
+    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetAllActivities(Guid shelterId)
+    {
+        var activities = await _shelterRepository.GetAllActivities(shelterId);
+        var activitiesDto = _mapper.Map<IEnumerable<ActivityReadDTO>>(activities);
+        if (activitiesDto != null)
+        {
+            return Ok(activitiesDto);
+        }
+        return BadRequest();
+    }
+    [HttpGet("{shelterId}/calendar/activities/{activityId})")]
+    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetActivityById(Guid shelterId, Guid activityId) 
+    {
+        var activity = await _shelterRepository.GetActivityById(shelterId, activityId);
+        var activityDto = _mapper.Map<ActivityReadDTO>(activity);
+        if(activityDto != null)
+        {
+            return Ok(activityDto);
+        }
+        return BadRequest();
     }
 }
 
