@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Serialization;
 using SimpleWebDal.Data;
 using SimpleWebDal.Repository.ShelterRepo;
 using SimpleWebDal.Repository.UserRepo;
@@ -9,7 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(s => {
+    s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+}); 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

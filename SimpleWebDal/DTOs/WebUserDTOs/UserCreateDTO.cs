@@ -14,5 +14,5 @@ public class UserCreateDTO
     public CalendarActivityCreateDTO UserCalendar { get; set; }
     public ICollection<RoleCreateDTO> Roles { get; set; }
     //public ICollection<AdoptionCreateDTO> Adoptions { get; set; }
-   // public ICollection<UserPetsCreateDTO> PetList { get; set; }
+    public ICollection<UserPetsCreateDTO> PetList { get; set; }
 }

@@ -13,7 +13,7 @@ using SimpleWebDal.Data;
 namespace SimpleWebDal.Migrations
 {
     [DbContext(typeof(PetAdoptionCenterContext))]
-    [Migration("20230928131657_firstMigration")]
+    [Migration("20230928213441_firstMigration")]
     partial class firstMigration
     {
         /// <inheritdoc />
