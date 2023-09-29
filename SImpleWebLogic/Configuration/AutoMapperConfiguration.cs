@@ -1,49 +1,27 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
-using SImpleWebLogic.Profiles.MapAddressProfile;
-using SImpleWebLogic.Profiles.MapAdoptionProfile;
-using SImpleWebLogic.Profiles.MapAnimalProfile;
-using SImpleWebLogic.Profiles.MapAnimalProfile.MapBasicHealthInfoProfile;
-using SImpleWebLogic.Profiles.MapAnimalProfile.MapDiseaseProfile;
-using SImpleWebLogic.Profiles.MapAnimalProfile.MapUserProfiles;
-using SImpleWebLogic.Profiles.MapAnimalProfile.MapVaccinationProfile;
-using SImpleWebLogic.Profiles.MapCalendarProfile;
-using SImpleWebLogic.Profiles.MapCalendarProfile.MapActivityProfile;
-using SImpleWebLogic.Profiles.MapShelterProfile;
-using SImpleWebLogic.Profiles.MapTemporaryHouseProfile;
-using SImpleWebLogic.Profiles.MapUserPetsProfile;
-using SImpleWebLogic.Profiles.MapWebUserProfile;
-using SImpleWebLogic.Profiles.MapWebUserProfile.MapBasicInformationProfile;
-using SImpleWebLogic.Profiles.MapWebUserProfile.MapCredentialsProfile;
-using SImpleWebLogic.Profiles.MapWebUserProfile.MapRoleProfile;
+using System.Reflection;
 
-namespace SImpleWebLogic.Configuration;
-
-public static class AutoMapperConfiguration
+namespace SImpleWebLogic.Configuration
 {
-    public static void ConfigureAutoMapper(this IServiceCollection services)
+    public static class AutoMapperConfiguration
     {
-        var mappingConfig = new MapperConfiguration(mc =>
+        public static void ConfigureAutoMapper(this IServiceCollection services)
         {
-            mc.AddProfile(new MapAddress());
-            mc.AddProfile(new MapAdoption());
-            mc.AddProfile(new MapVaccination());
-            mc.AddProfile(new MapDisease());
-            mc.AddProfile(new MapBasicHealthInfo());
-            mc.AddProfile(new MapPet());
-            mc.AddProfile(new MapActivity());
-            mc.AddProfile(new MapCalendarActivity());
-            mc.AddProfile(new MapShelter());
-            mc.AddProfile(new MapTempHouse());
-            mc.AddProfile(new MapBasicInformation());
-            mc.AddProfile(new MapCredentials());
-            mc.AddProfile(new MapRole());
-            mc.AddProfile(new MapUserPets());
-            mc.AddProfile(new MapUser());
-            mc.AddProfile(new MapPatronUsers());
-        });
+            var mappingConfig = new MapperConfiguration(cfg =>
+            {
+                var profileTypes = Assembly.GetExecutingAssembly().GetTypes()
+                    .Where(t => typeof(Profile).IsAssignableFrom(t));
 
-        IMapper mapper = mappingConfig.CreateMapper();
-        services.AddSingleton(mapper);
+                foreach (var profileType in profileTypes)
+                {
+                    var profile = (Profile)Activator.CreateInstance(profileType);
+                    cfg.AddProfile(profile);
+                }
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+        }
     }
 }
