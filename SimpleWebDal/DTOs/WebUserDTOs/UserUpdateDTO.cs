@@ -1,6 +1,6 @@
 ﻿using SimpleWebDal.DTOs.CalendarDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.BasicInformationDTOs;
-using SimpleWebDal.DTOs.WebUserDTOs.CredentialsDTOs;
+
 using SimpleWebDal.DTOs.WebUserDTOs.RoleDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.UserPetsDTOs;
 

@@ -19,9 +19,9 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<User> GetUserById(Guid userId)
+    public async Task<User> GetUserById(string userId)
     {
-        var foundUser = await _dbContext.Users.Include(a => a.Credentials)
+        var foundUser = await _dbContext.Users
             .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
@@ -50,14 +50,14 @@ public class UserRepository : IUserRepository
     }
     public async Task<IEnumerable<User>> GetAllUsers()
     {
-        return await _dbContext.Users.Include(a => a.Credentials)
+        return await _dbContext.Users
             .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
             .Include(g => g.Adoptions)
             .Include(h => h.PetList).ToListAsync();
     }
-    public async Task<bool> DeleteUser(Guid userId)
+    public async Task<bool> DeleteUser(string userId)
     {
         var foundUser = await GetUserById(userId);
         if (foundUser != null)
@@ -88,12 +88,11 @@ public class UserRepository : IUserRepository
 
         if (foundUser != null)
         {
-            foundUser.Credentials.Username = user.Credentials.Username;
-            foundUser.Credentials.Password = user.Credentials.Password;
+      
             foundUser.BasicInformation.Name = user.BasicInformation.Name;
             foundUser.BasicInformation.Surname = user.BasicInformation.Surname;
             foundUser.BasicInformation.Phone = user.BasicInformation.Phone;
-            foundUser.BasicInformation.Email = user.BasicInformation.Email;
+            
             foundUser.BasicInformation.Address.Street = user.BasicInformation.Address.Street;
             foundUser.BasicInformation.Address.HouseNumber = user.BasicInformation.Address.HouseNumber;
             foundUser.BasicInformation.Address.FlatNumber = user.BasicInformation.Address.FlatNumber;
@@ -137,7 +136,7 @@ public class UserRepository : IUserRepository
     {
         return await _dbContext.Pets.FirstOrDefaultAsync(p => p.Id == id);
     }
-    public async Task<IEnumerable<Activity>> GetUserActivities(Guid userId)
+    public async Task<IEnumerable<Activity>> GetUserActivities(string userId)
     {
         var foundUser = await GetUserById(userId);
 
@@ -148,7 +147,7 @@ public class UserRepository : IUserRepository
 
         return Enumerable.Empty<Activity>(); 
     }
-    public async Task<Activity> GetUserActivityById(Guid userId, Guid activityId)
+    public async Task<Activity> GetUserActivityById(string userId, Guid activityId)
     {
         var foundUser = await GetUserById(userId);
 
@@ -161,7 +160,7 @@ public class UserRepository : IUserRepository
         return null;
     }
 
-    public async Task<Activity> AddActivity(Guid userId, Activity activity)
+    public async Task<Activity> AddActivity(string userId, Activity activity)
     {
         var foundUser = await GetUserById(userId);
        if(foundUser != null && foundUser.UserCalendar != null)
@@ -174,7 +173,7 @@ public class UserRepository : IUserRepository
         }
         return activity;
     }
-    public async Task<bool> UpdateActivity(Guid userId, Activity activity)
+    public async Task<bool> UpdateActivity(string userId, Activity activity)
     {
         var foundUser = await GetUserById(userId);
         var foundActivity = foundUser.UserCalendar.Activities.FirstOrDefault(e => e.Id == activity.Id);
@@ -189,7 +188,7 @@ public class UserRepository : IUserRepository
         return false;
     }
 
-    public async Task<bool> DeleteActivity(Guid userId, Guid activityId)
+    public async Task<bool> DeleteActivity(string userId, Guid activityId)
     {
         var foundUser = await GetUserById(userId);
         var foundActivity = foundUser.UserCalendar.Activities.FirstOrDefault(e => e.Id == activityId);
@@ -204,7 +203,7 @@ public class UserRepository : IUserRepository
         return false;
     }
 
-    public async Task<string> AddFavouritePet(Guid userId, Guid petId)
+    public async Task<string> AddFavouritePet(string userId, Guid petId)
     {
         var foundUser = await GetUserById(userId);
         var foundPet = await GetPetById(petId);
@@ -253,7 +252,7 @@ public class UserRepository : IUserRepository
     }
 
 
-    public async Task<bool> DeleteFavouritePet(Guid id, Guid petId)
+    public async Task<bool> DeleteFavouritePet(string id, Guid petId)
     {
         var foundUser = await GetUserById(id);
         var foundPet = await GetFavouritePetById(id, petId);
@@ -272,7 +271,7 @@ public class UserRepository : IUserRepository
     }
 
 
-    public async Task<IEnumerable<string>> GetAllFavouritePets(Guid id)
+    public async Task<IEnumerable<string>> GetAllFavouritePets(string id)
     {
         var foundUser = await GetUserById(id);
 
@@ -290,7 +289,7 @@ public class UserRepository : IUserRepository
     }
 
 
-    public async Task<string> GetFavouritePetById(Guid userId, Guid petId)
+    public async Task<string> GetFavouritePetById(string userId, Guid petId)
     {
         var foundUser = await GetUserById(userId);
 

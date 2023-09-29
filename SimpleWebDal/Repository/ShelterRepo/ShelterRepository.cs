@@ -33,9 +33,9 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 .FirstOrDefaultAsync(e => e.Id == shelterId);
             return foundShelter;
         }
-        public async Task<User> FindUserById(Guid userId)
+        public async Task<User> FindUserById(string userId)
         {
-            var foundUser = await _dbContext.Users.Include(a => a.Credentials)
+            var foundUser = await _dbContext.Users
             .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
@@ -68,7 +68,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             _dbContext.SaveChanges();
             return activity;
         }
-        public async Task<bool> AddShelterUser(Guid shelterId, Guid userId, RoleName roleName)
+        public async Task<bool> AddShelterUser(Guid shelterId, string userId, RoleName roleName)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundUser = await _dbContext.Users.Include(r => r.Roles).FirstOrDefaultAsync(u => u.Id == userId);
@@ -159,10 +159,10 @@ namespace SimpleWebDal.Repository.ShelterRepo
             foundPet.BasicHealthInfo.MedicalHistory.Add(disease);
             return disease;
         }
-        public async Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, TempHouse tempHouse)
+        public async Task<TempHouse> AddTempHouse(Guid shelterId, string userId, TempHouse tempHouse)
         {
             var foundShelter = await FindShelter(shelterId);
-            var foundUser = await _dbContext.Users.Include(a => a.Credentials)
+            var foundUser = await _dbContext.Users
             .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
@@ -181,7 +181,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return newTempHouse;
 
         }
-        public async Task<bool> AddUserToShelter(Guid shelterId, Guid userId, RoleName role)
+        public async Task<bool> AddUserToShelter(Guid shelterId, string userId, RoleName role)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundUser = await _dbContext.Users.FirstOrDefaultAsync(e => e.Id == userId);
@@ -224,7 +224,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return false;
         }
 
-        public async Task<bool> DeleteShelterUser(Guid shelterId, Guid userId)
+        public async Task<bool> DeleteShelterUser(Guid shelterId, string userId)
         {
             var foundShelter = await FindShelter(shelterId);
             var user = foundShelter.ShelterUsers.FirstOrDefault(e => e.Id == userId);
@@ -376,7 +376,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
         }
 
-        public async Task<User> GetShelterUserById(Guid shelterId, Guid userId)
+        public async Task<User> GetShelterUserById(Guid shelterId, string userId)
         {
             var foundShelter = await FindShelter(shelterId);
             var shelterUsers = foundShelter.ShelterUsers;

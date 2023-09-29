@@ -1,10 +1,6 @@
 ﻿using FluentValidation;
 using SimpleWebDal.DTOs.WebUserDTOs;
-using SImpleWebLogic.Validations.AdoptionCreateDTOValidation;
-using SImpleWebLogic.Validations.CalendarCreateValidation;
-using SImpleWebLogic.Validations.WebUserDTOValidation.BasicInformationDTOValidation;
 
-using SImpleWebLogic.Validations.WebUserValidation.RoleCreateValidations;
 
 namespace SImpleWebLogic.Validations.WebUserValidation;
 
