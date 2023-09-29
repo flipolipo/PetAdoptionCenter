@@ -8,16 +8,19 @@ using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
-
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System.Reflection.Emit;
 
 namespace SimpleWebDal.Data;
 
-public class PetAdoptionCenterContext : DbContext
+public class PetAdoptionCenterContext : IdentityDbContext<User, IdentityRole, string>
 {
+
     public DbSet<User> Users { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<BasicInformation> BasicInformations { get; set; }
-    public DbSet<Credentials> Credentials { get; set; }
+
     public DbSet<Role> Roles { get; set; }
     public DbSet<ProfileModel> Profiles { get; set; }
     public DbSet<TempHouse> TempHouses { get; set; }
@@ -30,7 +33,7 @@ public class PetAdoptionCenterContext : DbContext
     public DbSet<Activity> Activities { get; set; }
     public DbSet<CalendarActivity> CalendarActivities { get; set; }
 
-    private readonly IConfiguration _configuration;
+
 
     public PetAdoptionCenterContext(DbContextOptions<PetAdoptionCenterContext> options) : base(options)
     {
@@ -40,5 +43,9 @@ public class PetAdoptionCenterContext : DbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        base.OnModelCreating(builder);
     }
+
+   
+
 }

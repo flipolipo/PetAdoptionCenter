@@ -13,12 +13,11 @@ namespace SimpleWebDal.Configuration
             builder.HasOne(u => u.BasicInformation)
                 .WithOne()
                 .HasForeignKey<User>(u => u.BasicInformationId);
-            builder.HasOne(u => u.Credentials)
-                .WithOne()
-                .HasForeignKey<User>(a => a.CredentialsId);
+          
             builder.HasOne(u => u.UserCalendar)
                 .WithOne()
                 .HasForeignKey<User>(u => u.UserCalendarId);
+            
             builder.HasMany(u => u.Adoptions);
             builder.HasMany(u => u.Roles)
                .WithMany(r => r.Users)

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SimpleWebDal.Data;
+using SimpleWebDal.Models.WebUser;
 using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Extensions;
 using System.Text;
@@ -83,13 +84,13 @@ void ConfigureSwagger()
 void AddDbContext(ConfigurationManager dbConfig)
 {
     builder.Services.AddDbContext<PetAdoptionCenterContext>(options => options.UseNpgsql(dbConfig.GetConnectionString("MyConnection")));
-    builder.Services.AddDbContext<UsersContext>(options => options.UseNpgsql(dbConfig.GetConnectionString("MyConnection")));
+   
 
 };
 void AddIdentity()
 {
     builder.Services
-        .AddIdentityCore<IdentityUser>(options =>
+        .AddIdentityCore<User>(options =>
         {
             options.SignIn.RequireConfirmedAccount = false;
             options.User.RequireUniqueEmail = true;
@@ -100,7 +101,7 @@ void AddIdentity()
             options.Password.RequireLowercase = false;
         })
         .AddRoles<IdentityRole>() 
-        .AddEntityFrameworkStores<UsersContext>();
+        .AddEntityFrameworkStores<PetAdoptionCenterContext>();
 }
 void AddAuthentication()
 {
@@ -160,11 +161,11 @@ async Task AddAdmin()
 async Task CreateAdminIfNotExists()
 {
     using var scope = app.Services.CreateScope();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     var adminInDb = await userManager.FindByEmailAsync("admin@admin.com");
     if (adminInDb == null)
     {
-        var admin = new IdentityUser { UserName = "admin", Email = "admin@admin.com" };
+        var admin = new User { UserName = "admin", Email = "admin@admin.com" };
         var adminCreated = await userManager.CreateAsync(admin, builder.Configuration.GetValue<string>("AdminPassword"));
 
         if (adminCreated.Succeeded)

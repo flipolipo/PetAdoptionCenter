@@ -13,7 +13,7 @@ using SImpleWebLogic.Profiles.MapShelterProfile;
 using SImpleWebLogic.Profiles.MapTemporaryHouseProfile;
 using SImpleWebLogic.Profiles.MapWebUserProfile;
 using SImpleWebLogic.Profiles.MapWebUserProfile.MapBasicInformationProfile;
-using SImpleWebLogic.Profiles.MapWebUserProfile.MapCredentialsProfile;
+
 using SImpleWebLogic.Profiles.MapWebUserProfile.MapRoleProfile;
 
 namespace SImpleWebLogic.Configuration;
@@ -36,7 +36,7 @@ public static class AutoMapperConfiguration
             mc.AddProfile(new MapShelter());
             mc.AddProfile(new MapTempHouse());
             mc.AddProfile(new MapBasicInformation());
-            mc.AddProfile(new MapCredentials());
+         
             mc.AddProfile(new MapRole());
             mc.AddProfile(new MapUser());
         });

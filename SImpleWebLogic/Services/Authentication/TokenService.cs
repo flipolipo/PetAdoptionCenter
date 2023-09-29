@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SimpleWebDal.Models.WebUser;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -16,7 +17,7 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string CreateToken(IdentityUser user, string role)
+    public string CreateToken(User user, string role)
     {
         var expiration = DateTime.UtcNow.AddMinutes(ExpirationMinutes);
         var token = CreateJwtToken(
@@ -43,7 +44,7 @@ public class TokenService : ITokenService
         );
     }
 
-    private List<Claim> CreateClaims(IdentityUser user, string? role)
+    private List<Claim> CreateClaims(User user, string? role)
     {
         try
         {
