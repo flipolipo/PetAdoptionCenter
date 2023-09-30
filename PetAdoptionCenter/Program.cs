@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SimpleWebDal.Data;
 using SimpleWebDal.Models.WebUser;
 using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Extensions;
@@ -18,9 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("secrets.json", optional: false, reloadOnChange: true);
 
-builder.Services.AddControllers().AddNewtonsoftJson(s => {
-    s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-}); 
+builder.Services.AddControllers();
 AddServices();
 ConfigureSwagger();
 AddDbContext(builder.Configuration);

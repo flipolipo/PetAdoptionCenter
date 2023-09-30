@@ -402,7 +402,7 @@ public class SheltersController : ControllerBase
     }
 
     [HttpPost("{shelterId}/temphouses/create")]
-    public async Task<ActionResult<TempHouseReadDTO>> AddTempHouse(Guid shelterId, string userId, TempHouseCreateDTO tempHouseCreateDTO)
+    public async Task<ActionResult<TempHouseReadDTO>> AddTempHouse(Guid shelterId, string userId, Guid petId, TempHouseCreateDTO tempHouseCreateDTO)
     {
         //var tempHouseDto = new TempHouseCreateDTO()
         //{

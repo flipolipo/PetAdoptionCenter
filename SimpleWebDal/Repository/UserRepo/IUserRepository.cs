@@ -21,7 +21,7 @@ public interface IUserRepository
     public Task<IEnumerable<Activity>> GetUserActivities(string userId);
     public Task<Activity> GetUserActivityById(string userId, Guid activityId);
     public Task<IEnumerable<string>> GetAllFavouritePets(string id);
-    public Task<string> GetFavouritePetById(string userId, Guid petId);
+    //public Task<string> GetFavouritePetById(string userId, Guid petId);
     public Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets();
     public Task<Pet> GetVirtualAdoptedPetById(Guid favouriteId);
 

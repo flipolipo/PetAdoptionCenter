@@ -159,9 +159,10 @@ namespace SimpleWebDal.Repository.ShelterRepo
             foundPet.BasicHealthInfo.MedicalHistory.Add(disease);
             return disease;
         }
-        public async Task<TempHouse> AddTempHouse(Guid shelterId, string userId, TempHouse tempHouse)
+        public async Task<TempHouse> AddTempHouse(Guid shelterId, string userId, Guid petId, TempHouse tempHouse)
         {
             var foundShelter = await FindShelter(shelterId);
+            var foundPetById = await GetShelterPetById(shelterId, petId);
             var foundUser = await _dbContext.Users
             .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
             .Include(d => d.Roles)
