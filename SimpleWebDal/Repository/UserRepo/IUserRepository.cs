@@ -28,12 +28,12 @@ public interface IUserRepository
     //POST
     public Task<Activity> AddActivity(string userId, Activity activity);
     public Task<User> AddUser(User user);
-    public Task<string> AddFavouritePet(string userId, Guid petId);
+  //  public Task<string> AddFavouritePet(Guid userId, Guid petId);
 
 
     //PUT or PATCH
     public Task<bool> UpdateUser(User user);
-    public Task<bool> PartialUpdateUser(User user);
+   // public Task<bool> PartialUpdateUser(User user);
 
     public Task<bool> UpdateActivity(string userId, Activity activity);
 

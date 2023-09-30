@@ -10,7 +10,5 @@ public class MapUser : Profile
     {
         CreateMap<User, UserReadDTO>();
         CreateMap<UserCreateDTO, User>();
-        CreateMap<UserUpdateDTO, User>();
-        CreateMap<User, UserUpdateDTO>();
     }
 }

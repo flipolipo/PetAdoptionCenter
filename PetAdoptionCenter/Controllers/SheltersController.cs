@@ -417,7 +417,7 @@ public class SheltersController : ControllerBase
         var tempHouse = _mapper.Map<TempHouse>(tempHouseCreateDTO);
         try
         {
-            await _shelterRepository.AddTempHouse(shelterId, userId, tempHouse);
+            await _shelterRepository.AddTempHouse(shelterId, userId, petId, tempHouse);
             var tempHouseReadDto = _mapper.Map<TempHouseReadDTO>(tempHouse);
             return Ok(tempHouseReadDto);
         }

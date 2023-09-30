@@ -40,7 +40,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
             .Include(g => g.Adoptions)
-            .Include(h => h.PetList).FirstOrDefaultAsync(z => z.Id == userId);
+            .Include(h => h.Pets).FirstOrDefaultAsync(z => z.Id == userId);
             return foundUser;
         }
         private List<User> FilterUsersByRole(ICollection<User> users, RoleName roleName)
@@ -167,13 +167,15 @@ namespace SimpleWebDal.Repository.ShelterRepo
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
             .Include(g => g.Adoptions)
-            .Include(h => h.PetList).FirstOrDefaultAsync(e => e.Id == userId);
+            .Include(h => h.Pets).FirstOrDefaultAsync(e => e.Id == userId);
+            tempHouse.PetsInTemporaryHouse.Add(foundPetById);
+
             var newTempHouse = new TempHouse()
             {
                 Id = tempHouse.Id,
                 TemporaryOwner = foundUser,
                 TemporaryHouseAddress = foundUser.BasicInformation.Address,
-                PetsInTemporaryHouse = new List<Pet>(),
+                PetsInTemporaryHouse = tempHouse.PetsInTemporaryHouse,
                 StartOfTemporaryHouseDate = tempHouse.StartOfTemporaryHouseDate
             };
             foundShelter.TempHouses.Add(newTempHouse);
