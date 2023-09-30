@@ -1,6 +1,4 @@
 using AutoMapper;
-using FluentValidation;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SimpleWebDal.DTOs.AddressDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
@@ -8,7 +6,6 @@ using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.BasicInformationDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.CredentialsDTOs;
-using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
 using SimpleWebDal.Repository.UserRepo;
