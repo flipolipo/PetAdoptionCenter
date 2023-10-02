@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleWebDal.Data;
+using SimpleWebDal.DTOs.AnimalDTOs.VaccinationDTOs;
 using SimpleWebDal.Models.AdoptionProccess;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
@@ -523,19 +524,15 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var foundShelter = await FindShelter(shelterId);
             var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
             foundPet.BasicHealthInfo.MedicalHistory.Add(disease);
+            _dbContext.SaveChanges();
             return disease;
         }
-        public async Task<Vaccination> AddPetVaccination(Guid shelterId, Guid petId, string name, DateTime date)
+        public async Task<Vaccination> AddPetVaccination(Guid shelterId, Guid petId, Vaccination vaccination)
         {
-            var vaccination = new Vaccination()
-            {
-                Id = Guid.NewGuid(),
-                Date = date,
-                VaccinationName = name,
-            };
             var foundShelter = await FindShelter(shelterId);
             var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
             foundPet.BasicHealthInfo.Vaccinations.Add(vaccination);
+            _dbContext.SaveChanges();
             return vaccination;
         }
 

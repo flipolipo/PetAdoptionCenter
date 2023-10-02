@@ -1,4 +1,5 @@
-﻿using SimpleWebDal.Models.Animal;
+﻿using SimpleWebDal.DTOs.AnimalDTOs.VaccinationDTOs;
+using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.PetShelter;
@@ -39,7 +40,8 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<TempHouse> AddTempHouse(Guid shelterId, string userId, Guid petId, TempHouse tempHouse);
         public Task<Pet> AddPet(Guid shelterId, Pet pet);
         public Task<Activity> AddActivityToCalendar(Guid shelterId, Activity activity);
-        
+        public Task<Vaccination> AddPetVaccination(Guid shelterId, Guid petId, Vaccination vaccination);
+
 
         //PUT
         public Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city);

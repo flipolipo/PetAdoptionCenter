@@ -16,6 +16,7 @@ using SImpleWebLogic.Repository.ShelterRepo;
 using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
 using SimpleWebDal.DTOs.TemporaryHouseDTOs;
 using SimpleWebDal.Models.WebUser.Enums;
+using SimpleWebDal.DTOs.AnimalDTOs.VaccinationDTOs;
 
 namespace PetAdoptionCenter.Controllers;
 
@@ -438,16 +439,38 @@ public class SheltersController : ControllerBase
         return BadRequest();
     }
     [HttpGet("{shelterId}/calendar/activities/{activityId})")]
-    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetActivityById(Guid shelterId, Guid activityId) 
+    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetActivityById(Guid shelterId, Guid activityId)
     {
         var activity = await _shelterRepository.GetActivityById(shelterId, activityId);
         var activityDto = _mapper.Map<ActivityReadDTO>(activity);
-        if(activityDto != null)
+        if (activityDto != null)
         {
             return Ok(activityDto);
         }
         return BadRequest();
     }
+    [HttpGet("{shelterId}/pets/{petId}/vaccinations/{vaccinationId}", Name = "GetPetVaccinationById")]
+    public async Task<ActionResult<VaccinationReadDTO>> GetPetVaccinationById(Guid shelterId, Guid petId, Guid vaccinationId) 
+    {
+        var vaccination = await _shelterRepository.GetPetVaccinationById(shelterId, petId, vaccinationId);
+        var vaccinationDTO = _mapper.Map<VaccinationReadDTO>(vaccination);
+        if(vaccinationDTO != null) 
+        {
+            return Ok(vaccinationDTO);
+        }
+        return BadRequest();
+    }
+
+    [HttpPost("{shelterId}/pets/{petId}/vaccinations")]
+    public async Task<ActionResult<VaccinationReadDTO>> AddVaccination(Guid shelterId, Guid petId, VaccinationCreateDTO vaccinationCreateDTO) 
+    {
+        var vaccination = _mapper.Map<Vaccination>(vaccinationCreateDTO);
+        
+            var addedVaccination = _shelterRepository.AddPetVaccination(shelterId, petId, vaccination);
+            return CreatedAtRoute(nameof(GetPetVaccinationById), new {shelterId, petId, vaccinationId = addedVaccination.Id });
+        
+    }
+    
 }
 
 
