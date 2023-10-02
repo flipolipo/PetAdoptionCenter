@@ -188,11 +188,20 @@ public class UserRepository : IUserRepository
         return await _dbContext.Pets.FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    public async Task<string> AddFavouritePet(string userId, Guid petId)
+    public async Task<Pet> AddFavouritePet(string userId, Guid petId)
     {
         var foundUser = await GetUserById(userId);
         var foundPet = await GetPetById(petId);
-        throw new NotImplementedException();
+        if (foundUser != null && foundPet != null)
+        {
+            if (!foundUser.Pets.Contains(foundPet))
+            {
+                foundUser.Pets.Add(foundPet);
+                await _dbContext.SaveChangesAsync();
+                return foundPet;
+            }
+        }
+        return null;
     }
     public async Task<IEnumerable<Pet>> GetAllFavouritePets(string id)
     {

@@ -28,7 +28,7 @@ public interface IUserRepository
     //POST
     public Task<Activity> AddActivity(string userId, Activity activity);
    // public Task<User> AddUser(User user);
-  //  public Task<string> AddFavouritePet(Guid userId, Guid petId);
+    public Task<Pet> AddFavouritePet(string userId, Guid petId);
 
 
     //PUT or PATCH

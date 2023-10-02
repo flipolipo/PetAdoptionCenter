@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SimpleWebDal.DTOs.AddressDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
@@ -300,33 +299,20 @@ public class UsersController : ControllerBase
     }
 
 
-    [HttpPatch("{id}")]
-    public async Task<ActionResult> PartialUserUpdate(string id, JsonPatchDocument<IEnumerable<PetCreateDTO>> patchDoc)
+    [HttpPost("{id}/pets/{petId}")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> AddExistingPetToUser(string id, Guid petId)
     {
-        var user = await _userRepository.GetUserById(id);
-        var petsList = await _userRepository.GetAllFavouritePets(id);
+        var addedPet = await _userRepository.AddFavouritePet(id, petId);
 
-        if (petsList == null)
+        if (addedPet != null)
+        {
+            return Ok(addedPet);
+        }
+        else
         {
             return NotFound();
         }
-
-     
-
-        return NoContent();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

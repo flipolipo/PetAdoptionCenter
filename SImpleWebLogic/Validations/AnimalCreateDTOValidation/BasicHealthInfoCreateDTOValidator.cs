@@ -18,18 +18,18 @@ public class BasicHealthInfoCreateDTOValidator : AbstractValidator<BasicHealthIn
         RuleFor(info => info.Size)
             .IsInEnum().WithMessage("Invalid Size value.");
 
-        When(info => info.Vaccinations.Any(), () =>
-        {
-            RuleForEach(info => info.Vaccinations)
-            .NotNull();
-                //.SetValidator(new VaccinationCreateDTOValidator());
-        });
+        //When(info => info.Vaccinations.Any(), () =>
+        //{
+        //    RuleForEach(info => info.Vaccinations)
+        //    .NotNull();
+        //        //.SetValidator(new VaccinationCreateDTOValidator());
+        //});
 
-        When(info => info.MedicalHistory.Any(), () =>
-        {
-            RuleForEach(info => info.MedicalHistory)
-            .NotNull();
-                //.SetValidator(new DiseaseCreateDTOValidator());
-        });
+        //When(info => info.MedicalHistory.Any(), () =>
+        //{
+        //    RuleForEach(info => info.MedicalHistory)
+        //    .NotNull();
+        //        //.SetValidator(new DiseaseCreateDTOValidator());
+        //});
     }
 }
