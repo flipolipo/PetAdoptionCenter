@@ -13,7 +13,7 @@ using System.Reflection.Emit;
 
 namespace SimpleWebDal.Data;
 
-public class PetAdoptionCenterContext : IdentityDbContext<User, IdentityRole, string>
+public class PetAdoptionCenterContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
 
     public DbSet<User> Users { get; set; }
