@@ -28,15 +28,48 @@ public class UserRepository : IUserRepository
         return foundUser;
     }
 
-    public async Task<User> AddUser(User user)
-    {
-        if (user == null)
-        {
-            throw new ArgumentNullException(nameof(user));
-        }
+    //public async Task<User> AddUser(User user)
+    //{
+    //    if (user == null)
+    //    {
+    //        throw new ArgumentNullException(nameof(user));
+    //    }
 
-        bool existingUser = await CheckIfUserExistInDataBase(user);
-        if (!existingUser)
+    //    bool existingUser = await CheckIfUserExistInDataBase(user);
+    //    if (!existingUser)
+    //    {
+    //        var existingAddress = await GetExistingAddressFromDataBase(user);
+    //        if (existingAddress == null)
+    //        {
+    //            _dbContext.Addresses.Add(user.BasicInformation.Address);
+    //        }
+    //        else
+    //        {
+    //            user.BasicInformation.Address = existingAddress;
+    //            user.BasicInformation.AddressId = existingAddress.Id;
+    //        }
+
+    //        _dbContext.Users.Add(user);
+    //        await _dbContext.SaveChangesAsync();
+
+    //    }
+    //    return user;
+
+    //}
+    public async Task<IEnumerable<User>> GetAllUsers()
+    {
+        return await _dbContext.Users
+            .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
+            .Include(d => d.Roles)
+            .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
+            .Include(g => g.Adoptions)
+            .Include(h => h.Pets).ToListAsync();
+    }
+    public async Task<bool> UpdateUser(User user)
+    {
+        var foundUser = await GetUserById(user.Id);
+
+        if (foundUser != null)
         {
             var existingAddress = await GetExistingAddressFromDataBase(user);
             if (existingAddress == null)
@@ -49,22 +82,16 @@ public class UserRepository : IUserRepository
                 user.BasicInformation.AddressId = existingAddress.Id;
             }
 
-            _dbContext.Users.Add(user);
+            foundUser.BasicInformation.Name = user.BasicInformation.Name;
+            foundUser.BasicInformation.Surname = user.BasicInformation.Surname;
+            foundUser.BasicInformation.Phone = user.BasicInformation.Phone;
+
             await _dbContext.SaveChangesAsync();
-
+            return true;
         }
-        return user;
+        return false;
+    }
 
-    }
-    public async Task<IEnumerable<User>> GetAllUsers()
-    {
-        return await _dbContext.Users
-            .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
-            .Include(d => d.Roles)
-            .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
-            .Include(g => g.Adoptions)
-            .Include(h => h.Pets).ToListAsync();
-    }
     public async Task<bool> DeleteUser(string userId)
     {
         var foundUser = await GetUserById(userId);
@@ -83,45 +110,6 @@ public class UserRepository : IUserRepository
             return true;
         }
         return false;
-    }
-
-    private async Task<Shelter> FindShelter(Guid shelterId)
-    {
-        return await _dbContext.Shelters.FirstOrDefaultAsync(e => e.Id == shelterId);
-    }
-
-    public async Task<bool> UpdateUser(User user)
-    {
-        var foundUser = await GetUserById(user.Id);
-
-        if (foundUser != null)
-        {
-      
-            foundUser.BasicInformation.Name = user.BasicInformation.Name;
-            foundUser.BasicInformation.Surname = user.BasicInformation.Surname;
-            foundUser.BasicInformation.Phone = user.BasicInformation.Phone;
-            
-            foundUser.BasicInformation.Address.Street = user.BasicInformation.Address.Street;
-            foundUser.BasicInformation.Address.HouseNumber = user.BasicInformation.Address.HouseNumber;
-            foundUser.BasicInformation.Address.FlatNumber = user.BasicInformation.Address.FlatNumber;
-            foundUser.BasicInformation.Address.PostalCode = user.BasicInformation.Address.PostalCode;
-            foundUser.BasicInformation.Address.City = user.BasicInformation.Address.City;
-            await _dbContext.SaveChangesAsync();
-            return true;
-        }
-        return false;
-    }
-
-
-
-    public async Task<IEnumerable<Pet>> GetAllPets()
-    {
-        return await _dbContext.Pets.ToListAsync();
-    }
-
-    public async Task<Pet> GetPetById(Guid id)
-    {
-        return await _dbContext.Pets.FirstOrDefaultAsync(p => p.Id == id);
     }
     public async Task<IEnumerable<Activity>> GetUserActivities(string userId)
     {
@@ -190,124 +178,58 @@ public class UserRepository : IUserRepository
         return false;
     }
 
+    public async Task<IEnumerable<Pet>> GetAllPets()
+    {
+        return await _dbContext.Pets.ToListAsync();
+    }
+
+    public async Task<Pet> GetPetById(Guid id)
+    {
+        return await _dbContext.Pets.FirstOrDefaultAsync(p => p.Id == id);
+    }
+
     public async Task<string> AddFavouritePet(string userId, Guid petId)
     {
+        var foundUser = await GetUserById(userId);
+        var foundPet = await GetPetById(petId);
         throw new NotImplementedException();
     }
-
-    public async Task<Pet> GetPetById(string id)
+    public async Task<IEnumerable<Pet>> GetAllFavouritePets(string id)
     {
-        return await _dbContext.Pets.FirstOrDefaultAsync(p => p.Id.ToString() == id);
+        var foundUser = await GetUserById(id);
+        if (foundUser != null)
+        {
+            return foundUser.Pets;
+        }
+
+        return Enumerable.Empty<Pet>();
     }
 
-    //public async Task<string> AddFavouritePet(Guid userId, Guid petId)
-    //{
-    //    var foundUser = await GetUserById(userId);
-    //    var foundPet = await GetPetById(petId);
+    public async Task<Pet> GetFavouritePetById(string userId, Guid petId)
+    {
+        var foundUser = await GetUserById(userId);
 
-    //    if (foundUser == null || foundPet == null)
-    //    {
-    //        throw new Exception("User or pet not found.");
-    //    }
+        if (foundUser != null && foundUser.Pets != null)
+        {
+            var pet = foundUser.Pets.FirstOrDefault(p => p.Id == petId);
+            return pet;
+        }
+        return null;
+    }
 
-    //    if (foundUser.PetList == null)
-    //    {
-    //        foundUser.PetList = new List<UserPets>();
-    //    }
+    public async Task<bool> DeleteFavouritePet(string id, Guid petId)
+    {
+        var foundUser = await GetUserById(id);
+        var foundPetForUser = await GetFavouritePetById(id, petId);
+        if (foundUser != null && foundPetForUser != null)
+        {
+            foundUser.Pets.Remove(foundPetForUser);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
 
-    //    var userPets = foundUser.PetList.SingleOrDefault(userPet => userPet.UserId == userId);
-
-    //    if (userPets == null)
-    //    {
-    //        userPets = new UserPets
-    //        {
-    //            Id = Guid.NewGuid(),
-    //            UserId = userId,
-    //            Pets = new List<string> { petId.ToString() }
-    //        };
-
-    //        foundUser.PetList.Add(userPets);
-    //    }
-    //    else
-    //    {
-    //        if (userPets.Pets == null)
-    //        {
-    //            userPets.Pets = new List<string>();
-    //        }
-
-    //        if (userPets.Pets.Contains(petId.ToString()))
-    //        {
-    //            throw new Exception("This pet is already on the user's favorites list.");
-    //        }
-
-    //        userPets.Pets.Add(petId.ToString());
-    //    }
-
-    //    await _dbContext.SaveChangesAsync();
-
-    //    return petId.ToString();
-    //}
-
-
-    //public async Task<bool> DeleteFavouritePet(Guid id, Guid petId)
-    //{
-    //    var foundUser = await GetUserById(id);
-    //    var foundPet = await GetFavouritePetById(id, petId);
-
-    //    if (foundPet != null && foundUser != null)
-    //    {
-    //        foreach (var pet in foundUser.PetList)
-    //        {
-    //            pet.Pets.Remove(foundPet);
-    //        }
-    //       await _dbContext.SaveChangesAsync();
-    //        return true;
-    //    }
-
-    //    return false;
-    //}
-
-
-    //public async Task<IEnumerable<string>> GetAllFavouritePets(Guid id)
-    //{
-    //    var foundUser = await GetUserById(id);
-
-    //    if (foundUser != null && foundUser.PetList != null)
-    //    {
-    //        var favoritePets = foundUser.PetList
-    //            .Where(userPets => userPets.UserId == id)
-    //            .SelectMany(userPets => userPets.Pets)
-    //            .ToList();
-
-    //        return favoritePets;
-    //    }
-
-    //    return Enumerable.Empty<string>();
-    //}
-
-
-    //public async Task<string> GetFavouritePetById(Guid userId, Guid petId)
-    //{
-    //    var foundUser = await GetUserById(userId);
-
-    //    if (foundUser != null && foundUser.PetList != null)
-    //    {
-    //        var userPets = foundUser.PetList.SingleOrDefault(userPet => userPet.UserId == userId);
-
-    //        if (userPets != null && userPets.Pets != null)
-    //        {
-    //            if (userPets.Pets.Contains(petId.ToString()))
-    //            {
-    //                return petId.ToString();
-    //            }
-    //        }
-    //    }
-
-    //    return null;
-    //}
-
-
-
+        return false;
+    }
     public async Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets()
     {
         throw new NotImplementedException();
@@ -320,7 +242,10 @@ public class UserRepository : IUserRepository
         return foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
     }
 
-
+    private async Task<Shelter> FindShelter(Guid shelterId)
+    {
+        return await _dbContext.Shelters.FirstOrDefaultAsync(e => e.Id == shelterId);
+    }
 
     public async Task<Pet> GetVirtualAdoptedPetById(int favouriteId)
     {
@@ -355,7 +280,7 @@ public class UserRepository : IUserRepository
         return true;
     }
 
-    private async Task<Address> GetExistingAddressFromDataBase (User user)
+    private async Task<Address> GetExistingAddressFromDataBase(User user)
     {
         if (user == null)
         {
@@ -368,17 +293,7 @@ public class UserRepository : IUserRepository
         return existingAddress;
     }
 
-    public Task<IEnumerable<string>> GetAllFavouritePets(string id)
-    {
-        throw new NotImplementedException();
-    }
 
-   
-
-    public Task<bool> DeleteFavouritePet(string id, Guid petId)
-    {
-        throw new NotImplementedException();
-    }
 }
 
 

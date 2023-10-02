@@ -20,14 +20,14 @@ public interface IUserRepository
     //public Task<CalendarActivity> GetCalendarForUser(Guid userId);
     public Task<IEnumerable<Activity>> GetUserActivities(string userId);
     public Task<Activity> GetUserActivityById(string userId, Guid activityId);
-    public Task<IEnumerable<string>> GetAllFavouritePets(string id);
-    //public Task<string> GetFavouritePetById(string userId, Guid petId);
+    public Task<IEnumerable<Pet>> GetAllFavouritePets(string id);
+    public Task<Pet> GetFavouritePetById(string userId, Guid petId);
     public Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets();
     public Task<Pet> GetVirtualAdoptedPetById(Guid favouriteId);
 
     //POST
     public Task<Activity> AddActivity(string userId, Activity activity);
-    public Task<User> AddUser(User user);
+   // public Task<User> AddUser(User user);
   //  public Task<string> AddFavouritePet(Guid userId, Guid petId);
 
 
