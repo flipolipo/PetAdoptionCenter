@@ -249,7 +249,7 @@ public class UsersController : ControllerBase
             return NotFound();
         }
     }
-   
+
 
     [HttpPatch("{id}")]
     public async Task<ActionResult> PartialUserUpdate(Guid id, JsonPatchDocument<IEnumerable<string>> patchDoc)
@@ -281,6 +281,7 @@ public class UsersController : ControllerBase
 
         return NoContent();
     }
+    
 }
 
 
