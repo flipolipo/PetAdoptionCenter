@@ -1,13 +1,11 @@
 using AutoMapper;
-using FluentValidation;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SimpleWebDal.DTOs.AddressDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
 using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.BasicInformationDTOs;
-using SimpleWebDal.DTOs.WebUserDTOs.CredentialsDTOs;
+
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
@@ -39,7 +37,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetUserById")]
-    public async Task<ActionResult<UserReadDTO>> GetUserById(Guid id)
+    public async Task<ActionResult<UserReadDTO>> GetUserById(string id)
     {
         var user = await _userRepository.GetUserById(id);
         if (user != null)
@@ -53,15 +51,15 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
     {
         var userModel = _mapper.Map<User>(userCreateDTO);
-        var userCredentialsValidator = _validatorFactory.GetValidator<CredentialsCreateDTO>();
+       
         var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
         var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
 
-        var validationResultCredentials = userCredentialsValidator.Validate(userCreateDTO.Credentials);
+       
         var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
         var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
 
-        if (!validationResultCredentials.IsValid ||
+        if (
             !validationResultBasicInformation.IsValid || !validationResultAddress.IsValid)
         {
             return BadRequest();
@@ -75,7 +73,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(Guid id)
+    public async Task<IActionResult> DeleteUser(string id)
     {
         bool deleted = await _userRepository.DeleteUser(id);
 
@@ -90,7 +88,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateUser(Guid id, UserCreateDTO userCreateDTO)
+    public async Task<ActionResult> UpdateUser(string id, UserCreateDTO userCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         if (foundUser == null)
@@ -114,7 +112,7 @@ public class UsersController : ControllerBase
         }
     }
     [HttpGet("{id}/calendar/activities")]
-    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetAllActivities(Guid id)
+    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetAllActivities(string id)
     {
         var userCalendar = await _userRepository.GetUserActivities(id);
         if (userCalendar != null)
@@ -125,7 +123,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}/calendar/activities/{activityId}", Name = "GetActivityById")]
-    public async Task<ActionResult<ActivityReadDTO>> GetActivityById(Guid id, Guid activityId)
+    public async Task<ActionResult<ActivityReadDTO>> GetActivityById(string id, Guid activityId)
     {
         var userActivity = await _userRepository.GetUserActivityById(id, activityId);
         if (userActivity != null)
@@ -136,7 +134,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("{id}/calendar/activities")]
-    public async Task<ActionResult<ActivityReadDTO>> AddActivity(Guid id, ActivityCreateDTO activityCreateDTO)
+    public async Task<ActionResult<ActivityReadDTO>> AddActivity(string id, ActivityCreateDTO activityCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         var activityModel = _mapper.Map<Activity>(activityCreateDTO);
@@ -156,7 +154,7 @@ public class UsersController : ControllerBase
 
 
     [HttpPut("{id}/calendar/activities/{activityId}")]
-    public async Task<ActionResult> UpdateUserActivity(Guid id, Guid activityId, ActivityCreateDTO activityCreateDTO)
+    public async Task<ActionResult> UpdateUserActivity(string id, Guid activityId, ActivityCreateDTO activityCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         var foundActivity = await _userRepository.GetUserActivityById(id, activityId);
@@ -182,7 +180,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}/activities/{activityId}")]
-    public async Task<ActionResult> DeleteActivity(Guid id, Guid activityId)
+    public async Task<ActionResult> DeleteActivity(string id, Guid activityId)
     {
         bool deleted = await _userRepository.DeleteActivity(id, activityId);
 
@@ -213,75 +211,74 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
-    [HttpGet("{id}/pets")]
-    public async Task<ActionResult<IEnumerable<string>>> GetAllFavouritePets(Guid id)
-    {
-        var pets = await _userRepository.GetAllFavouritePets(id);
-        if (pets != null)
-        {
-            return Ok(pets);
-        }
-        return NotFound();
-    }
+    //[HttpGet("{id}/pets")]
+    //public async Task<ActionResult<IEnumerable<string>>> GetAllFavouritePets(Guid id)
+    //{
+    //    var pets = await _userRepository.GetAllFavouritePets(id);
+    //    if (pets != null)
+    //    {
+    //        return Ok(pets);
+    //    }
+    //    return NotFound();
+    //}
 
-    [HttpGet("{id}/pets/{petId}", Name = "GetFavouritePetById")]
-    public async Task<ActionResult<string>> GetFavouritePetById(Guid id, Guid petId)
-    {
-        var pet = await _userRepository.GetFavouritePetById(id, petId);
-        if (pet != null)
-        {
-            return Ok(pet);
-        }
-        return NotFound();
-    }
+    //[HttpGet("{id}/pets/{petId}", Name = "GetFavouritePetById")]
+    //public async Task<ActionResult<string>> GetFavouritePetById(Guid id, Guid petId)
+    //{
+    //    var pet = await _userRepository.GetFavouritePetById(id, petId);
+    //    if (pet != null)
+    //    {
+    //        return Ok(pet);
+    //    }
+    //    return NotFound();
+    //}
 
-    [HttpDelete("{id}/pets/{petId}")]
-    public async Task<IActionResult> DeleteFavouritePet(Guid id, Guid petId)
-    {
-        bool deleted = await _userRepository.DeleteFavouritePet(id, petId);
+    //[HttpDelete("{id}/pets/{petId}")]
+    //public async Task<IActionResult> DeleteFavouritePet(Guid id, Guid petId)
+    //{
+    //    bool deleted = await _userRepository.DeleteFavouritePet(id, petId);
 
-        if (deleted)
-        {
-            return NoContent();
-        }
-        else
-        {
-            return NotFound();
-        }
-    }
+    //    if (deleted)
+    //    {
+    //        return NoContent();
+    //    }
+    //    else
+    //    {
+    //        return NotFound();
+    //    }
+    //}
 
 
-    [HttpPatch("{id}")]
-    public async Task<ActionResult> PartialUserUpdate(Guid id, JsonPatchDocument<IEnumerable<string>> patchDoc)
-    {
-        var user = await _userRepository.GetUserById(id);
-        var petsList = await _userRepository.GetAllFavouritePets(id);
+    //[HttpPatch("{id}")]
+    //public async Task<ActionResult> PartialUserUpdate(Guid id, JsonPatchDocument<IEnumerable<string>> patchDoc)
+    //{
+    //    var user = await _userRepository.GetUserById(id);
+    //    var petsList = await _userRepository.GetAllFavouritePets(id);
 
-        if (petsList == null)
-        {
-            return NotFound();
-        }
+    //    if (petsList == null)
+    //    {
+    //        return NotFound();
+    //    }
 
-        patchDoc.ApplyTo(petsList, ModelState);
+    //    patchDoc.ApplyTo(petsList, ModelState);
 
-        foreach (var operation in patchDoc.Operations)
-        {
-            if (operation.op == "add" && operation.path == "/Id")
-            {
-                var newId = operation.value.ToString();
-                petsList.Append(newId);
-            }
-        }
+    //    foreach (var operation in patchDoc.Operations)
+    //    {
+    //        if (operation.op == "add" && operation.path == "/Id")
+    //        {
+    //            var newId = operation.value.ToString();
+    //            petsList.Append(newId);
+    //        }
+    //    }
 
-        if (!TryValidateModel(patchDoc))
-        {
-            return ValidationProblem(ModelState);
-        }
-        await _userRepository.PartialUpdateUser(user);
+    //    if (!TryValidateModel(patchDoc))
+    //    {
+    //        return ValidationProblem(ModelState);
+    //    }
+    //    await _userRepository.PartialUpdateUser(user);
 
-        return NoContent();
-    }
-    
+    //    return NoContent();
+    //}
 }
 
 

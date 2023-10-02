@@ -9,7 +9,7 @@ namespace SimpleWebDal.Configuration
         public void Configure(EntityTypeBuilder<Pet> builder)
         {
             builder.HasKey(p => p.Id);
-            builder.HasMany(p => p.PatronUsers);
+            builder.HasMany(p => p.Users);
             builder.HasOne(p => p.Calendar)
                      .WithOne()
                      .HasForeignKey<Pet>(p => p.CalendarId);

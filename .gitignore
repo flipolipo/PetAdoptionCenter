@@ -419,4 +419,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/PetAdoptionCenter/secrets.json
 /SimpleWebDal/secrets.json
+/PetAdoptionCenter/secrets.json

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using SimpleWebDal.DTOs.WebUserDTOs.BasicInformationDTOs;
-using SImpleWebLogic.Validations.AddressCreateDTOValidation;
+
 
 namespace SImpleWebLogic.Validations.WebUserDTOValidation.BasicInformationDTOValidation;
 
@@ -20,10 +20,7 @@ public class BasicInformationDTOValidator : AbstractValidator<BasicInformationCr
             .NotEmpty().WithMessage("Phone cannot be empty.")
             .MaximumLength(20).WithMessage("The maximum phone length is 20 characters.");
 
-        RuleFor(info => info.Email)
-            .NotEmpty().WithMessage("Email cannot be empty.")
-            .MaximumLength(100).WithMessage("The maximum email length is 100 characters.")
-            .EmailAddress().WithMessage("Invalid email format.");
+        
 
     }
 }
