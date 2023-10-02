@@ -1,16 +1,12 @@
 using AutoMapper;
-using FluentValidation;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SimpleWebDal.DTOs.AddressDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
+using SimpleWebDal.DTOs.CalendarDTOs;
 using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.BasicInformationDTOs;
-using SimpleWebDal.DTOs.WebUserDTOs.CredentialsDTOs;
-using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.CalendarModel;
-using SimpleWebDal.Models.WebUser;
 using SimpleWebDal.Repository.UserRepo;
 using SImpleWebLogic.Configuration;
 
@@ -32,6 +28,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetAllUsers()
     {
         var users = await _userRepository.GetAllUsers();
@@ -39,7 +36,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetUserById")]
-    public async Task<ActionResult<UserReadDTO>> GetUserById(Guid id)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UserReadDTO>> GetUserById(string id)
     {
         var user = await _userRepository.GetUserById(id);
         if (user != null)
@@ -49,57 +48,45 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
-    [HttpPost]
-    public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
-    {
-        var userModel = _mapper.Map<User>(userCreateDTO);
-        var userCredentialsValidator = _validatorFactory.GetValidator<CredentialsCreateDTO>();
-        var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
-        var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
+    //[HttpPost]
+    //public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
+    //{
+    //    var userModel = _mapper.Map<User>(userCreateDTO);
 
-        var validationResultCredentials = userCredentialsValidator.Validate(userCreateDTO.Credentials);
-        var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
-        var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
+    //    var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
+    //    var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
 
-        if (!validationResultCredentials.IsValid ||
-            !validationResultBasicInformation.IsValid || !validationResultAddress.IsValid)
-        {
-            return BadRequest();
-        }
 
-        //userModel.PetList = new List<UserPets>();
-        var addedUser = await _userRepository.AddUser(userModel);
-        var userReadDTO = _mapper.Map<UserReadDTO>(userModel);
+    //    var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
+    //    var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
 
-        return CreatedAtRoute(nameof(GetUserById), new { id = userReadDTO.Id }, userReadDTO);
-    }
+    //    if (
+    //        !validationResultBasicInformation.IsValid || !validationResultAddress.IsValid)
+    //    {
+    //        return BadRequest();
+    //    }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(Guid id)
-    {
-        bool deleted = await _userRepository.DeleteUser(id);
+    //    var addedUser = await _userRepository.AddUser(userModel);
+    //    var userReadDTO = _mapper.Map<UserReadDTO>(userModel);
 
-        if (deleted)
-        {
-            return NoContent();
-        }
-        else
-        {
-            return NotFound();
-        }
-    }
+    //    return CreatedAtRoute(nameof(GetUserById), new { id = userReadDTO.Id }, userReadDTO);
+    //}
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateUser(Guid id, UserCreateDTO userCreateDTO)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> UpdateUser(string id, UserCreateDTO userCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         if (foundUser == null)
         {
             return NotFound();
         }
-        if (foundUser.Id != id)
+        if (!IsUserCreateDTOValid(userCreateDTO))
         {
-            return BadRequest("User ID does not match the request.");
+            return BadRequest();
         }
         var userCreateDto = _mapper.Map(userCreateDTO, foundUser);
 
@@ -113,8 +100,45 @@ public class UsersController : ControllerBase
             return StatusCode(500);
         }
     }
+    private bool IsUserCreateDTOValid(UserCreateDTO userCreateDTO)
+    {
+        var userValidator = _validatorFactory.GetValidator<UserCreateDTO>();
+        var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
+        var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
+        var userCalendarValidator = _validatorFactory.GetValidator<CalendarActivityCreateDTO>();
+
+        var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
+        var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
+        var validationResultCalendarActivity = userCalendarValidator.Validate(userCreateDTO.UserCalendar);
+        var validateResultRole = userValidator.Validate(userCreateDTO);
+
+        return validationResultBasicInformation.IsValid && validationResultAddress.IsValid && validationResultCalendarActivity.IsValid 
+            && validateResultRole.IsValid;
+    }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteUser(string id)
+    {
+        bool deleted = await _userRepository.DeleteUser(id);
+
+        if (deleted)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
+
+
     [HttpGet("{id}/calendar/activities")]
-    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetAllActivities(Guid id)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetAllActivities(string id)
     {
         var userCalendar = await _userRepository.GetUserActivities(id);
         if (userCalendar != null)
@@ -124,8 +148,11 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
+
     [HttpGet("{id}/calendar/activities/{activityId}", Name = "GetActivityById")]
-    public async Task<ActionResult<ActivityReadDTO>> GetActivityById(Guid id, Guid activityId)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ActivityReadDTO>> GetActivityById(string id, Guid activityId)
     {
         var userActivity = await _userRepository.GetUserActivityById(id, activityId);
         if (userActivity != null)
@@ -135,8 +162,11 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
+
     [HttpPost("{id}/calendar/activities")]
-    public async Task<ActionResult<ActivityReadDTO>> AddActivity(Guid id, ActivityCreateDTO activityCreateDTO)
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<ActivityReadDTO>> AddActivity(string id, ActivityCreateDTO activityCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         var activityModel = _mapper.Map<Activity>(activityCreateDTO);
@@ -156,7 +186,11 @@ public class UsersController : ControllerBase
 
 
     [HttpPut("{id}/calendar/activities/{activityId}")]
-    public async Task<ActionResult> UpdateUserActivity(Guid id, Guid activityId, ActivityCreateDTO activityCreateDTO)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> UpdateUserActivity(string id, Guid activityId, ActivityCreateDTO activityCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         var foundActivity = await _userRepository.GetUserActivityById(id, activityId);
@@ -164,10 +198,13 @@ public class UsersController : ControllerBase
         {
             return NotFound();
         }
-        if (foundUser.Id != id || foundActivity.Id != activityId)
+        var activityValidator = _validatorFactory.GetValidator<ActivityCreateDTO>();
+        var validationResult = activityValidator.Validate(activityCreateDTO);
+        if (!validationResult.IsValid)
         {
-            return BadRequest("User ID does not match the request.");
+            return BadRequest();
         }
+    
         var activityCreate = _mapper.Map(activityCreateDTO, foundActivity);
 
         bool updated = await _userRepository.UpdateActivity(id, foundActivity);
@@ -182,7 +219,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}/activities/{activityId}")]
-    public async Task<ActionResult> DeleteActivity(Guid id, Guid activityId)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> DeleteActivity(string id, Guid activityId)
     {
         bool deleted = await _userRepository.DeleteActivity(id, activityId);
 
@@ -196,6 +235,7 @@ public class UsersController : ControllerBase
         }
     }
     [HttpGet("pets")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllPets()
     {
         var pets = await _userRepository.GetAllPets();
@@ -203,6 +243,8 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("pets/{id}", Name = "GetPetById")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PetReadDTO>> GetPetById(Guid id)
     {
         var pets = await _userRepository.GetPetById(id);
@@ -213,74 +255,74 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
-    [HttpGet("{id}/pets")]
-    public async Task<ActionResult<IEnumerable<string>>> GetAllFavouritePets(Guid id)
-    {
-        var pets = await _userRepository.GetAllFavouritePets(id);
-        if (pets != null)
-        {
-            return Ok(pets);
-        }
-        return NotFound();
-    }
+    //[HttpGet("{id}/pets")]
+    //public async Task<ActionResult<IEnumerable<string>>> GetAllFavouritePets(Guid id)
+    //{
+    //    var pets = await _userRepository.GetAllFavouritePets(id);
+    //    if (pets != null)
+    //    {
+    //        return Ok(pets);
+    //    }
+    //    return NotFound();
+    //}
 
-    [HttpGet("{id}/pets/{petId}", Name = "GetFavouritePetById")]
-    public async Task<ActionResult<string>> GetFavouritePetById(Guid id, Guid petId)
-    {
-        var pet = await _userRepository.GetFavouritePetById(id, petId);
-        if (pet != null)
-        {
-            return Ok(pet);
-        }
-        return NotFound();
-    }
+    //[HttpGet("{id}/pets/{petId}", Name = "GetFavouritePetById")]
+    //public async Task<ActionResult<string>> GetFavouritePetById(Guid id, Guid petId)
+    //{
+    //    var pet = await _userRepository.GetFavouritePetById(id, petId);
+    //    if (pet != null)
+    //    {
+    //        return Ok(pet);
+    //    }
+    //    return NotFound();
+    //}
 
-    [HttpDelete("{id}/pets/{petId}")]
-    public async Task<IActionResult> DeleteFavouritePet(Guid id, Guid petId)
-    {
-        bool deleted = await _userRepository.DeleteFavouritePet(id, petId);
+    //[HttpDelete("{id}/pets/{petId}")]
+    //public async Task<IActionResult> DeleteFavouritePet(Guid id, Guid petId)
+    //{
+    //    bool deleted = await _userRepository.DeleteFavouritePet(id, petId);
 
-        if (deleted)
-        {
-            return NoContent();
-        }
-        else
-        {
-            return NotFound();
-        }
-    }
-   
+    //    if (deleted)
+    //    {
+    //        return NoContent();
+    //    }
+    //    else
+    //    {
+    //        return NotFound();
+    //    }
+    //}
 
-    [HttpPatch("{id}")]
-    public async Task<ActionResult> PartialUserUpdate(Guid id, JsonPatchDocument<IEnumerable<string>> patchDoc)
-    {
-        var user = await _userRepository.GetUserById(id);
-        var petsList = await _userRepository.GetAllFavouritePets(id);
 
-        if (petsList == null)
-        {
-            return NotFound();
-        }
+    //[HttpPatch("{id}")]
+    //public async Task<ActionResult> PartialUserUpdate(Guid id, JsonPatchDocument<IEnumerable<string>> patchDoc)
+    //{
+    //    var user = await _userRepository.GetUserById(id);
+    //    var petsList = await _userRepository.GetAllFavouritePets(id);
 
-        patchDoc.ApplyTo(petsList, ModelState);
+    //    if (petsList == null)
+    //    {
+    //        return NotFound();
+    //    }
 
-        foreach (var operation in patchDoc.Operations)
-        {
-            if (operation.op == "add" && operation.path == "/Id")
-            {
-                var newId = operation.value.ToString();
-                petsList.Append(newId);
-            }
-        }
+    //    patchDoc.ApplyTo(petsList, ModelState);
 
-        if (!TryValidateModel(patchDoc))
-        {
-            return ValidationProblem(ModelState);
-        }
-        await _userRepository.PartialUpdateUser(user);
+    //    foreach (var operation in patchDoc.Operations)
+    //    {
+    //        if (operation.op == "add" && operation.path == "/Id")
+    //        {
+    //            var newId = operation.value.ToString();
+    //            petsList.Append(newId);
+    //        }
+    //    }
 
-        return NoContent();
-    }
+    //    if (!TryValidateModel(patchDoc))
+    //    {
+    //        return ValidationProblem(ModelState);
+    //    }
+    //    await _userRepository.PartialUpdateUser(user);
+
+    //    return NoContent();
+    //}
 }
 
 
