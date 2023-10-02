@@ -37,7 +37,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetUserById")]
-    public async Task<ActionResult<UserReadDTO>> GetUserById(string id)
+    public async Task<ActionResult<UserReadDTO>> GetUserById(Guid id)
     {
         var user = await _userRepository.GetUserById(id);
         if (user != null)
@@ -73,7 +73,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(string id)
+    public async Task<IActionResult> DeleteUser(Guid id)
     {
         bool deleted = await _userRepository.DeleteUser(id);
 
@@ -88,7 +88,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateUser(string id, UserCreateDTO userCreateDTO)
+    public async Task<ActionResult> UpdateUser(Guid id, UserCreateDTO userCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         if (foundUser == null)
@@ -112,7 +112,7 @@ public class UsersController : ControllerBase
         }
     }
     [HttpGet("{id}/calendar/activities")]
-    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetAllActivities(string id)
+    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetAllActivities(Guid id)
     {
         var userCalendar = await _userRepository.GetUserActivities(id);
         if (userCalendar != null)
@@ -123,7 +123,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}/calendar/activities/{activityId}", Name = "GetActivityById")]
-    public async Task<ActionResult<ActivityReadDTO>> GetActivityById(string id, Guid activityId)
+    public async Task<ActionResult<ActivityReadDTO>> GetActivityById(Guid id, Guid activityId)
     {
         var userActivity = await _userRepository.GetUserActivityById(id, activityId);
         if (userActivity != null)
@@ -134,7 +134,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("{id}/calendar/activities")]
-    public async Task<ActionResult<ActivityReadDTO>> AddActivity(string id, ActivityCreateDTO activityCreateDTO)
+    public async Task<ActionResult<ActivityReadDTO>> AddActivity(Guid id, ActivityCreateDTO activityCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         var activityModel = _mapper.Map<Activity>(activityCreateDTO);
@@ -154,7 +154,7 @@ public class UsersController : ControllerBase
 
 
     [HttpPut("{id}/calendar/activities/{activityId}")]
-    public async Task<ActionResult> UpdateUserActivity(string id, Guid activityId, ActivityCreateDTO activityCreateDTO)
+    public async Task<ActionResult> UpdateUserActivity(Guid id, Guid activityId, ActivityCreateDTO activityCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         var foundActivity = await _userRepository.GetUserActivityById(id, activityId);
@@ -180,7 +180,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}/activities/{activityId}")]
-    public async Task<ActionResult> DeleteActivity(string id, Guid activityId)
+    public async Task<ActionResult> DeleteActivity(Guid id, Guid activityId)
     {
         bool deleted = await _userRepository.DeleteActivity(id, activityId);
 

@@ -75,7 +75,7 @@ public class SheltersController : ControllerBase
         return NotFound();
     }
     [HttpGet("{shelterId}/users/{userId}")]
-    public async Task<ActionResult<UserReadDTO>> GetShelterWorkerById(Guid shelterId, string userId)
+    public async Task<ActionResult<UserReadDTO>> GetShelterWorkerById(Guid shelterId, Guid userId)
     {
         var user = await _shelterRepository.GetShelterUserById(shelterId, userId);
         var userDto = _mapper.Map<UserReadDTO>(user);
@@ -102,7 +102,7 @@ public class SheltersController : ControllerBase
     }
 
     [HttpDelete("{shelterId}/contributors/{contributorId}")]
-    public async Task<IActionResult> DeleteUser(Guid shelterId, string userId)
+    public async Task<IActionResult> DeleteUser(Guid shelterId, Guid userId)
     {
         bool deleted = await _shelterRepository.DeleteShelterUser(shelterId, userId);
 
@@ -225,7 +225,7 @@ public class SheltersController : ControllerBase
     }
 
     [HttpPost("{shelterId}/users")]
-    public async Task<ActionResult<UserReadDTO>> AddUser(Guid shelterId, string userId, RoleName role)
+    public async Task<ActionResult<UserReadDTO>> AddUser(Guid shelterId, Guid userId, RoleName role)
     {
         var foundUser = await _shelterRepository.FindUserById(userId);
         var userReadDto = _mapper.Map<UserReadDTO>(foundUser);
@@ -402,7 +402,7 @@ public class SheltersController : ControllerBase
     }
 
     [HttpPost("{shelterId}/temphouses/create")]
-    public async Task<ActionResult<TempHouseReadDTO>> AddTempHouse(Guid shelterId, string userId, Guid petId, TempHouseCreateDTO tempHouseCreateDTO)
+    public async Task<ActionResult<TempHouseReadDTO>> AddTempHouse(Guid shelterId, Guid userId, Guid petId, TempHouseCreateDTO tempHouseCreateDTO)
     {
         //var tempHouseDto = new TempHouseCreateDTO()
         //{

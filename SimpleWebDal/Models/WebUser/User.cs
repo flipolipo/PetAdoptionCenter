@@ -4,7 +4,7 @@ using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.CalendarModel;
 namespace SimpleWebDal.Models.WebUser;
 
-public class User : IdentityUser
+public class User : IdentityUser<Guid>
 {
     
     public Guid? BasicInformationId { get; set; }

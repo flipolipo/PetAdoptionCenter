@@ -8,7 +8,7 @@ public class TempHouse
 {
 
     public Guid Id { get; set; }
-    public string UserId { get; set; }
+    public Guid UserId { get; set; }
     public User TemporaryOwner { get; set; }
     public Guid AddressId { get; set; }
     public Address TemporaryHouseAddress { get; set; }
