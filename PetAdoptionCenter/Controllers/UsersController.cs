@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SimpleWebDal.DTOs.AddressDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
@@ -247,98 +248,79 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<PetReadDTO>> GetPetById(Guid id)
     {
-        var pets = await _userRepository.GetPetById(id);
-        if (pets != null)
+        var pet = await _userRepository.GetPetById(id);
+        if (pet != null)
         {
-            return Ok(_mapper.Map<PetReadDTO>(pets));
+            return Ok(_mapper.Map<PetReadDTO>(pet));
         }
         return NotFound();
     }
 
-    //[HttpGet("{id}/pets")]
-    //public async Task<ActionResult<IEnumerable<string>>> GetAllFavouritePets(Guid id)
-    //{
-    //    var pets = await _userRepository.GetAllFavouritePets(id);
-    //    if (pets != null)
-    //    {
-    //        return Ok(pets);
-    //    }
-    //    return NotFound();
-    //}
+    [HttpGet("{id}/pets")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllFavouritePets(string id)
+    {
+        var pets = await _userRepository.GetAllFavouritePets(id);
+        if (pets != null)
+        {
+            return Ok(_mapper.Map<IEnumerable<PetReadDTO>>(pets));
+        }
+        return NotFound();
+    }
 
-    //[HttpGet("{id}/pets/{petId}", Name = "GetFavouritePetById")]
-    //public async Task<ActionResult<string>> GetFavouritePetById(Guid id, Guid petId)
-    //{
-    //    var pet = await _userRepository.GetFavouritePetById(id, petId);
-    //    if (pet != null)
-    //    {
-    //        return Ok(pet);
-    //    }
-    //    return NotFound();
-    //}
+    [HttpGet("{id}/pets/{petId}", Name = "GetFavouritePetById")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PetReadDTO>> GetFavouritePetById(string id, Guid petId)
+    {
+        var pet = await _userRepository.GetFavouritePetById(id, petId);
+        if (pet != null)
+        {
+            return Ok(_mapper.Map<PetReadDTO>(pet));
+        }
+        return NotFound();
+    }
 
-    //[HttpDelete("{id}/pets/{petId}")]
-    //public async Task<IActionResult> DeleteFavouritePet(Guid id, Guid petId)
-    //{
-    //    bool deleted = await _userRepository.DeleteFavouritePet(id, petId);
+    [HttpDelete("{id}/pets/{petId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> DeleteFavouritePet(string id, Guid petId)
+    {
+        bool deleted = await _userRepository.DeleteFavouritePet(id, petId);
 
-    //    if (deleted)
-    //    {
-    //        return NoContent();
-    //    }
-    //    else
-    //    {
-    //        return NotFound();
-    //    }
-    //}
+        if (deleted)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
 
 
-    //[HttpPatch("{id}")]
-    //public async Task<ActionResult> PartialUserUpdate(Guid id, JsonPatchDocument<IEnumerable<string>> patchDoc)
-    //{
-    //    var user = await _userRepository.GetUserById(id);
-    //    var petsList = await _userRepository.GetAllFavouritePets(id);
+    [HttpPatch("{id}")]
+    public async Task<ActionResult> PartialUserUpdate(string id, JsonPatchDocument<IEnumerable<PetCreateDTO>> patchDoc)
+    {
+        var user = await _userRepository.GetUserById(id);
+        var petsList = await _userRepository.GetAllFavouritePets(id);
 
-    //    if (petsList == null)
-    //    {
-    //        return NotFound();
-    //    }
+        if (petsList == null)
+        {
+            return NotFound();
+        }
 
-    //    patchDoc.ApplyTo(petsList, ModelState);
+     
 
-    //    foreach (var operation in patchDoc.Operations)
-    //    {
-    //        if (operation.op == "add" && operation.path == "/Id")
-    //        {
-    //            var newId = operation.value.ToString();
-    //            petsList.Append(newId);
-    //        }
-    //    }
-
-    //    if (!TryValidateModel(patchDoc))
-    //    {
-    //        return ValidationProblem(ModelState);
-    //    }
-    //    await _userRepository.PartialUpdateUser(user);
-
-    //    return NoContent();
-    //}
+        return NoContent();
+    }
 }
 
 
 
 
 
-//[HttpGet("{id}/pets/type")]
-//public async Task<ActionResult<IEnumerable<Pet>>> GetAllShelterPets(Guid shelterId)
-//{
-//    var pets = await _userRepository.GetAllShelterPets(shelterId);
-//    if (pets != null)
-//    {
-//        return Ok(pets);
-//    }
-//    return BadRequest();
-//}
 
 
 
