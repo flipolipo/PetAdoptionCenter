@@ -38,7 +38,7 @@ public class UsersController : ControllerBase
     [HttpGet("{id}", Name = "GetUserById")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserReadDTO>> GetUserById(string id)
+    public async Task<ActionResult<UserReadDTO>> GetUserById(Guid id)
     {
         var user = await _userRepository.GetUserById(id);
         if (user != null)
@@ -77,7 +77,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> UpdateUser(string id, UserCreateDTO userCreateDTO)
+    public async Task<ActionResult> UpdateUser(Guid id, UserCreateDTO userCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         if (foundUser == null)
@@ -119,7 +119,7 @@ public class UsersController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> DeleteUser(string id)
+    public async Task<IActionResult> DeleteUser(Guid id)
     {
         bool deleted = await _userRepository.DeleteUser(id);
 
@@ -138,7 +138,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetAllActivities(string id)
+    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetAllActivities(Guid id)
     {
         var userCalendar = await _userRepository.GetUserActivities(id);
         if (userCalendar != null)
@@ -152,7 +152,7 @@ public class UsersController : ControllerBase
     [HttpGet("{id}/calendar/activities/{activityId}", Name = "GetActivityById")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ActivityReadDTO>> GetActivityById(string id, Guid activityId)
+    public async Task<ActionResult<ActivityReadDTO>> GetActivityById(Guid id, Guid activityId)
     {
         var userActivity = await _userRepository.GetUserActivityById(id, activityId);
         if (userActivity != null)
@@ -166,7 +166,7 @@ public class UsersController : ControllerBase
     [HttpPost("{id}/calendar/activities")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<ActivityReadDTO>> AddActivity(string id, ActivityCreateDTO activityCreateDTO)
+    public async Task<ActionResult<ActivityReadDTO>> AddActivity(Guid id, ActivityCreateDTO activityCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         var activityModel = _mapper.Map<Activity>(activityCreateDTO);
@@ -190,7 +190,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> UpdateUserActivity(string id, Guid activityId, ActivityCreateDTO activityCreateDTO)
+    public async Task<ActionResult> UpdateUserActivity(Guid id, Guid activityId, ActivityCreateDTO activityCreateDTO)
     {
         var foundUser = await _userRepository.GetUserById(id);
         var foundActivity = await _userRepository.GetUserActivityById(id, activityId);
@@ -221,7 +221,7 @@ public class UsersController : ControllerBase
     [HttpDelete("{id}/activities/{activityId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> DeleteActivity(string id, Guid activityId)
+    public async Task<ActionResult> DeleteActivity(Guid id, Guid activityId)
     {
         bool deleted = await _userRepository.DeleteActivity(id, activityId);
 
@@ -258,7 +258,7 @@ public class UsersController : ControllerBase
     [HttpGet("{id}/pets")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllFavouritePets(string id)
+    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllFavouritePets(Guid id)
     {
         var pets = await _userRepository.GetAllFavouritePets(id);
         if (pets != null)
@@ -271,7 +271,7 @@ public class UsersController : ControllerBase
     [HttpGet("{id}/pets/{petId}", Name = "GetFavouritePetById")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<PetReadDTO>> GetFavouritePetById(string id, Guid petId)
+    public async Task<ActionResult<PetReadDTO>> GetFavouritePetById(Guid id, Guid petId)
     {
         var pet = await _userRepository.GetFavouritePetById(id, petId);
         if (pet != null)
@@ -284,7 +284,7 @@ public class UsersController : ControllerBase
     [HttpDelete("{id}/pets/{petId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> DeleteFavouritePet(string id, Guid petId)
+    public async Task<ActionResult> DeleteFavouritePet(Guid id, Guid petId)
     {
         bool deleted = await _userRepository.DeleteFavouritePet(id, petId);
 
@@ -302,7 +302,7 @@ public class UsersController : ControllerBase
     [HttpPost("{id}/pets/{petId}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> AddExistingPetToUser(string id, Guid petId)
+    public async Task<ActionResult> AddExistingPetToUser(Guid id, Guid petId)
     {
         var addedPet = await _userRepository.AddFavouritePet(id, petId);
 

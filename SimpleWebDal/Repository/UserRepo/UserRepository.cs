@@ -17,7 +17,7 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<User> GetUserById(string userId)
+    public async Task<User> GetUserById(Guid userId)
     {
         var foundUser = await _dbContext.Users
             .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
@@ -92,7 +92,7 @@ public class UserRepository : IUserRepository
         return false;
     }
 
-    public async Task<bool> DeleteUser(string userId)
+    public async Task<bool> DeleteUser(Guid userId)
     {
         var foundUser = await GetUserById(userId);
         if (foundUser != null)
@@ -111,7 +111,7 @@ public class UserRepository : IUserRepository
         }
         return false;
     }
-    public async Task<IEnumerable<Activity>> GetUserActivities(string userId)
+    public async Task<IEnumerable<Activity>> GetUserActivities(Guid userId)
     {
         var foundUser = await GetUserById(userId);
 
@@ -122,7 +122,7 @@ public class UserRepository : IUserRepository
 
         return Enumerable.Empty<Activity>();
     }
-    public async Task<Activity> GetUserActivityById(string userId, Guid activityId)
+    public async Task<Activity> GetUserActivityById(Guid userId, Guid activityId)
     {
         var foundUser = await GetUserById(userId);
 
@@ -135,7 +135,7 @@ public class UserRepository : IUserRepository
         return null;
     }
 
-    public async Task<Activity> AddActivity(string userId, Activity activity)
+    public async Task<Activity> AddActivity(Guid userId, Activity activity)
     {
         var foundUser = await GetUserById(userId);
         if (foundUser != null && foundUser.UserCalendar != null)
@@ -148,7 +148,7 @@ public class UserRepository : IUserRepository
         }
         return activity;
     }
-    public async Task<bool> UpdateActivity(string userId, Activity activity)
+    public async Task<bool> UpdateActivity(Guid userId, Activity activity)
     {
         var foundUser = await GetUserById(userId);
         var foundActivity = foundUser.UserCalendar.Activities.FirstOrDefault(e => e.Id == activity.Id);
@@ -163,7 +163,7 @@ public class UserRepository : IUserRepository
         return false;
     }
 
-    public async Task<bool> DeleteActivity(string userId, Guid activityId)
+    public async Task<bool> DeleteActivity(Guid userId, Guid activityId)
     {
         var foundUser = await GetUserById(userId);
         var foundActivity = foundUser.UserCalendar.Activities.FirstOrDefault(e => e.Id == activityId);
@@ -188,7 +188,7 @@ public class UserRepository : IUserRepository
         return await _dbContext.Pets.FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    public async Task<Pet> AddFavouritePet(string userId, Guid petId)
+    public async Task<Pet> AddFavouritePet(Guid userId, Guid petId)
     {
         var foundUser = await GetUserById(userId);
         var foundPet = await GetPetById(petId);
@@ -203,7 +203,7 @@ public class UserRepository : IUserRepository
         }
         return null;
     }
-    public async Task<IEnumerable<Pet>> GetAllFavouritePets(string id)
+    public async Task<IEnumerable<Pet>> GetAllFavouritePets(Guid id)
     {
         var foundUser = await GetUserById(id);
         if (foundUser != null)
@@ -214,7 +214,7 @@ public class UserRepository : IUserRepository
         return Enumerable.Empty<Pet>();
     }
 
-    public async Task<Pet> GetFavouritePetById(string userId, Guid petId)
+    public async Task<Pet> GetFavouritePetById(Guid userId, Guid petId)
     {
         var foundUser = await GetUserById(userId);
 
@@ -226,7 +226,7 @@ public class UserRepository : IUserRepository
         return null;
     }
 
-    public async Task<bool> DeleteFavouritePet(string id, Guid petId)
+    public async Task<bool> DeleteFavouritePet(Guid id, Guid petId)
     {
         var foundUser = await GetUserById(id);
         var foundPetForUser = await GetFavouritePetById(id, petId);

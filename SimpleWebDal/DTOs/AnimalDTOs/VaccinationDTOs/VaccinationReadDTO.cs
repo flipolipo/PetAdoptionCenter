@@ -3,5 +3,5 @@
 public class VaccinationReadDTO
 {
     public string VaccinationName { get; set; }
-    public DateTime date { get; set; }
+    public DateTimeOffset Date { get; set; }
 }
