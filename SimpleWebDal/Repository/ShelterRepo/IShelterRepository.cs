@@ -14,7 +14,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         //GET
         public Task<IEnumerable<Shelter>> GetAllShelters();
         public Task<IEnumerable<User>> GetShelterUsersByRole(Guid shelterId, RoleName role);
-        public Task<User> GetShelterUserById(Guid shelterId, string userId);
+        public Task<User> GetShelterUserById(Guid shelterId, Guid userId);
         public Task<IEnumerable<User>> GetShelterUsers(Guid shelterId);
         public Task<Shelter> GetShelterById(Guid shelterId); 
         public Task<IEnumerable<Pet>> GetAllShelterDogsOrCats(Guid shelterId, PetType type);
@@ -37,7 +37,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         //POST
         // public Task<Shelter> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city);
         public Task<Shelter> CreateShelter(Shelter shelter);
-        public Task<TempHouse> AddTempHouse(Guid shelterId, string userId, Guid petId, TempHouse tempHouse);
+        public Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, Guid petId, TempHouse tempHouse);
         public Task<Pet> AddPet(Guid shelterId, Pet pet);
         public Task<Activity> AddActivityToCalendar(Guid shelterId, Activity activity);
         public Task<Vaccination> AddPetVaccination(Guid shelterId, Guid petId, Vaccination vaccination);
@@ -47,15 +47,15 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city);
         public Task<bool> UpdateShelterPet(Guid shelterId, Guid petId, PetType type, string description, PetStatus status, bool avaibleForAdoption);
         public Task<bool> UpdateActivity(Guid shelterId, Guid activityId, string name, DateTime date);
-        public Task<bool> AddShelterUser(Guid shelterId, string userId, RoleName roleName);
+        public Task<bool> AddShelterUser(Guid shelterId, Guid userId, RoleName roleName);
         public Task<bool> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size);
         //DELETE
         public Task<bool> DeleteShelterPet(Guid shelterId, Guid petId);
         public Task<bool> DeleteActivity(Guid callendarId, Guid activityId);
         public Task<bool> DeleteTempHouse(Guid tempHouseId, Guid shelterId);
         public Task<bool> DeleteShelter(Guid shelterId);
-        public Task<bool> DeleteShelterUser(Guid shelterId, string userId);
+        public Task<bool> DeleteShelterUser(Guid shelterId, Guid userId);
         //UTILITY
-        public Task<User> FindUserById(string userId);
+        public Task<User> FindUserById(Guid userId);
     }
 }

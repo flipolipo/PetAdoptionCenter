@@ -13,5 +13,5 @@ public class PetCreateDTO
     public CalendarActivityCreateDTO Calendar { get; set; }
     public PetStatus Status { get; set; }
     public bool AvaibleForAdoption { get; set; }
-    public ICollection<UserCreateDTO> Users { get; set; } 
+    //public ICollection<UserCreateDTO> Users { get; set; } 
 }

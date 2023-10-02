@@ -108,7 +108,7 @@ void AddIdentity()
             options.Password.RequireUppercase = false;
             options.Password.RequireLowercase = false;
         })
-        .AddRoles<IdentityRole>() 
+        .AddRoles<IdentityRole<Guid>>() 
         .AddEntityFrameworkStores<PetAdoptionCenterContext>();
 }
 void AddAuthentication()
@@ -139,7 +139,7 @@ void AddAuthentication()
 async Task AddRoles()
 {
     using var scope = app.Services.CreateScope();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
     await CreateAdminRole(roleManager);
 
@@ -150,17 +150,17 @@ async Task AddRoles()
     await CreateShelterAdminRole(roleManager);
 
 }
-async Task CreateAdminRole(RoleManager<IdentityRole> roleManager)
+async Task CreateAdminRole(RoleManager<IdentityRole<Guid>> roleManager)
 {
-    await roleManager.CreateAsync(new IdentityRole("Admin")); //The role string should better be stored as a constant or a value in appsettings
+    await roleManager.CreateAsync(new IdentityRole<Guid>("Admin")); //The role string should better be stored as a constant or a value in appsettings
 }
-async Task CreateUserRole(RoleManager<IdentityRole> roleManager)
+async Task CreateUserRole(RoleManager<IdentityRole<Guid>> roleManager)
 {
-    await roleManager.CreateAsync(new IdentityRole("User")); //The role string should better be stored as a constant or a value in appsettings
+    await roleManager.CreateAsync(new IdentityRole<Guid>("User")); //The role string should better be stored as a constant or a value in appsettings
 }
-async Task CreateShelterAdminRole(RoleManager<IdentityRole> roleManager)
+async Task CreateShelterAdminRole(RoleManager<IdentityRole<Guid>> roleManager)
 {
-    await roleManager.CreateAsync(new IdentityRole("ShelterAdmin")); //The role string should better be stored as a constant or a value in appsettings
+    await roleManager.CreateAsync(new IdentityRole<Guid>("ShelterAdmin")); //The role string should better be stored as a constant or a value in appsettings
 }
 async Task AddAdmin()
 {

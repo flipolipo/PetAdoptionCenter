@@ -76,7 +76,7 @@ public class SheltersController : ControllerBase
         return NotFound();
     }
     [HttpGet("{shelterId}/users/{userId}")]
-    public async Task<ActionResult<UserReadDTO>> GetShelterWorkerById(Guid shelterId, string userId)
+    public async Task<ActionResult<UserReadDTO>> GetShelterWorkerById(Guid shelterId, Guid userId)
     {
         var user = await _shelterRepository.GetShelterUserById(shelterId, userId);
         var userDto = _mapper.Map<UserReadDTO>(user);
@@ -103,7 +103,7 @@ public class SheltersController : ControllerBase
     }
 
     [HttpDelete("{shelterId}/contributors/{contributorId}")]
-    public async Task<IActionResult> DeleteUser(Guid shelterId, string userId)
+    public async Task<IActionResult> DeleteUser(Guid shelterId, Guid userId)
     {
         bool deleted = await _shelterRepository.DeleteShelterUser(shelterId, userId);
 
@@ -174,7 +174,7 @@ public class SheltersController : ControllerBase
 
         return NotFound();
     }
-    [HttpPost("create"), ActionName(nameof(CreateShelter))]
+    [HttpPost, ActionName(nameof(CreateShelter))]
     public async Task<ActionResult<ShelterReadDTO>> CreateShelter([FromBody] ShelterCreateDTO shelterCreateDTO)
     {
 
@@ -203,7 +203,7 @@ public class SheltersController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Błąd podczas tworzenia schroniska: " + ex.Message);
         }
     }
-    [HttpPost("{shelterId}/calendar/activities/create")]
+    [HttpPost("{shelterId}/calendar/activities")]
     public async Task<ActionResult<ActivityReadDTO>> AddActivityToCalendar(Guid shelterId, ActivityCreateDTO activityCreateDTO)
     {
 
@@ -226,7 +226,7 @@ public class SheltersController : ControllerBase
     }
 
     [HttpPost("{shelterId}/users")]
-    public async Task<ActionResult<UserReadDTO>> AddUser(Guid shelterId, string userId, RoleName role)
+    public async Task<ActionResult<UserReadDTO>> AddUser(Guid shelterId, Guid userId, RoleName role)
     {
         var foundUser = await _shelterRepository.FindUserById(userId);
         var userReadDto = _mapper.Map<UserReadDTO>(foundUser);
@@ -299,7 +299,7 @@ public class SheltersController : ControllerBase
         }
         return NotFound();
     }
-    [HttpGet("{shelterId}/tempHouse/{temphouseId}")]
+    [HttpGet("{shelterId}/tempHouse/{temphouseId}", Name = "GetTempHouseById")]
     public async Task<ActionResult<TempHouseReadDTO>> GetTempHouseById(Guid shelterId, Guid tempHouseId)
     {
         var tempHouse = await _shelterRepository.GetTempHouseById(shelterId, tempHouseId);
@@ -376,7 +376,7 @@ public class SheltersController : ControllerBase
         return NotFound();
     }
 
-    [HttpPost("{shelterId}/pets/create")]
+    [HttpPost("{shelterId}/pets")]
     public async Task<ActionResult<PetReadDTO>> AddPet([FromBody] PetCreateDTO petCreateDTO, Guid shelterId)
     {
 
@@ -402,8 +402,8 @@ public class SheltersController : ControllerBase
         }
     }
 
-    [HttpPost("{shelterId}/temphouses/create")]
-    public async Task<ActionResult<TempHouseReadDTO>> AddTempHouse(Guid shelterId, string userId, Guid petId, TempHouseCreateDTO tempHouseCreateDTO)
+    [HttpPost("{shelterId}/temphouses")]
+    public async Task<ActionResult<TempHouseReadDTO>> AddTempHouse(Guid shelterId, Guid userId, Guid petId, TempHouseCreateDTO tempHouseCreateDTO)
     {
         //var tempHouseDto = new TempHouseCreateDTO()
         //{
@@ -418,13 +418,14 @@ public class SheltersController : ControllerBase
         var tempHouse = _mapper.Map<TempHouse>(tempHouseCreateDTO);
         try
         {
-            await _shelterRepository.AddTempHouse(shelterId, userId, petId, tempHouse);
-            var tempHouseReadDto = _mapper.Map<TempHouseReadDTO>(tempHouse);
-            return Ok(tempHouseReadDto);
+          var addedTemphouse = await _shelterRepository.AddTempHouse(shelterId, userId, petId, tempHouse);
+            var tempHouseReadDto = _mapper.Map<TempHouseReadDTO>(addedTemphouse);
+            return CreatedAtRoute(nameof(GetTempHouseById), new {shelterId, petId}, tempHouseReadDto);
+            //return Ok(tempHouseReadDto);
         }
         catch (Exception ex)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Error while creating an activity: " + ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Error while creating an temphouse: " + ex.Message);
         }
     }
     [HttpGet("{shelterId}/calendar/activities")]

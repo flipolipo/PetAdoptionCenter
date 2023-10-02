@@ -34,7 +34,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 .FirstOrDefaultAsync(e => e.Id == shelterId);
             return foundShelter;
         }
-        public async Task<User> FindUserById(string userId)
+        public async Task<User> FindUserById(Guid userId)
         {
             var foundUser = await _dbContext.Users
             .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
@@ -69,7 +69,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             _dbContext.SaveChanges();
             return activity;
         }
-        public async Task<bool> AddShelterUser(Guid shelterId, string userId, RoleName roleName)
+        public async Task<bool> AddShelterUser(Guid shelterId, Guid userId, RoleName roleName)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundUser = await _dbContext.Users.Include(r => r.Roles).FirstOrDefaultAsync(u => u.Id == userId);
@@ -112,8 +112,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
             //};
 
 
-            pet.ShelterId = shelterId;
-            _dbContext.Pets.Add(pet);
+            foundShelter.ShelterPets.Add(pet);
+            //_dbContext.Pets.Add(pet);
             _dbContext.SaveChanges();
             return pet;
         }
@@ -160,7 +160,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             foundPet.BasicHealthInfo.MedicalHistory.Add(disease);
             return disease;
         }
-        public async Task<TempHouse> AddTempHouse(Guid shelterId, string userId, Guid petId, TempHouse tempHouse)
+        public async Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, Guid petId, TempHouse tempHouse)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundPetById = await GetShelterPetById(shelterId, petId);
@@ -170,22 +170,20 @@ namespace SimpleWebDal.Repository.ShelterRepo
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
             .Include(g => g.Adoptions)
             .Include(h => h.Pets).FirstOrDefaultAsync(e => e.Id == userId);
-            tempHouse.PetsInTemporaryHouse.Add(foundPetById);
-
-            var newTempHouse = new TempHouse()
+            var foundPet = await GetShelterPetById(shelterId, petId);
+            tempHouse.TemporaryOwner = foundUser;
+            tempHouse.TemporaryHouseAddress = foundUser.BasicInformation.Address;
+            tempHouse.PetsInTemporaryHouse = new List<Pet>
             {
-                Id = tempHouse.Id,
-                TemporaryOwner = foundUser,
-                TemporaryHouseAddress = foundUser.BasicInformation.Address,
-                PetsInTemporaryHouse = tempHouse.PetsInTemporaryHouse,
-                StartOfTemporaryHouseDate = tempHouse.StartOfTemporaryHouseDate
+                foundPet
             };
-            foundShelter.TempHouses.Add(newTempHouse);
+            foundShelter.TempHouses.Add(tempHouse);
+           // foundPet.Status = PetStatus.TemporaryHouse;
             _dbContext.SaveChanges();
-            return newTempHouse;
+            return tempHouse;
 
         }
-        public async Task<bool> AddUserToShelter(Guid shelterId, string userId, RoleName role)
+        public async Task<bool> AddUserToShelter(Guid shelterId, Guid userId, RoleName role)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundUser = await _dbContext.Users.FirstOrDefaultAsync(e => e.Id == userId);
@@ -228,7 +226,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return false;
         }
 
-        public async Task<bool> DeleteShelterUser(Guid shelterId, string userId)
+        public async Task<bool> DeleteShelterUser(Guid shelterId, Guid userId)
         {
             var foundShelter = await FindShelter(shelterId);
             var user = foundShelter.ShelterUsers.FirstOrDefault(e => e.Id == userId);
@@ -380,7 +378,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
         }
 
-        public async Task<User> GetShelterUserById(Guid shelterId, string userId)
+        public async Task<User> GetShelterUserById(Guid shelterId, Guid userId)
         {
             var foundShelter = await FindShelter(shelterId);
             var shelterUsers = foundShelter.ShelterUsers;
