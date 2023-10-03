@@ -12,8 +12,8 @@ using SimpleWebDal.Data;
 namespace SimpleWebDal.Migrations
 {
     [DbContext(typeof(PetAdoptionCenterContext))]
-    [Migration("20231002125203_addRoles")]
-    partial class addRoles
+    [Migration("20231002202237_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -560,19 +560,19 @@ namespace SimpleWebDal.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("UserPetsJoinTable", b =>
+            modelBuilder.Entity("SimpleWebDal.Models.WebUser.UserPet", b =>
                 {
-                    b.Property<Guid>("PetsId")
+                    b.Property<Guid>("PetId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("UsersId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("PetsId", "UsersId");
+                    b.HasKey("PetId", "UserId");
 
-                    b.HasIndex("UsersId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("UserPetsJoinTable");
+                    b.ToTable("UserPet");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -768,17 +768,17 @@ namespace SimpleWebDal.Migrations
                     b.Navigation("UserCalendar");
                 });
 
-            modelBuilder.Entity("UserPetsJoinTable", b =>
+            modelBuilder.Entity("SimpleWebDal.Models.WebUser.UserPet", b =>
                 {
                     b.HasOne("SimpleWebDal.Models.Animal.Pet", null)
                         .WithMany()
-                        .HasForeignKey("PetsId")
+                        .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SimpleWebDal.Models.WebUser.User", null)
                         .WithMany()
-                        .HasForeignKey("UsersId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

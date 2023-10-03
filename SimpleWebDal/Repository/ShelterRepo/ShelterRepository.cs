@@ -29,7 +29,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 .Include(d => d.TempHouses).ThenInclude(h => h.TemporaryOwner)
                 .Include(d => d.TempHouses).ThenInclude(h => h.TemporaryHouseAddress)
                 .Include(d => d.TempHouses).ThenInclude(h => h.PetsInTemporaryHouse)
-                .Include(f => f.ShelterPets)
+                .Include(f => f.ShelterPets).ThenInclude(h => h.BasicHealthInfo)
+                .Include(f => f.ShelterPets).ThenInclude(h => h.Calendar)
                 .FirstOrDefaultAsync(e => e.Id == shelterId);
             return foundShelter;
         }

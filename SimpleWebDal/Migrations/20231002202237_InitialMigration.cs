@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace SimpleWebDal.Migrations
 {
     /// <inheritdoc />
-    public partial class addRoles : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -444,24 +444,24 @@ namespace SimpleWebDal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserPetsJoinTable",
+                name: "UserPet",
                 columns: table => new
                 {
-                    PetsId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UsersId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PetId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserPetsJoinTable", x => new { x.PetsId, x.UsersId });
+                    table.PrimaryKey("PK_UserPet", x => new { x.PetId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_UserPetsJoinTable_AspNetUsers_UsersId",
-                        column: x => x.UsersId,
+                        name: "FK_UserPet_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserPetsJoinTable_Pets_PetsId",
-                        column: x => x.PetsId,
+                        name: "FK_UserPet_Pets_PetId",
+                        column: x => x.PetId,
                         principalTable: "Pets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -601,9 +601,9 @@ namespace SimpleWebDal.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserPetsJoinTable_UsersId",
-                table: "UserPetsJoinTable",
-                column: "UsersId");
+                name: "IX_UserPet_UserId",
+                table: "UserPet",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vaccinations_BasicHealthInfoId",
@@ -642,7 +642,7 @@ namespace SimpleWebDal.Migrations
                 name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "UserPetsJoinTable");
+                name: "UserPet");
 
             migrationBuilder.DropTable(
                 name: "Vaccinations");

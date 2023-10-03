@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Hosting;
+using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.WebUser;
 using System.Reflection.Emit;
 
@@ -22,7 +24,9 @@ namespace SimpleWebDal.Configuration
             builder.HasMany(u => u.Roles);
            builder.HasMany(e => e.Pets)
         .WithMany(e => e.Users)
-        .UsingEntity("UserPetsJoinTable");
+          .UsingEntity<UserPet>(
+            l => l.HasOne<Pet>().WithMany().HasForeignKey(e => e.PetId),
+            r => r.HasOne<User>().WithMany().HasForeignKey(e => e.UserId));
         }
     }
 }
