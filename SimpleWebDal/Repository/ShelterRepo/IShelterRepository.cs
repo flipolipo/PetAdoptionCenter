@@ -1,4 +1,5 @@
 ﻿using SimpleWebDal.DTOs.AnimalDTOs.VaccinationDTOs;
+using SimpleWebDal.Models.AdoptionProccess;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
@@ -33,6 +34,8 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Disease> GetPetVaccinationById(Guid shelterId, Guid petId, Guid vaccinationId);
         public Task<IEnumerable<Activity>> GetAllActivities(Guid shelterId);
         public Task<Activity> GetActivityById(Guid shelterId, Guid activityId);
+        public Task<IEnumerable<Adoption>> GetAllShelterAdoptions(Guid shelterId);
+        public Task <Adoption> GetShelterAdoptionById(Guid shelterId, Guid adoptionId);
 
         //POST
         // public Task<Shelter> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city);
@@ -41,6 +44,8 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Pet> AddPet(Guid shelterId, Pet pet);
         public Task<Activity> AddActivityToCalendar(Guid shelterId, Activity activity);
         public Task<Vaccination> AddPetVaccination(Guid shelterId, Guid petId, Vaccination vaccination);
+        public Task<Disease> AddPetDisease(Guid shelterId, Guid petId, Disease disease);
+        public Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption);
 
 
         //PUT

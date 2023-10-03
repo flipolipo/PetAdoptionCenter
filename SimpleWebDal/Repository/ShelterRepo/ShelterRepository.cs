@@ -510,15 +510,9 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var vaccination = foundPet.BasicHealthInfo.MedicalHistory.FirstOrDefault(e => e.Id == vaccinationId);
             return vaccination;
         }
-        public async Task<Disease> AddPetDisease(Guid shelterId, Guid petId, string name, DateTime start, DateTime end)
+        public async Task<Disease> AddPetDisease(Guid shelterId, Guid petId, Disease disease)
         {
-            var disease = new Disease()
-            {
-                Id = Guid.NewGuid(),
-                NameOfdisease = name,
-                IllnessStart = start,
-                IllnessEnd = end,
-            };
+            
             var foundShelter = await FindShelter(shelterId);
             var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
             foundPet.BasicHealthInfo.MedicalHistory.Add(disease);
@@ -547,6 +541,29 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var foundShelter = await FindShelter(shelterId);
             var activity = foundShelter.ShelterCalendar.Activities.FirstOrDefault(e => e.Id == activityId);
             return activity;
+        }
+
+        public async Task<IEnumerable<Adoption>> GetAllShelterAdoptions(Guid shelterId)
+        {
+            var foundShelter = await FindShelter(shelterId);
+            return foundShelter.Adoptions;
+        }
+
+        public async Task<Adoption> GetShelterAdoptionById(Guid shelterId, Guid adoptionId)
+        {
+            var foundShelter = await FindShelter(shelterId);
+            var adoption = foundShelter.Adoptions.FirstOrDefault(e => e.Id == adoptionId);
+            return adoption;
+
+        }
+
+        public async Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption)
+        {
+            var foundShelter = await FindShelter(shelterId);
+            adoption.PetId = petId;
+            adoption.UserId = userId;
+            foundShelter.Adoptions.Add(adoption);
+            return adoption;
         }
     }
 }

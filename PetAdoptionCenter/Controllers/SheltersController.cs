@@ -17,6 +17,8 @@ using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
 using SimpleWebDal.DTOs.TemporaryHouseDTOs;
 using SimpleWebDal.Models.WebUser.Enums;
 using SimpleWebDal.DTOs.AnimalDTOs.VaccinationDTOs;
+using SimpleWebDal.DTOs.AnimalDTOs.DiseaseDTOs;
+using SimpleWebDal.DTOs.AdoptionDTOs;
 
 namespace PetAdoptionCenter.Controllers;
 
@@ -467,11 +469,49 @@ public class SheltersController : ControllerBase
     {
         var vaccination = _mapper.Map<Vaccination>(vaccinationCreateDTO);
         
-            var addedVaccination = _shelterRepository.AddPetVaccination(shelterId, petId, vaccination);
+            var addedVaccination = await _shelterRepository.AddPetVaccination(shelterId, petId, vaccination);
             return CreatedAtRoute(nameof(GetPetVaccinationById), new {shelterId, petId, vaccinationId = addedVaccination.Id });
         
     }
-    
+    [HttpGet("{shelterId}/pets/{petId}/diseases/{diseaseId}", Name = "GetPetDiseaseById")]
+    public async Task<ActionResult<DiseaseReadDTO>> GetPetDiseaseById(Guid shelterId, Guid petId, Guid diseaseId)
+    {
+        var disease = await _shelterRepository.GetPetDiseaseById(shelterId, petId, diseaseId);
+        var diseaseDTO = _mapper.Map<DiseaseReadDTO>(disease);
+        if (diseaseDTO != null)
+        {
+            return Ok(diseaseDTO);
+        }
+        return BadRequest();
+    }
+    [HttpPost("{shelterId}/pets/{petId}/diseases")]
+    public async Task<ActionResult<DiseaseReadDTO>> AddDisease(Guid shelterId, Guid petId, DiseaseCreateDTO diseaseCreateDTO)
+    {
+        var disease = _mapper.Map<Disease>(diseaseCreateDTO);
+
+        var addedDisease = await _shelterRepository.AddPetDisease(shelterId, petId, disease);
+        return CreatedAtRoute(nameof(GetPetDiseaseById), new { shelterId, petId, diseaseId = addedDisease.Id });
+
+    }
+    [HttpGet("{shelterId}/adoptions")]
+    public async Task<ActionResult<IEnumerable<AdoptionReadDTO>>> GetAllAdoptions(Guid shelterId) 
+    {
+        var adoptions = await _shelterRepository.GetAllShelterAdoptions(shelterId);
+        var adoptionsDTO = _mapper.Map<AdoptionReadDTO>(adoptions);
+        if (adoptionsDTO != null) {  return Ok(adoptionsDTO); }
+        return BadRequest();
+    }
+    [HttpGet("{shelterId}/adoptions/{adoptionId}")]
+    public async Task<ActionResult<AdoptionReadDTO>> GetAdoptionById(Guid shelterId, Guid adoptionId)
+    {
+        var adoption = await _shelterRepository.GetShelterAdoptionById(shelterId, adoptionId);
+        var adoptionDTO = _mapper.Map<AdoptionReadDTO>(adoption);
+        if (adoptionDTO != null) 
+        { return Ok(adoptionDTO); }
+        return BadRequest();
+        
+    }
+
 }
 
 
