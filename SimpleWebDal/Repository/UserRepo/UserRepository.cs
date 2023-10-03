@@ -28,34 +28,34 @@ public class UserRepository : IUserRepository
         return foundUser;
     }
 
-    //public async Task<User> AddUser(User user)
-    //{
-    //    if (user == null)
-    //    {
-    //        throw new ArgumentNullException(nameof(user));
-    //    }
+    public async Task<User> AddUser(User user)
+    {
+        if (user == null)
+        {
+            throw new ArgumentNullException(nameof(user));
+        }
 
-    //    bool existingUser = await CheckIfUserExistInDataBase(user);
-    //    if (!existingUser)
-    //    {
-    //        var existingAddress = await GetExistingAddressFromDataBase(user);
-    //        if (existingAddress == null)
-    //        {
-    //            _dbContext.Addresses.Add(user.BasicInformation.Address);
-    //        }
-    //        else
-    //        {
-    //            user.BasicInformation.Address = existingAddress;
-    //            user.BasicInformation.AddressId = existingAddress.Id;
-    //        }
+        bool existingUser = await CheckIfUserExistInDataBase(user);
+        if (!existingUser)
+        {
+            var existingAddress = await GetExistingAddressFromDataBase(user);
+            if (existingAddress == null)
+            {
+                _dbContext.Addresses.Add(user.BasicInformation.Address);
+            }
+            else
+            {
+                user.BasicInformation.Address = existingAddress;
+                user.BasicInformation.AddressId = existingAddress.Id;
+            }
 
-    //        _dbContext.Users.Add(user);
-    //        await _dbContext.SaveChangesAsync();
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
 
-    //    }
-    //    return user;
+        }
+        return user;
 
-    //}
+    }
     public async Task<IEnumerable<User>> GetAllUsers()
     {
         return await _dbContext.Users
@@ -153,7 +153,7 @@ public class UserRepository : IUserRepository
         var foundUser = await GetUserById(userId);
         var foundActivity = foundUser.UserCalendar.Activities.FirstOrDefault(e => e.Id == activity.Id);
 
-        if (foundActivity != null)
+        if (foundUser != null && foundActivity != null)
         {
             foundActivity.Name = activity.Name;
             foundActivity.ActivityDate = activity.ActivityDate.ToUniversalTime();
@@ -180,12 +180,19 @@ public class UserRepository : IUserRepository
 
     public async Task<IEnumerable<Pet>> GetAllPets()
     {
-        return await _dbContext.Pets.ToListAsync();
+        return await _dbContext.Pets.Include(p => p.BasicHealthInfo).ThenInclude(p => p.Vaccinations)
+            .Include(p => p.BasicHealthInfo).ThenInclude(p => p.MedicalHistory)
+            .Include(p => p.Calendar).ThenInclude(p => p.Activities)
+            .Include(p => p.Users).ToListAsync();
     }
 
     public async Task<Pet> GetPetById(Guid id)
     {
-        return await _dbContext.Pets.FirstOrDefaultAsync(p => p.Id == id);
+        return await _dbContext.Pets.Include(p => p.BasicHealthInfo).ThenInclude(p => p.Vaccinations)
+            .Include(p => p.BasicHealthInfo).ThenInclude(p => p.MedicalHistory)
+            .Include(p => p.Calendar).ThenInclude(p => p.Activities)
+            .Include(p => p.Users)
+            .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<Pet> AddFavouritePet(Guid userId, Guid petId)
@@ -197,6 +204,7 @@ public class UserRepository : IUserRepository
             if (!foundUser.Pets.Contains(foundPet))
             {
                 foundUser.Pets.Add(foundPet);
+                foundPet.Users.Add(foundUser);
                 await _dbContext.SaveChangesAsync();
                 return foundPet;
             }
@@ -233,10 +241,72 @@ public class UserRepository : IUserRepository
         if (foundUser != null && foundPetForUser != null)
         {
             foundUser.Pets.Remove(foundPetForUser);
+            foundPetForUser.Users.Remove(foundUser);
             await _dbContext.SaveChangesAsync();
             return true;
         }
 
+        return false;
+    }
+
+    public async Task<IEnumerable<Role>> GetAllUserRoles(Guid id)
+    {
+        var foundUser = await GetUserById(id);
+        if(foundUser != null && foundUser.Roles != null)
+        {
+           return foundUser.Roles;
+        }
+        return Enumerable.Empty<Role>();
+    }
+    public async Task<Role> GetUserRoleById(Guid id, Guid roleId)
+    {
+        var foundUser = await GetUserById(id);
+        var role = foundUser.Roles.FirstOrDefault(r => r.Id == roleId);
+        if (foundUser != null && role != null)
+        {
+            return role;
+        }
+        return null;
+    }
+
+    public async Task<Role> AddRole(Guid id, Role role)
+    {
+        var foundUser = await GetUserById(id);
+        var userContainsRole = foundUser.Roles.Contains(role);
+        if(foundUser != null && !userContainsRole)
+        {
+            foundUser.Roles.Add(role);
+            await _dbContext.SaveChangesAsync();
+        }
+        return role;
+    }
+
+    public async Task<bool> DeleteUserRole(Guid userId, Guid roleId)
+    {
+        var foundUser = await GetUserById(userId);
+        var foundRole = foundUser.Roles.FirstOrDefault(r =>r.Id == roleId);
+
+        if (foundUser != null && foundRole != null)
+        {
+            foundUser.Roles.Remove(foundRole);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
+    }
+    public async Task<bool> UpdateUserRole(Guid userId, Role role)
+    {
+        var foundUser = await GetUserById(userId);
+        var foundRole = foundUser.Roles.FirstOrDefault(r => r.Id == role.Id);
+
+
+        if (foundUser != null && foundRole != null)
+        {
+            foundRole.Title = role.Title;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
         return false;
     }
     public async Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets()

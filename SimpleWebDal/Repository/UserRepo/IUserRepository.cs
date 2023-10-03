@@ -24,11 +24,17 @@ public interface IUserRepository
     public Task<Pet> GetFavouritePetById(Guid userId, Guid petId);
     public Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets();
     public Task<Pet> GetVirtualAdoptedPetById(Guid favouriteId);
+    public Task<IEnumerable<Role>> GetAllUserRoles(Guid id);
+    public Task<Role> GetUserRoleById(Guid id, Guid roleId);
+
+
 
     //POST
     public Task<Activity> AddActivity(Guid userId, Activity activity);
-   // public Task<User> AddUser(User user);
+    public Task<User> AddUser(User user);
     public Task<Pet> AddFavouritePet(Guid userId, Guid petId);
+    public Task<Role> AddRole(Guid id, Role role);
+
 
 
     //PUT or PATCH
@@ -36,13 +42,13 @@ public interface IUserRepository
    // public Task<bool> PartialUpdateUser(User user);
 
     public Task<bool> UpdateActivity(Guid userId, Activity activity);
+    public Task<bool> UpdateUserRole(Guid userId, Role role);
+
 
 
     //DELETE
     public Task<bool> DeleteUser(Guid userId);
     public Task<bool> DeleteActivity(Guid userId, Guid activityId);
     public Task<bool> DeleteFavouritePet(Guid id, Guid petId);
-    
-
-
+    public Task<bool> DeleteUserRole(Guid userId, Guid roleId);
 }

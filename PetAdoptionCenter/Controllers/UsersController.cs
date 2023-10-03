@@ -6,7 +6,9 @@ using SimpleWebDal.DTOs.CalendarDTOs;
 using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.BasicInformationDTOs;
+using SimpleWebDal.DTOs.WebUserDTOs.RoleDTOs;
 using SimpleWebDal.Models.CalendarModel;
+using SimpleWebDal.Models.WebUser;
 using SimpleWebDal.Repository.UserRepo;
 using SImpleWebLogic.Configuration;
 
@@ -48,29 +50,29 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
-    //[HttpPost]
-    //public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
-    //{
-    //    var userModel = _mapper.Map<User>(userCreateDTO);
+    [HttpPost]
+    public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
+    {
+        var userModel = _mapper.Map<User>(userCreateDTO);
 
-    //    var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
-    //    var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
+        var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
+        var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
 
 
-    //    var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
-    //    var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
+        var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
+        var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
 
-    //    if (
-    //        !validationResultBasicInformation.IsValid || !validationResultAddress.IsValid)
-    //    {
-    //        return BadRequest();
-    //    }
+        if (
+            !validationResultBasicInformation.IsValid || !validationResultAddress.IsValid)
+        {
+            return BadRequest();
+        }
 
-    //    var addedUser = await _userRepository.AddUser(userModel);
-    //    var userReadDTO = _mapper.Map<UserReadDTO>(userModel);
+        var addedUser = await _userRepository.AddUser(userModel);
+        var userReadDTO = _mapper.Map<UserReadDTO>(userModel);
 
-    //    return CreatedAtRoute(nameof(GetUserById), new { id = userReadDTO.Id }, userReadDTO);
-    //}
+        return CreatedAtRoute(nameof(GetUserById), new { id = userReadDTO.Id }, userReadDTO);
+    }
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -234,6 +236,104 @@ public class UsersController : ControllerBase
             return NotFound();
         }
     }
+    [HttpGet("{id}/roles")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+    public async Task<ActionResult<IEnumerable<RoleReadDTO>>> GetAllUserRoles(Guid id)
+    {
+        var userRoles = await _userRepository.GetAllUserRoles(id);
+        if (userRoles != null)
+        {
+            return Ok(_mapper.Map<IEnumerable<RoleReadDTO>>(userRoles));
+        }
+        return NotFound();
+    }
+
+    [HttpGet("{id}/roles/{roleId}", Name = "GetUserRoleById")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<RoleReadDTO>> GetUserRoleById(Guid id, Guid roleId)
+    {
+        var userRole = await _userRepository.GetUserRoleById(id, roleId);
+        if (userRole != null)
+        {
+            return Ok(_mapper.Map<RoleReadDTO>(userRole));
+        }
+        return NotFound();
+    }
+
+    [HttpPost("{id}/roles")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<RoleReadDTO>> AddUserRole(Guid id, RoleCreateDTO roleCreateDTO)
+    {
+        var foundUser = await _userRepository.GetUserById(id);
+        var roleModel = _mapper.Map<Role>(roleCreateDTO);
+
+        var roleValidator = _validatorFactory.GetValidator<RoleCreateDTO>();
+        var validationResult = roleValidator.Validate(roleCreateDTO);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var addedUserRole = await _userRepository.AddRole(id, roleModel);
+        var roleReadDTO = _mapper.Map<RoleReadDTO>(roleModel);
+
+        return CreatedAtRoute(nameof(GetUserRoleById), new { id = foundUser.Id, roleId = addedUserRole.Id }, roleReadDTO);
+    }
+
+    [HttpDelete("{id}/roles/{roleId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> DeleteUserRole(Guid id, Guid roleId)
+    {
+        bool deleted = await _userRepository.DeleteUserRole(id, roleId);
+
+        if (deleted)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
+
+    [HttpPut("{id}/roles/{roleId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> UpdateUserRole(Guid id, Guid roleId, RoleCreateDTO roleCreateDTO)
+    {
+        var foundUser = await _userRepository.GetUserById(id);
+        var foundRole = await _userRepository.GetUserRoleById(id, roleId);
+        if (foundUser == null || foundRole == null)
+        {
+            return NotFound();
+        }
+        var roleValidator = _validatorFactory.GetValidator<RoleCreateDTO>();
+        var validationResult = roleValidator.Validate(roleCreateDTO);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var activityCreate = _mapper.Map(roleCreateDTO, foundRole);
+
+        bool updated = await _userRepository.UpdateUserRole(id, foundRole);
+        if (updated)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return StatusCode(500);
+        }
+    }
+
     [HttpGet("pets")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllPets()
@@ -302,13 +402,15 @@ public class UsersController : ControllerBase
     [HttpPost("{id}/pets/{petId}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> AddExistingPetToUser(Guid id, Guid petId)
+    public async Task<ActionResult<PetReadDTO>> AddExistingPetToUser(Guid id, Guid petId)
     {
+        var foundUser = await _userRepository.GetUserById(id);
         var addedPet = await _userRepository.AddFavouritePet(id, petId);
+        var addedPetReadDto = _mapper.Map<PetReadDTO>(addedPet);
 
         if (addedPet != null)
         {
-            return Ok(addedPet);
+            return CreatedAtRoute(nameof(GetFavouritePetById), new {id = foundUser.Id, petId = addedPetReadDto.Id}, addedPetReadDto);
         }
         else
         {
