@@ -6,7 +6,8 @@ namespace SimpleWebDal.Models.Animal;
 
 public class Pet
 {
-    public Guid Id { get; init; }
+    public Guid Id { get; set; }
+    public PetGender Gender { get; set; }
     public PetType Type { get; set; }
     public Guid BasicHealthInfoId { get; set; }
     public BasicHealthInfo? BasicHealthInfo { get; set; }

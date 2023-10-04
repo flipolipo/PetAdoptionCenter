@@ -7,7 +7,8 @@ namespace SimpleWebDal.DTOs.AnimalDTOs;
 
 public class PetCreateDTO
 {
-    public PetType Type { get; init; }
+    public PetType Type { get; set; }
+    public PetGender Gender { get; set; }
     public BasicHealthInfoCreateDTO? BasicHealthInfo { get; set; }
     public string Description { get; set; }
     public CalendarActivityCreateDTO Calendar { get; set; }

@@ -9,6 +9,7 @@ public class PetReadDTO
 {
     public Guid Id { get; set; }
     public PetType Type { get; set; }
+    public PetGender Gender { get; set; }
     public BasicHealthInfoReadDTO? BasicHealthInfo { get; set; }
     public string Description { get; set; }
     public CalendarActivityReadDTO Calendar { get; set; }

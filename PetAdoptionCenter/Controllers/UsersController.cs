@@ -29,6 +29,10 @@ public class UsersController : ControllerBase
         _validatorFactory = validatorFactory;
     }
 
+    /// <summary>
+    /// Display all users
+    /// </summary>
+    /// <returns>List of all users in UserReadDTO</returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetAllUsers()

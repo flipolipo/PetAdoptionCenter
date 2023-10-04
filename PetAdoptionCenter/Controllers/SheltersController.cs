@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SimpleWebDal.DTOs.AddressDTOs;
-using SimpleWebDal.DTOs.CalendarDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
 using SimpleWebDal.DTOs.ShelterDTOs;
 using SimpleWebDal.Models.CalendarModel;
@@ -10,7 +9,6 @@ using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.TemporaryHouse;
-using SimpleWebDal.Models.WebUser;
 using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Repository.ShelterRepo;
 using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
@@ -348,9 +346,9 @@ public class SheltersController : ControllerBase
     }
 
     [HttpPut("{shelterId}/pets/{petId}")]
-    public async Task<IActionResult> UpdateShelterPet(Guid shelterId, Guid petId, PetType type, string description, PetStatus status, bool avaibleForAdoption)
+    public async Task<IActionResult> UpdateShelterPet(Guid shelterId, Guid petId, PetGender gender, PetType type, string description, PetStatus status, bool avaibleForAdoption)
     {
-        bool updated = await _shelterRepository.UpdateShelterPet(shelterId, petId, type, description, status, avaibleForAdoption);
+        bool updated = await _shelterRepository.UpdateShelterPet(shelterId, petId, gender, type, description, status, avaibleForAdoption);
 
         if (updated)
         {
@@ -362,9 +360,9 @@ public class SheltersController : ControllerBase
     }
 
     [HttpPut("{shelterId}/pets/basicHealthInfo/{basicHelthInfoId}")]
-    public async Task<IActionResult> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size)
+    public async Task<IActionResult> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size, bool isNeutred)
     {
-        bool updated = await _shelterRepository.UpdatePetBasicHealthInfo(shelterId, petId, name, age, size);
+        bool updated = await _shelterRepository.UpdatePetBasicHealthInfo(shelterId, petId, name, age, size, isNeutred);
 
         if (updated)
         {
