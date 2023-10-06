@@ -20,6 +20,8 @@ public interface IUserRepository
     //public Task<Pet> GetVirtualAdoptedPetById(Guid favouriteId);
     public Task<IEnumerable<Role>> GetAllUserRoles(Guid id);
     public Task<Role> GetUserRoleById(Guid id, Guid roleId);
+    public Task<IEnumerable<Pet>> GetAllAdoptedPet();
+    public Task<Pet> GetAdoptedPetById(Guid id);
     #endregion
 
 

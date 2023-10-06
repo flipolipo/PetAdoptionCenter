@@ -309,58 +309,16 @@ public class UserRepository : IUserRepository
     }
 
 
-    //public async Task<IEnumerable<Adoption>> GetAllAdoption(Guid id)
-    //{
-    //    var foundUser = await GetUserById(id);
-    //    if (foundUser != null)
-    //    {
-    //        return foundUser.Adoptions;
-    //    }
-
-    //    return Enumerable.Empty<Adoption>();
-    //}
-
-    //public async Task<Adoption> GetAdopteById(Guid userId, Guid petId)
-    //{
-    //    var foundUser = await GetUserById(userId);
-
-    //    if (foundUser != null && foundUser.Adoptions != null)
-    //    {
-    //        var pet = foundUser.Pets.FirstOrDefault(p => p.Id == petId);
-    //        return pet;
-    //    }
-    //    return null;
-    //}
-
-    //public async Task<bool> DeleteAdoptedPet(Guid id, Guid petId)
-    //{
-    //    var foundUser = await GetUserById(id);
-    //    var foundPetForUser = await GetFavouritePetById(id, petId);
-    //    if (foundUser != null && foundPetForUser != null)
-    //    {
-    //        foundUser.Pets.Remove(foundPetForUser);
-    //        foundPetForUser.Users.Remove(foundUser);
-    //        await _dbContext.SaveChangesAsync();
-    //        return true;
-    //    }
-
-    //    return false;
-    //}
-    //public async Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets()
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public async Task<Pet> GetVirtualAdoptedPetById(int favouriteId)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public async Task<Pet> GetVirtualAdoptedPetById(Guid favouriteId)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
+    public async Task<IEnumerable<Pet>> GetAllAdoptedPet()
+    {
+        var pets = await GetAllPets();
+        return pets.Where(pet => pet.Status == Models.Animal.Enums.PetStatus.Adopted);
+    }
+    public async Task<Pet> GetAdoptedPetById(Guid id)
+    {
+        var foundPets = await GetAllAdoptedPet();
+        return foundPets.FirstOrDefault(pet => pet.Id == id);
+    }
     private async Task<bool> CheckIfUserExistInDataBase(User user)
     {
         if (user == null)
@@ -393,6 +351,22 @@ public class UserRepository : IUserRepository
 
         return existingAddress;
     }
+
+    //public async Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets()
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    //public async Task<Pet> GetVirtualAdoptedPetById(int favouriteId)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    //public async Task<Pet> GetVirtualAdoptedPetById(Guid favouriteId)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
 
 
 }
