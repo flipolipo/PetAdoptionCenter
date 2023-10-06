@@ -8,6 +8,7 @@ public class BasicHealthInfo
     public string Name { get; set; }
     public int Age { get; set; }
     public Size Size { get; set; }
+    public bool IsNeutered { get; set; }
     public ICollection<Vaccination>? Vaccinations { get; set; }
     public ICollection<Disease>? MedicalHistory { get; set; }
 

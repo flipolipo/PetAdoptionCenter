@@ -10,7 +10,6 @@ using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 using SimpleWebDal.Models.WebUser.Enums;
 using SImpleWebLogic.Repository.ShelterRepo;
-using System.Text;
 
 namespace SimpleWebDal.Repository.ShelterRepo
 {
@@ -118,7 +117,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             _dbContext.SaveChanges();
             return pet;
         }
-        public async Task<BasicHealthInfo> AddBasicHelathInfoToAPet(Guid shelterId, Guid petId, string name, int age, Size size)
+        public async Task<BasicHealthInfo> AddBasicHelathInfoToAPet(Guid shelterId, Guid petId, string name, int age, Size size, bool isNeutred)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
@@ -127,7 +126,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 Id = Guid.NewGuid(),
                 Name = name,
                 Age = age,
-                Size = size
+                Size = size,
+                IsNeutered = isNeutred
             };
             foundPet.BasicHealthInfo = info;
             return info;
@@ -431,7 +431,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return false;
         }
 
-        public async Task<bool> UpdateShelterPet(Guid shelterId, Guid petId, PetType type, string description, PetStatus status, bool avaibleForAdoption)
+        public async Task<bool> UpdateShelterPet(Guid shelterId, Guid petId, PetGender gender, PetType type, string description, PetStatus status, bool avaibleForAdoption)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
@@ -439,6 +439,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             if (foundPet != null)
             {
                 foundPet.AvaibleForAdoption = avaibleForAdoption;
+                foundPet.Gender = gender;
                 foundPet.Description = description;
                 foundPet.Status = status;
                 foundPet.Type = type;
@@ -448,7 +449,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return false;
         }
 
-        public async Task<bool> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size)
+        public async Task<bool> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size, bool isNeutred)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
@@ -459,6 +460,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 petHealthInfo.Size = size;
                 petHealthInfo.Age = age;
                 petHealthInfo.Name = name;
+                petHealthInfo.IsNeutered = isNeutred;
                 await _dbContext.SaveChangesAsync();
 
                 return true;

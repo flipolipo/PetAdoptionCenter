@@ -29,6 +29,10 @@ public class UsersController : ControllerBase
         _validatorFactory = validatorFactory;
     }
 
+    /// <summary>
+    /// Display all users
+    /// </summary>
+    /// <returns>List of all users in UserReadDTO</returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetAllUsers()
@@ -51,6 +55,8 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
     {
         var userModel = _mapper.Map<User>(userCreateDTO);
@@ -416,5 +422,25 @@ public class UsersController : ControllerBase
         {
             return NotFound();
         }
+    }
+    [HttpGet("pets/adopted")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllAdoptedPets()
+    {
+        var pets = await _userRepository.GetAllAdoptedPet();
+        return Ok(_mapper.Map<IEnumerable<PetReadDTO>>(pets));
+    }
+
+    [HttpGet("pets/adopted/{id}", Name = "GetAdoptedPetById")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<PetReadDTO>> GetAdoptedPetById(Guid id)
+    {
+        var pet = await _userRepository.GetAdoptedPetById(id);
+        if (pet != null)
+        {
+            return Ok(_mapper.Map<PetReadDTO>(pet));
+        }
+        return NotFound();
     }
 }

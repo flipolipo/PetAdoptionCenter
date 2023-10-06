@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleWebDal.Data;
+using SimpleWebDal.Models.AdoptionProccess;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.CalendarModel;
-using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.WebUser;
 
 
@@ -177,7 +177,66 @@ public class UserRepository : IUserRepository
 
         return false;
     }
+    public async Task<IEnumerable<Role>> GetAllUserRoles(Guid id)
+    {
+        var foundUser = await GetUserById(id);
+        if (foundUser != null && foundUser.Roles != null)
+        {
+            return foundUser.Roles;
+        }
+        return Enumerable.Empty<Role>();
+    }
+    public async Task<Role> GetUserRoleById(Guid id, Guid roleId)
+    {
+        var foundUser = await GetUserById(id);
+        var role = foundUser.Roles.FirstOrDefault(r => r.Id == roleId);
+        if (foundUser != null && role != null)
+        {
+            return role;
+        }
+        return null;
+    }
 
+    public async Task<Role> AddRole(Guid id, Role role)
+    {
+        var foundUser = await GetUserById(id);
+        var userContainsRole = foundUser.Roles.Contains(role);
+        if (foundUser != null && !userContainsRole)
+        {
+            foundUser.Roles.Add(role);
+            await _dbContext.SaveChangesAsync();
+        }
+        return role;
+    }
+
+    public async Task<bool> DeleteUserRole(Guid userId, Guid roleId)
+    {
+        var foundUser = await GetUserById(userId);
+        var foundRole = foundUser.Roles.FirstOrDefault(r => r.Id == roleId);
+
+        if (foundUser != null && foundRole != null)
+        {
+            foundUser.Roles.Remove(foundRole);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
+    }
+    public async Task<bool> UpdateUserRole(Guid userId, Role role)
+    {
+        var foundUser = await GetUserById(userId);
+        var foundRole = foundUser.Roles.FirstOrDefault(r => r.Id == role.Id);
+
+
+        if (foundUser != null && foundRole != null)
+        {
+            foundRole.Title = role.Title;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        return false;
+    }
     public async Task<IEnumerable<Pet>> GetAllPets()
     {
         return await _dbContext.Pets.Include(p => p.BasicHealthInfo).ThenInclude(p => p.Vaccinations)
@@ -249,96 +308,17 @@ public class UserRepository : IUserRepository
         return false;
     }
 
-    public async Task<IEnumerable<Role>> GetAllUserRoles(Guid id)
+
+    public async Task<IEnumerable<Pet>> GetAllAdoptedPet()
     {
-        var foundUser = await GetUserById(id);
-        if(foundUser != null && foundUser.Roles != null)
-        {
-           return foundUser.Roles;
-        }
-        return Enumerable.Empty<Role>();
+        var pets = await GetAllPets();
+        return pets.Where(pet => pet.Status == Models.Animal.Enums.PetStatus.Adopted);
     }
-    public async Task<Role> GetUserRoleById(Guid id, Guid roleId)
+    public async Task<Pet> GetAdoptedPetById(Guid id)
     {
-        var foundUser = await GetUserById(id);
-        var role = foundUser.Roles.FirstOrDefault(r => r.Id == roleId);
-        if (foundUser != null && role != null)
-        {
-            return role;
-        }
-        return null;
+        var foundPets = await GetAllAdoptedPet();
+        return foundPets.FirstOrDefault(pet => pet.Id == id);
     }
-
-    public async Task<Role> AddRole(Guid id, Role role)
-    {
-        var foundUser = await GetUserById(id);
-        var userContainsRole = foundUser.Roles.Contains(role);
-        if(foundUser != null && !userContainsRole)
-        {
-            foundUser.Roles.Add(role);
-            await _dbContext.SaveChangesAsync();
-        }
-        return role;
-    }
-
-    public async Task<bool> DeleteUserRole(Guid userId, Guid roleId)
-    {
-        var foundUser = await GetUserById(userId);
-        var foundRole = foundUser.Roles.FirstOrDefault(r =>r.Id == roleId);
-
-        if (foundUser != null && foundRole != null)
-        {
-            foundUser.Roles.Remove(foundRole);
-            await _dbContext.SaveChangesAsync();
-            return true;
-        }
-
-        return false;
-    }
-    public async Task<bool> UpdateUserRole(Guid userId, Role role)
-    {
-        var foundUser = await GetUserById(userId);
-        var foundRole = foundUser.Roles.FirstOrDefault(r => r.Id == role.Id);
-
-
-        if (foundUser != null && foundRole != null)
-        {
-            foundRole.Title = role.Title;
-            await _dbContext.SaveChangesAsync();
-            return true;
-        }
-        return false;
-    }
-    public async Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets()
-    {
-        throw new NotImplementedException();
-    }
-
-
-    public async Task<Pet> GetShelterPetById(Guid shelterId, Guid petId)
-    {
-        var foundShelter = await FindShelter(shelterId);
-        return foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
-    }
-
-    private async Task<Shelter> FindShelter(Guid shelterId)
-    {
-        return await _dbContext.Shelters.FirstOrDefaultAsync(e => e.Id == shelterId);
-    }
-
-    public async Task<Pet> GetVirtualAdoptedPetById(int favouriteId)
-    {
-        throw new NotImplementedException();
-    }
-
-
-
-
-    public async Task<Pet> GetVirtualAdoptedPetById(Guid favouriteId)
-    {
-        throw new NotImplementedException();
-    }
-
     private async Task<bool> CheckIfUserExistInDataBase(User user)
     {
         if (user == null)
@@ -371,6 +351,22 @@ public class UserRepository : IUserRepository
 
         return existingAddress;
     }
+
+    //public async Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets()
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    //public async Task<Pet> GetVirtualAdoptedPetById(int favouriteId)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    //public async Task<Pet> GetVirtualAdoptedPetById(Guid favouriteId)
+    //{
+    //    throw new NotImplementedException();
+    //}
+
 
 
 }
