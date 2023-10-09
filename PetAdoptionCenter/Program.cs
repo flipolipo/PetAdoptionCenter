@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Serialization;
 using SimpleWebDal.Data;
 using SimpleWebDal.Repository.ShelterRepo;
 using SimpleWebDal.Repository.UserRepo;
@@ -13,18 +12,21 @@ using SImpleWebLogic.Extensions;
 using System.Text;
 using SImpleWebLogic.Repository.ShelterRepo;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("secrets.json", optional: false, reloadOnChange: true);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(opt => {
+    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
+
 AddServices();
 ConfigureSwagger();
 AddDbContext(builder.Configuration);
 AddAuthentication();
 AddIdentity();
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.RegisterApplicationDependencies();
 builder.Services.ConfigureAutoMapper();
