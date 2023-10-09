@@ -6,7 +6,8 @@ namespace SimpleWebDal.Models.WebUser;
 
 public class User : IdentityUser<Guid>
 {
-    
+    public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpiration { get; set; }
     public Guid? BasicInformationId { get; set; }
     public BasicInformation? BasicInformation { get; set; }
     public Guid? UserCalendarId { get; set; }

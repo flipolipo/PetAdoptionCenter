@@ -2,7 +2,8 @@
     bool Success,
     string Email,
     string UserName,
-    string Token)
+    string Token,
+    string RefreshToken)
 {
     public readonly Dictionary<string, string> ErrorMessages = new();
 }
