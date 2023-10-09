@@ -200,6 +200,8 @@ namespace SimpleWebDal.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    RefreshToken = table.Column<string>(type: "text", nullable: true),
+                    RefreshTokenExpiration = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     BasicInformationId = table.Column<Guid>(type: "uuid", nullable: true),
                     UserCalendarId = table.Column<Guid>(type: "uuid", nullable: true),
                     ShelterId = table.Column<Guid>(type: "uuid", nullable: true),
