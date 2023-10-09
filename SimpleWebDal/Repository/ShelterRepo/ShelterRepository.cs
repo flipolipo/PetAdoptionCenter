@@ -91,29 +91,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
         public async Task<Pet> AddPet(Guid shelterId, Pet pet)
         {
             var foundShelter = await FindShelter(shelterId);
-            //var newpet = new Pet()
-            //{
-            //    Id = Guid.NewGuid(),
-            //    Type = type,
-            //    Description = description,
-            //    Status = status,
-            //    AvaibleForAdoption = avaibleForAdoption,
-            //    Calendar = new CalendarActivity(),
-            //    ShelterId = foundShelter.Id,
-            //    PatronUsers = new List<PatronUsers>(),
-            //    BasicHealthInfo = new BasicHealthInfo()
-            //    {
-            //        Name = name,
-            //        Age = age,
-            //        Size = size,
-            //        Vaccinations = new List<Vaccination>(),
-            //        MedicalHistory = new List<Disease>()
-            //    }
-            //};
-
-
+            pet.Calendar = new CalendarActivity();
             foundShelter.ShelterPets.Add(pet);
-            //_dbContext.Pets.Add(pet);
             _dbContext.SaveChanges();
             return pet;
         }
@@ -315,6 +294,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
         public async Task<IEnumerable<Pet>> GetAllShelterPets(Guid shelterId)
         {
             var foundShelter = await FindShelter(shelterId);
+            
             return foundShelter.ShelterPets.ToList();
         }
 

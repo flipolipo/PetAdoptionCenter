@@ -2,6 +2,8 @@
 using SimpleWebDal.DTOs.AnimalDTOs.BasicHealthInfoDTOs;
 using SimpleWebDal.DTOs.CalendarDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs;
+using System.Buffers.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace SimpleWebDal.DTOs.AnimalDTOs;
 
@@ -17,4 +19,5 @@ public class PetReadDTO
     public bool AvaibleForAdoption { get; set; }
     public Guid ShelterId { get; set; }
     public ICollection<UserReadDTO>? Users { get; set; }
+    public string ImageBase64 { get; set; }
 }

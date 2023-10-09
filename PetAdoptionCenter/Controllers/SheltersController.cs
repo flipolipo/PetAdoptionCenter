@@ -258,10 +258,18 @@ public class SheltersController : ControllerBase
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllShelterPets(Guid shelterId)
     {
         var pets = await _shelterRepository.GetAllShelterPets(shelterId);
-        var petsDto = _mapper.Map<IEnumerable<Pet>>(pets);
-        if (pets != null)
+        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+        foreach (var petDto in petsDto)
         {
-            return Ok(pets);
+            foreach (var pet in pets) 
+            {
+                petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+            }
+            
+        }
+        if (petsDto != null)
+        {
+            return Ok(petsDto);
         }
         return BadRequest();
     }
@@ -270,6 +278,7 @@ public class SheltersController : ControllerBase
     {
         var pet = await _shelterRepository.GetShelterPetById(shelterId, petId);
         var petDto = _mapper.Map<PetReadDTO>(pet);
+        petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
         if (petDto != null)
         {
             return Ok(petDto);
@@ -377,24 +386,34 @@ public class SheltersController : ControllerBase
     }
 
     [HttpPost("{shelterId}/pets")]
-    public async Task<ActionResult<PetReadDTO>> AddPet([FromBody] PetCreateDTO petCreateDTO, Guid shelterId)
+    public async Task<ActionResult<PetReadDTO>> AddPet([FromForm] PetCreateDTO petCreateDTO, Guid shelterId)
     {
 
         var petValidator = _validatorFactory.GetValidator<PetCreateDTO>();
         var validationResult = petValidator.Validate(petCreateDTO);
+
         if (!validationResult.IsValid)
         {
             return BadRequest(validationResult.Errors);
         }
-        var pet = _mapper.Map<Pet>(petCreateDTO);
+        if(petCreateDTO.ImageFile.Length > 0) 
+        {
 
+        }
+        var pet = _mapper.Map<Pet>(petCreateDTO);
+        if (petCreateDTO.ImageFile != null && petCreateDTO.ImageFile.Length > 0)
+        {
+            using var memoryStream = new MemoryStream();
+            await petCreateDTO.ImageFile.CopyToAsync(memoryStream);
+            pet.Image = memoryStream.ToArray();
+        }
         try
         {
             await _shelterRepository.AddPet(shelterId, pet);
+
             var map = _mapper.Map<PetReadDTO>(pet);
 
             return CreatedAtRoute(nameof(GetShelterPetById), new { shelterId = map.ShelterId, petId = map.Id }, map);
-            //return Ok(map);
         }
         catch (Exception ex)
         {
