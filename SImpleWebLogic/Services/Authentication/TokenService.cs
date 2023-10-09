@@ -14,12 +14,12 @@ public class TokenService : ITokenService
     private const int ExpirationMinutes = 30;
 
     private readonly IConfiguration _configuration;
-    private readonly PetAdoptionCenterContext _context;
+   
 
-    public TokenService(IConfiguration configuration, PetAdoptionCenterContext context)
+    public TokenService(IConfiguration configuration)
     {
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        _context = context ?? throw new ArgumentNullException(nameof(context));
+        
     }
 
     public (string AccessToken, string RefreshToken) CreateToken(User user, string role)
@@ -101,45 +101,6 @@ public class TokenService : ITokenService
         return Convert.ToBase64String(randomNumber);
     }
 
-    public (string NewAccessToken, string NewRefreshToken) Refresh(string refreshToken, string email)
-    {
-        User user;
-
-        try
-        {
-            user = _context.Users.SingleOrDefault(u => u.Email == email);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw new AuthenticationException("Database error occurred.");
-        }
-
-        if (user == null)
-        {
-            throw new AuthenticationException("User not found.");
-        }
-
-      
-
-        var newRefreshToken = GenerateRefreshToken();
-        var (newAccessToken, _) = CreateToken(user, "User");
-
-        user.RefreshToken = newRefreshToken;
-        user.RefreshTokenExpiration = DateTime.UtcNow.AddDays(7);
-
-        try
-        {
-            _context.Users.Update(user);
-            _context.SaveChanges();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw new AuthenticationException("Database error occurred.");
-        }
-
-        return (newAccessToken, newRefreshToken);
-    }
+  
 
 }

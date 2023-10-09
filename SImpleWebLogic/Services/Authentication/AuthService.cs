@@ -5,13 +5,13 @@ public class AuthService : IAuthService
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;
-    private readonly IServiceProvider _serviceProvider;
 
-    public AuthService(UserManager<User> userManager, ITokenService tokenService, IServiceProvider serviceProvider)
+
+    public AuthService(UserManager<User> userManager, ITokenService tokenService)
     {
         _userManager = userManager;
         _tokenService = tokenService;
-        _serviceProvider = serviceProvider;
+       
     }
 
     public async Task<AuthResult> RegisterAsync(string email, string username, string password, string role)
@@ -24,10 +24,10 @@ public class AuthService : IAuthService
             return FailedRegistration(result, email, username);
         }
 
-        // Assign role to the user
+       
         await _userManager.AddToRoleAsync(user, role);
 
-        // Generate refresh token
+       
         var refreshToken = _tokenService.GenerateRefreshToken();
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpiration = DateTime.UtcNow.AddDays(7);
