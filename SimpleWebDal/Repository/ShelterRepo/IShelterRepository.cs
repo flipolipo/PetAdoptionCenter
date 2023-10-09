@@ -49,7 +49,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         #endregion
 
 
-        //PUT
+        #region //PUT
         public Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city);
         public Task<bool> UpdateShelterPet(Guid shelterId, Guid petId, PetGender gender, PetType type, string description, PetStatus status, bool avaibleForAdoption);
         public Task<bool> UpdateActivity(Guid shelterId, Guid activityId, string name, DateTime date);
