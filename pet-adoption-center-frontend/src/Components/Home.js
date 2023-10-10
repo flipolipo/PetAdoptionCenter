@@ -7,7 +7,6 @@ import redPaw from '../Photo/redPaw.png';
 import whitePaw from '../Photo/whitePaw.png';
 import pets from '../Photo/pets.png';
 import phone from '../Photo/phone.png';
-import logo from '../Photo/Round_full.png';
 
 export const Home = () => {
   return (
