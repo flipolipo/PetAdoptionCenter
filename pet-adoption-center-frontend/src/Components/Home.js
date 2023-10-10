@@ -7,11 +7,11 @@ import redPaw from '../Photo/redPaw.png';
 import whitePaw from '../Photo/whitePaw.png';
 import pets from '../Photo/pets.png';
 import phone from '../Photo/phone.png';
+import './Home.css';
 
 export const Home = () => {
   return (
     <div className="homepage">
-  
     <div className="pets2">
       <img className="vector-icon8" alt="" src={paw} />
       <img className="vector-icon9" alt="" src={paw} />

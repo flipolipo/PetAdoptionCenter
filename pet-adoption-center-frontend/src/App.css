@@ -98,7 +98,7 @@ body {
   height: 123px;
 }
 .pets2 {
-  position: absolute;
+  position: relative;
   top: 209.6px;
   left: 30px;
   width: 1420px;
@@ -601,80 +601,7 @@ body {
   background-color: var(--color-lightsalmon-200);
   height: 126px;
 }
-.adoption1,
-.home1 {
-  text-decoration: none;
-  position: absolute;
-  top: 48.99px;
-  left: calc(50% - 495px);
-  line-height: 50px;
-  color: inherit;
-  display: inline-block;
-  width: 122px;
-  height: 40.68px;
-  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  -webkit-text-stroke: 1px #000;
-}
-.adoption1 {
-  top: 49.8px;
-  left: calc(50% - 315px);
-  width: 199px;
-}
-.shelters1,
-.vector-icon26 {
-  position: absolute;
-  top: 26.59px;
-  left: calc(50% + 147.54px);
-  width: 87.5px;
-  height: 76.25px;
-}
-.shelters1 {
-  text-decoration: none;
-  top: 50.62px;
-  left: calc(50% + 52px);
-  line-height: 50px;
-  color: inherit;
-  display: inline-block;
-  width: 202px;
-  height: 40.68px;
-  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  -webkit-text-stroke: 1px #000;
-}
-.vector-icon27 {
-  position: absolute;
-  top: 10.32px;
-  left: calc(50% + 383.53px);
-  width: 87.5px;
-  height: 76.25px;
-}
-.pets3,
-.temporary-house1 {
-  text-decoration: none;
-  position: absolute;
-  top: 30px;
-  left: calc(50% + 304px);
-  line-height: 50px;
-  color: inherit;
-  display: inline-block;
-  width: 237px;
-  height: 96px;
-  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  -webkit-text-stroke: 1px #000;
-}
-.pets3 {
-  top: 51.43px;
-  left: calc(50% - 78px);
-  width: 105px;
-  height: 40.68px;
-}
-.navbar11 {
-  position: absolute;
-  top: 325px;
-  left: 0;
-  width: 1440px;
-  height: 134px;
-  font-family: var(--font-roboto);
-}
+
 .homepage1-copy {
   background-color: var(--color-white);
   width: 1440px;
