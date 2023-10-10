@@ -11,14 +11,24 @@ using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Extensions;
 using System.Text;
 using SImpleWebLogic.Repository.ShelterRepo;
-
+using Newtonsoft.Json.Serialization;
+using Serilog;
+using PetAdoptionCenter.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+builder.Services.AddCors(c => { c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); });
 
 builder.Configuration.AddJsonFile("secrets.json", optional: false, reloadOnChange: true);
 
 builder.Services.AddControllers().AddNewtonsoftJson(opt => {
     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
 });
 
 AddServices();
@@ -34,8 +44,11 @@ builder.Services.AddDbContext<PetAdoptionCenterContext>();
 builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ValidatorFactory>();
+builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
+
 var app = builder.Build();
 
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -45,6 +58,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 await AddRoles();
