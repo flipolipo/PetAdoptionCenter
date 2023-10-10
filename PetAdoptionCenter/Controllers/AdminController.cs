@@ -35,7 +35,7 @@ public class AdminController : ControllerBase
         if (result.Succeeded)
         {
             var roleResult = await _userManager.AddToRoleAsync(user, "User");
-            return Ok();
+            return Ok(roleResult);
         }
         return BadRequest(result.Errors);
     }

@@ -21,12 +21,14 @@ public class UsersController : ControllerBase
     private IUserRepository _userRepository;
     private IMapper _mapper;
     private readonly ValidatorFactory _validatorFactory;
+    private readonly ILogger<UsersController> _logger;
 
-    public UsersController(IUserRepository userRepository, IMapper mapper, ValidatorFactory validatorFactory)
+    public UsersController(IUserRepository userRepository, IMapper mapper, ValidatorFactory validatorFactory, ILogger<UsersController> logger)
     {
         _userRepository = userRepository;
         _mapper = mapper;
         _validatorFactory = validatorFactory;
+        _logger = logger;
     }
 
     /// <summary>
@@ -38,21 +40,29 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetAllUsers()
     {
         var users = await _userRepository.GetAllUsers();
+        _logger.LogInformation($"Metoda HTTP: {HttpContext.Request.Method}");
         return Ok(_mapper.Map<IEnumerable<UserReadDTO>>(users));
     }
+    //[HttpGet("test")]
+    //public IActionResult Test()
+    //{
+    //    throw new Exception("This is a simulated exception.");
+    //}
 
     [HttpGet("{id}", Name = "GetUserById")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserReadDTO>> GetUserById(Guid id)
     {
-        var user = await _userRepository.GetUserById(id);
-        if (user != null)
-        {
-            return Ok(_mapper.Map<UserReadDTO>(user));
-        }
-        return NotFound();
+             var user = await _userRepository.GetUserById(id);
+            if (user != null)
+            {
+                return Ok(_mapper.Map<UserReadDTO>(user));
+            }
+            return NotFound();
     }
+
+
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -120,7 +130,7 @@ public class UsersController : ControllerBase
         var validationResultCalendarActivity = userCalendarValidator.Validate(userCreateDTO.UserCalendar);
         var validateResultRole = userValidator.Validate(userCreateDTO);
 
-        return validationResultBasicInformation.IsValid && validationResultAddress.IsValid && validationResultCalendarActivity.IsValid 
+        return validationResultBasicInformation.IsValid && validationResultAddress.IsValid && validationResultCalendarActivity.IsValid
             && validateResultRole.IsValid;
     }
 
@@ -212,7 +222,7 @@ public class UsersController : ControllerBase
         {
             return BadRequest();
         }
-    
+
         var activityCreate = _mapper.Map(activityCreateDTO, foundActivity);
 
         bool updated = await _userRepository.UpdateActivity(id, foundActivity);
@@ -416,7 +426,7 @@ public class UsersController : ControllerBase
 
         if (addedPet != null)
         {
-            return CreatedAtRoute(nameof(GetFavouritePetById), new {id = foundUser.Id, petId = addedPetReadDto.Id}, addedPetReadDto);
+            return CreatedAtRoute(nameof(GetFavouritePetById), new { id = foundUser.Id, petId = addedPetReadDto.Id }, addedPetReadDto);
         }
         else
         {
