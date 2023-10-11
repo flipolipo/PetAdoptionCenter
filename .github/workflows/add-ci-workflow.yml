@@ -57,12 +57,9 @@ jobs:
       env:
         Configuration: ${{ matrix.configuration }}
 
-    # Execute unit tests
+    # Execute all unit tests in the solution
     - name: Execute unit tests
-      run: dotnet test $env:Test_Project_Path --configuration $env:Configuration
-      env:
-        Test_Project_Path: ${{ env.Test_Project_Path }}
-        Configuration: ${{ matrix.configuration }}
+      run: dotnet test
 
     # For Code Coverage
     - name: Test with coverage
