@@ -26,22 +26,53 @@ jobs:
       with:
         fetch-depth: 0
 
+    # Cache NuGet packages
+    - name: Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
 
-    # Add  MSBuild to the PATH
+    # Add MSBuild to the PATH
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
 
-    # Execute all unit tests in the solution
-    - name: Execute unit tests
-      run: dotnet test
-
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    # Restore the application
     - name: Restore the application
       run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
+
+    # Build the Solution
+    - name: Build Solution
+      run: dotnet build $env:Solution_Name --configuration $env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
+
+    # Execute unit tests
+    - name: Execute unit tests
+      run: dotnet test $env:Test_Project_Path --configuration $env:Configuration
+      env:
+        Test_Project_Path: ${{ env.Test_Project_Path }}
+        Configuration: ${{ matrix.configuration }}
+
+    # For Code Coverage
+    - name: Test with coverage
+      run: |
+        dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} 
+        file: ./PetAdoptionCenter/coverage.opencover.xml 
+
+    
