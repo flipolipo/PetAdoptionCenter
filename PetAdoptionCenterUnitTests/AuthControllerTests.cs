@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 
 
@@ -40,7 +40,7 @@ public class AuthControllerTests
 
         // Assert
         Assert.IsInstanceOf<BadRequestObjectResult>(result.Result);
-       
+
     }
 
     [Test]
