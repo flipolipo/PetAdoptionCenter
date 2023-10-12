@@ -1,9 +1,9 @@
 import './App.css';
-import  Home   from './Components/Home';
-import { Shelters } from './Components/Shelters';
-import { Adoption } from './Components/Adoption';
-import { TemporaryHouse } from './Components/TemporaryHouse';
-import { Pets } from './Components/Pets';
+import  Home   from './Components/Pages/Home';
+import { Shelters } from './Components/Pages/Shelters';
+import { Adoption } from './Components/Pages/Adoption';
+import { TemporaryHouse } from './Components/Pages/TemporaryHouse';
+import { Pets } from './Components/Pages/Pets';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Components/Login';
 import Register from './Components/Register';

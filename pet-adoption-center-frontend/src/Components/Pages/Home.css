@@ -1,0 +1,67 @@
+.homepage-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
+  text-align: center;
+}
+.image-9-icon{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  object-fit: contain;
+}
+.rectanglePets{
+  background-color: rgba(246, 158, 123, 1); 
+  padding: 20px; 
+  border-radius: 20px; 
+  text-align: center;
+  width: 100%; 
+  margin-top: 20px;
+}
+ .find-your-new {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  position: sticky;
+  height: 14.3%;
+  width: 75%;
+  top: 85.47%;
+  left: 12.46%;
+  font-size: 30px;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+  text-align: center;
+  text-decoration: none;
+}
+@media (max-width: 480px) {
+  .rectanglePets{
+    background-color: rgba(246, 158, 123, 1); 
+    border-radius: 10px; 
+    text-align: center;
+    width: 100%; 
+    margin-top: 5px;
+  }
+  .find-your-new {
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+    position: sticky;
+    height: 14.3%;
+    width: 75%;
+    top: 85.47%;
+    left: 12.46%;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: var(--font-outfit);
+    color: var(--color-black);
+    text-align: center;
+    text-decoration: none;
+  }
+}
