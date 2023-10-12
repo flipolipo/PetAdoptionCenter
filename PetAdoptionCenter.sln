@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SImpleWebLogic", "SImpleWeb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWebDal", "SimpleWebDal\SimpleWebDal.csproj", "{9C7E898D-D96F-49FD-8AC8-A2E347BA4237}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetAdoptionCenterIntegrationTests", "PetAdoptionCenterIntegrationTests\PetAdoptionCenterIntegrationTests.csproj", "{F04D3620-C2E9-4EAA-A4DC-2E623AF6675A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{9C7E898D-D96F-49FD-8AC8-A2E347BA4237}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C7E898D-D96F-49FD-8AC8-A2E347BA4237}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C7E898D-D96F-49FD-8AC8-A2E347BA4237}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F04D3620-C2E9-4EAA-A4DC-2E623AF6675A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F04D3620-C2E9-4EAA-A4DC-2E623AF6675A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F04D3620-C2E9-4EAA-A4DC-2E623AF6675A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F04D3620-C2E9-4EAA-A4DC-2E623AF6675A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
