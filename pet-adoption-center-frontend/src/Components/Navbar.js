@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import logo from '../Photo/Round_full.png';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -13,7 +12,7 @@ const Navbar = () => {
     <>
          <nav className='navbar'>
         <div className='navbar-container'>
-    <img className="navbar-logo" alt="" src={logo} style={{ width: '120px', height: 'auto' }}/>
+    <img className="navbar-logo" alt="" src={process.env.PUBLIC_URL + '/Photo/Round_full.png'} style={{ width: '120px', height: 'auto' }}/>
     <span></span>
     <span></span>
     <span></span>
