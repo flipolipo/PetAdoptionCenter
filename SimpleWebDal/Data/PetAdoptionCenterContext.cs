@@ -6,10 +6,8 @@ using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 using System.Reflection;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using System.Reflection.Emit;
 
 namespace SimpleWebDal.Data;
 

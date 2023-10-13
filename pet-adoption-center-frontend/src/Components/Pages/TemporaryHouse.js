@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import './TemporaryHouse.css';
 
 export const TemporaryHouse = () => {
   return (

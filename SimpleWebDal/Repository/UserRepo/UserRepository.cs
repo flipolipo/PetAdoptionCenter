@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleWebDal.Data;
-using SimpleWebDal.Models.AdoptionProccess;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
@@ -352,23 +351,11 @@ public class UserRepository : IUserRepository
         return existingAddress;
     }
 
-    //public async Task<IEnumerable<Pet>> GetAllVirtualAdoptedPets()
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public async Task<Pet> GetVirtualAdoptedPetById(int favouriteId)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public async Task<Pet> GetVirtualAdoptedPetById(Guid favouriteId)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-
-
+    public async Task<IEnumerable<Pet>> GetAllPetsAvailableForAdoption()
+    {
+        var pets = await GetAllPets();
+        return pets.Where(pet => pet.AvaibleForAdoption == true);
+    }
 }
 
 

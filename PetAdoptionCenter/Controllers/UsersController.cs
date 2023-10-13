@@ -453,4 +453,12 @@ public class UsersController : ControllerBase
         }
         return NotFound();
     }
+
+    [HttpGet("pets/available-to-adoption")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllPetsAvailableToAdoption()
+    {
+        var pets = await _userRepository.GetAllPetsAvailableForAdoption();
+        return Ok(_mapper.Map<IEnumerable<PetReadDTO>>(pets));
+    }
 }

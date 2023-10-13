@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import './Adoption.css';
 
 export const Adoption = () => {
   return (
