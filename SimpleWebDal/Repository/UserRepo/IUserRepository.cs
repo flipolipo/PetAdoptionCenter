@@ -20,6 +20,7 @@ public interface IUserRepository
     public Task<IEnumerable<Pet>> GetAllAdoptedPet();
     public Task<IEnumerable<Pet>> GetAllPetsAvailableForAdoption();
     public Task<Pet> GetAdoptedPetById(Guid id);
+
     #endregion
 
 

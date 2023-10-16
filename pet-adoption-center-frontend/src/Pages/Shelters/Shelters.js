@@ -1,8 +1,9 @@
 import React from 'react';
 import './Shelters.css';
 
-export const Shelters = () => {
+ const Shelters = () => {
   return (
     <div><h2>This is page Shelters</h2></div>
   )
 }
+export default Shelters

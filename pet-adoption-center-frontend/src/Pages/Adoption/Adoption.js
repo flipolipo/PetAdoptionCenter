@@ -1,7 +1,7 @@
 import React from 'react';
 import './Adoption.css';
 
-export const Adoption = () => {
+const Adoption = () => {
   return (
     <div><h2>W React, a także w projektach opartych na HTML i CSS, wybór odpowiednich jednostek do określenia rozmiaru czcionki zależy od wielu czynników, takich jak projekt, responsywność, wygląd i indywidualne preferencje. Oto kilka jednostek jednostek stosowanych w CSS w kontekście projektów React i ich charakterystyka:
 
@@ -150,3 +150,4 @@ Są używane, aby czcionka skalowała się wraz ze zmianami rozmiaru widoku (np.
 Warto wybrać jednostki, które najlepiej spełniają wymagania projektu i zapewniają odpowiednią skalowalność i responsywność. Często mieszanie różnych jednostek w zależności od kontekstu może być również skuteczną strategią. Ważne jest, aby przeprowadzić testy i dostosować jednostki, aby osiągnąć oczekiwane rezultaty.</h2></div>
   )
 }
+export default Adoption
