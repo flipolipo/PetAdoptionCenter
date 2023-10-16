@@ -13,9 +13,10 @@ public class Pet
     public BasicHealthInfo? BasicHealthInfo { get; set; }
     public string Description { get; set; }
     public Guid CalendarId { get; set; }
-    public CalendarActivity Calendar { get; set; }
+    public CalendarActivity? Calendar { get; set; }
     public PetStatus Status { get; set; }
     public bool AvaibleForAdoption { get; set; }
     public ICollection<User>? Users { get; set; }
+    public byte[] Image { get; set; }
     public Guid ShelterId { get; set; }
 }
