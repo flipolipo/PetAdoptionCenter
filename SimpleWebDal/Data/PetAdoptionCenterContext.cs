@@ -8,6 +8,7 @@ using SimpleWebDal.Models.WebUser;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using System.Reflection.Emit;
 
 namespace SimpleWebDal.Data;
 
@@ -39,6 +40,7 @@ public class PetAdoptionCenterContext : IdentityDbContext<User, IdentityRole<Gui
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        //new DbInitializer(builder).Seed();
         base.OnModelCreating(builder);
     }
 

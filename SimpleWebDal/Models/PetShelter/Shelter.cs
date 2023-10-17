@@ -10,8 +10,8 @@ public class Shelter
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
-    public Guid CalendarId { get; set; }
-    public CalendarActivity ShelterCalendar { get; set; }
+    public Guid? CalendarId { get; set; }
+    public CalendarActivity? ShelterCalendar { get; set; }
     public Guid AddressId { get; set; }
     public Address ShelterAddress { get; set; }
     public string ShelterDescription { get; set; }
