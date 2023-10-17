@@ -1,8 +1,10 @@
 import React from 'react';
 import './Pets.css';
 
-export const Pets = () => {
+const Pets = () => {
   return (
     <div>Pets</div>
   )
 }
+
+export default Pets

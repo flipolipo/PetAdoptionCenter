@@ -3,7 +3,8 @@
     position: sticky;
     top:0;
   }
-  
+
+
   .navbar-container {
     display: grid; 
     grid-template-columns: repeat(6, 1fr); 
@@ -100,9 +101,9 @@ nav ul li {
 nav ul li a {
   margin: 0.2rem 0.5rem;
 }
-nav {
+/* nav {
   background-color: rgb(238, 201, 186);
-}
+} */
 nav .open {
   display: flex;
 }

@@ -36,6 +36,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<IEnumerable<Adoption>> GetAllShelterAdoptions(Guid shelterId);
         public Task<Adoption> GetShelterAdoptionById(Guid shelterId, Guid adoptionId);
         #endregion
+
         #region //POST
         // public Task<Shelter> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city);
         public Task<Shelter> CreateShelter(Shelter shelter);
@@ -46,7 +47,6 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Disease> AddPetDisease(Guid shelterId, Guid petId, Disease disease);
         public Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption);
         #endregion
-
 
         #region //PUT
         public Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city);

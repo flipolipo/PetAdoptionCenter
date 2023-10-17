@@ -3,7 +3,7 @@ using SimpleWebDal.Data;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
-
+using System.Data;
 
 namespace SimpleWebDal.Repository.UserRepo;
 
@@ -51,9 +51,11 @@ public class UserRepository : IUserRepository
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
+        } else
+        {
+            throw new InvalidOperationException("A user with the data provided already exists");
         }
         return user;
-
     }
     public async Task<IEnumerable<User>> GetAllUsers()
     {

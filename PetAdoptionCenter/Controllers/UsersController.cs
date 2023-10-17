@@ -30,11 +30,7 @@ public class UsersController : ControllerBase
         _validatorFactory = validatorFactory;
         _logger = logger;
     }
-
-    /// <summary>
-    /// Display all users
-    /// </summary>
-    /// <returns>List of all users in UserReadDTO</returns>
+    #region //Endpoints for users
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetAllUsers()
@@ -54,12 +50,12 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserReadDTO>> GetUserById(Guid id)
     {
-             var user = await _userRepository.GetUserById(id);
-            if (user != null)
-            {
-                return Ok(_mapper.Map<UserReadDTO>(user));
-            }
-            return NotFound();
+        var user = await _userRepository.GetUserById(id);
+        if (user != null)
+        {
+            return Ok(_mapper.Map<UserReadDTO>(user));
+        }
+        return NotFound();
     }
 
 
@@ -67,6 +63,7 @@ public class UsersController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //[ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
     {
         var userModel = _mapper.Map<User>(userCreateDTO);
@@ -349,13 +346,23 @@ public class UsersController : ControllerBase
             return StatusCode(500);
         }
     }
-
+    #endregion
+    #region //Endpoints for pets
     [HttpGet("pets")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllPets()
     {
         var pets = await _userRepository.GetAllPets();
-        return Ok(_mapper.Map<IEnumerable<PetReadDTO>>(pets));
+        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+        foreach (var petDto in petsDto)
+        {
+            foreach (var pet in pets)
+            {
+                petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+            }
+
+        }
+        return Ok(petsDto);
     }
 
     [HttpGet("pets/{id}", Name = "GetPetById")]
@@ -364,24 +371,30 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<PetReadDTO>> GetPetById(Guid id)
     {
         var pet = await _userRepository.GetPetById(id);
+        var petDto = _mapper.Map<PetReadDTO>(pet);
+        petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
         if (pet != null)
         {
-            return Ok(_mapper.Map<PetReadDTO>(pet));
+            return Ok(petDto);
         }
         return NotFound();
     }
 
     [HttpGet("{id}/pets")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllFavouritePets(Guid id)
     {
         var pets = await _userRepository.GetAllFavouritePets(id);
-        if (pets != null)
+        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+        foreach (var petDto in petsDto)
         {
-            return Ok(_mapper.Map<IEnumerable<PetReadDTO>>(pets));
+            foreach (var pet in pets)
+            {
+                petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+            }
+
         }
-        return NotFound();
+        return Ok(petsDto);
     }
 
     [HttpGet("{id}/pets/{petId}", Name = "GetFavouritePetById")]
@@ -390,9 +403,11 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<PetReadDTO>> GetFavouritePetById(Guid id, Guid petId)
     {
         var pet = await _userRepository.GetFavouritePetById(id, petId);
+        var petDto = _mapper.Map<PetReadDTO>(pet);
+        petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
         if (pet != null)
         {
-            return Ok(_mapper.Map<PetReadDTO>(pet));
+            return Ok(petDto);
         }
         return NotFound();
     }
@@ -438,7 +453,16 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllAdoptedPets()
     {
         var pets = await _userRepository.GetAllAdoptedPet();
-        return Ok(_mapper.Map<IEnumerable<PetReadDTO>>(pets));
+        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+        foreach (var petDto in petsDto)
+        {
+            foreach (var pet in pets)
+            {
+                petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+            }
+
+        }
+        return Ok(petsDto);
     }
 
     [HttpGet("pets/adopted/{id}", Name = "GetAdoptedPetById")]
@@ -447,9 +471,11 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<PetReadDTO>> GetAdoptedPetById(Guid id)
     {
         var pet = await _userRepository.GetAdoptedPetById(id);
+        var petDto = _mapper.Map<PetReadDTO>(pet);
+        petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
         if (pet != null)
         {
-            return Ok(_mapper.Map<PetReadDTO>(pet));
+            return Ok(petDto);
         }
         return NotFound();
     }
@@ -459,6 +485,16 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllPetsAvailableToAdoption()
     {
         var pets = await _userRepository.GetAllPetsAvailableForAdoption();
-        return Ok(_mapper.Map<IEnumerable<PetReadDTO>>(pets));
+        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+        foreach (var petDto in petsDto)
+        {
+            foreach (var pet in pets)
+            {
+                petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+            }
+
+        }
+        return Ok(petsDto);
     }
+    #endregion
 }
