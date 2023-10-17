@@ -147,7 +147,9 @@ vw (Viewport Width) i vh (Viewport Height):
 
 Jednostki vw i vh są względem szerokości i wysokości widoku.
 Są używane, aby czcionka skalowała się wraz ze zmianami rozmiaru widoku (np. dostosowywała się do różnych urządzeń).
-Warto wybrać jednostki, które najlepiej spełniają wymagania projektu i zapewniają odpowiednią skalowalność i responsywność. Często mieszanie różnych jednostek w zależności od kontekstu może być również skuteczną strategią. Ważne jest, aby przeprowadzić testy i dostosować jednostki, aby osiągnąć oczekiwane rezultaty.</h2></div>
+Warto wybrać jednostki, które najlepiej spełniają wymagania projektu i zapewniają odpowiednią skalowalność i responsywność. Często mieszanie różnych jednostek w zależności od kontekstu może być również skuteczną strategią. Ważne jest, aby przeprowadzić testy i dostosować jednostki, aby osiągnąć oczekiwane rezultaty.</h2>
+
+</div>
   )
 }
 export default Adoption

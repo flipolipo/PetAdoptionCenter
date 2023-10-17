@@ -486,15 +486,16 @@ public class UsersController : ControllerBase
     {
         var pets = await _userRepository.GetAllPetsAvailableForAdoption();
         var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
-        foreach (var petDto in petsDto)
+        var updatedPetsDto = petsDto.Select(petDto =>
         {
-            foreach (var pet in pets)
+            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+            if (matchingPet != null)
             {
-                petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
             }
-
-        }
-        return Ok(petsDto);
+            return petDto;
+        }).ToList();
+        return Ok(updatedPetsDto);
     }
     #endregion
 }
