@@ -10,6 +10,7 @@ import Login from './Components/Login';
 import Register from './Components/Register';
 import Navbar from './Components/Navbar';
 import ScrollHandler from './Components/ScrollHandler';
+import Footer from './Components/Footer';
 function App() {
   return (
     <Router>
@@ -31,6 +32,7 @@ function App() {
             <Route path="/sign-up" element={<Register />} />
           </Routes>
         </div>
+        <Footer/>
       </div>
     </Router>
   );
