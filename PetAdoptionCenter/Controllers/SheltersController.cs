@@ -29,12 +29,14 @@ public class SheltersController : ControllerBase
     private IShelterRepository _shelterRepository;
     private IMapper _mapper;
     private readonly ValidatorFactory _validatorFactory;
+    private readonly ILogger<SheltersController> _logger;
 
-    public SheltersController(IShelterRepository shelterRepository, IMapper mapper, ValidatorFactory validatorFactory)
+    public SheltersController(IShelterRepository shelterRepository, IMapper mapper, ValidatorFactory validatorFactory, ILogger<SheltersController> logger)
     {
         _shelterRepository = shelterRepository;
         _mapper = mapper;
         _validatorFactory = validatorFactory;
+        _logger = logger;
 
     }
 
@@ -359,17 +361,19 @@ public class SheltersController : ControllerBase
     {
         var pets = await _shelterRepository.GetAllShelterPets(shelterId);
         var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
-        foreach (var petDto in petsDto)
+        var updatedPetsDto = petsDto.Select(petDto =>
         {
-            foreach (var pet in pets) 
+            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+            if (matchingPet != null)
             {
-                petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
             }
-            
-        }
-        if (petsDto != null)
+            return petDto;
+        }).ToList();
+
+        if (updatedPetsDto != null)
         {
-            return Ok(petsDto);
+            return Ok(updatedPetsDto);
         }
         return BadRequest();
     }
@@ -475,6 +479,7 @@ public class SheltersController : ControllerBase
             return BadRequest(validationResult.Errors);
         }
         var pet = _mapper.Map<Pet>(petCreateDTO);
+       
         if (petCreateDTO.ImageFile != null && petCreateDTO.ImageFile.Length > 0)
         {
             using var memoryStream = new MemoryStream();
