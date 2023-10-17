@@ -40,7 +40,7 @@ const FlipCard = () => {
                   <div className="image-container">
                     <img
                       src={`data:image/jpeg;base64, ${pet.ImageBase64}`}
-                      alt=""
+                      alt="" width='250px' height='100%'
                     />
                     <img
                       src={process.env.PUBLIC_URL + '/Photo/whitePaw.png'}
