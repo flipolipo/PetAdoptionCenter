@@ -8,11 +8,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Components/Login';
 import Register from './Components/Register';
 import Navbar from './Components/Navbar';
+
 function App() {
   return (
     <Router>
     <div className="App-container">
       <Navbar/>
+      
    <div className='routes'>
    <Routes>
     <Route exact path="/" element={<Home/>}/>
@@ -24,6 +26,7 @@ function App() {
     <Route path="/sign-up" element={<Register/>}/>
    </Routes>
    </div>
+   
     </div>
     </Router>
   );
