@@ -68,6 +68,21 @@ namespace SimpleWebDal.Repository.ShelterRepo
             _dbContext.SaveChanges();
             return activity;
         }
+        public async Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption)
+        {
+            var foundShelter = await FindShelter(shelterId);
+            adoption.PetId = petId;
+            adoption.UserId = userId;
+            if (foundShelter != null)
+            {
+                if (adoption.PreAdoptionPoll == true && adoption.Meetings == true && adoption.ContractAdoption == true)
+                {
+                    foundShelter.Adoptions.Add(adoption);
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+            return adoption;
+        }
         public async Task<bool> AddShelterUser(Guid shelterId, Guid userId, RoleName roleName)
         {
             var foundShelter = await FindShelter(shelterId);
@@ -539,13 +554,17 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
         }
 
-        public async Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption)
+        public async Task<bool> DeleteAdoption(Guid shelterId, Guid adoptionId)
         {
             var foundShelter = await FindShelter(shelterId);
-            adoption.PetId = petId;
-            adoption.UserId = userId;
-            foundShelter.Adoptions.Add(adoption);
-            return adoption;
+            var foundAdoption = foundShelter.Adoptions.FirstOrDefault(x => x.Id == adoptionId);
+            if(foundAdoption != null && foundShelter != null) 
+            {
+                foundShelter.Adoptions.Remove(foundAdoption);
+                return true;
+            }
+           return false;
+
         }
     }
 }
