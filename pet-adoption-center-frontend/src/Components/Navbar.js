@@ -20,10 +20,10 @@ const Navbar = () => {
           <span></span>
           <span></span>
           <span></span>
-          <NavLink to="/sign-in" className="nav-links-logo">
+          <NavLink to="/sign-in" className="nav-links-logo nav-links-auth">
             Sign In
           </NavLink>
-          <NavLink to="/sign-up" className="nav-links-logo">
+          <NavLink to="/sign-up" className="nav-links-logo nav-links-auth">
             Sign Up
           </NavLink>
         </div>

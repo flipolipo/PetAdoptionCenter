@@ -40,7 +40,9 @@ const FlipCard = () => {
                   <div className="image-container">
                     <img
                       src={`data:image/jpeg;base64, ${pet.ImageBase64}`}
-                      alt="" width='250px' height='100%'
+                      alt=""
+                      width="250px"
+                      height="100%"
                     />
                     <img
                       src={process.env.PUBLIC_URL + '/Photo/whitePaw.png'}
@@ -48,7 +50,7 @@ const FlipCard = () => {
                       className="paw-icon"
                     />
                   </div>
-                  <center>
+                  <center className='pet-name'>
                     <h3>{pet.BasicHealthInfo.Name}</h3>
                   </center>
                 </div>
@@ -57,8 +59,18 @@ const FlipCard = () => {
                     <h2>Age: {pet.BasicHealthInfo.Age}</h2>
                     <h2>Size: {SizePetLabel(pet.BasicHealthInfo.Size)}</h2>
                     <h2>Gender: {GenderPetLabel(pet.Gender)}</h2>
-                    <h2>Description: {pet.Description}</h2>
-                    <Link to={`/Users/pets/${pet.Id}`}>More information</Link>
+                    <h2>
+                      {' '}
+                      Description: {' '}
+                      {pet.Description.length > 30
+                        ? pet.Description.substring(0, 30) + '...'
+                        : pet.Description}
+                    </h2>
+                    <div className="more-inf">
+                      <Link to={`/Users/pets/${pet.Id}`} className="inf-link">
+                        More information
+                      </Link>
+                    </div>
                   </center>
                 </div>
               </div>
@@ -70,12 +82,14 @@ const FlipCard = () => {
         <button
           onClick={() => setCurrentPage(currentPage - 1)}
           disabled={currentPage === 1}
+          className="button-pagination"
         >
           Previous
         </button>
         <button
           onClick={() => setCurrentPage(currentPage + 1)}
           disabled={indexOfLastPet >= petsAvailable.length}
+          className="button-pagination"
         >
           Next
         </button>

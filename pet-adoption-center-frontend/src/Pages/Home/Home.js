@@ -19,8 +19,12 @@ const Home = () => {
         </div>
       </div>
       <div className="petsAvailableForAdoption">
+        <div className='pet-inscription'>
         <h2>Pets available for adoption</h2>
+        </div>
+        <div className='pet-card'>
         <FlipCard />
+        </div>
       </div>
     </div>
   );

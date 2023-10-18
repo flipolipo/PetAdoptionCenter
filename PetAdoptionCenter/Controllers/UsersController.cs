@@ -63,7 +63,6 @@ public class UsersController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
     {
         var userModel = _mapper.Map<User>(userCreateDTO);
