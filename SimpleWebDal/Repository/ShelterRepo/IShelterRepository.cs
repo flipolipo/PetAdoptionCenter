@@ -55,6 +55,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<bool> UpdateActivity(Guid shelterId, Guid activityId, string name, DateTime date);
         public Task<bool> AddShelterUser(Guid shelterId, Guid userId, RoleName roleName);
         public Task<bool> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size, bool isNeutred);
+        public Task<bool> UpdateAdoption(Guid shelterId, Guid adoptionId, bool preAdoptionPoll, bool contractAdoption, bool meetings);
         #endregion
 
         #region //DELETE

@@ -566,5 +566,20 @@ namespace SimpleWebDal.Repository.ShelterRepo
            return false;
 
         }
+
+        public async Task<bool> UpdateAdoption(Guid shelterId, Guid adoptionId, bool preAdoptionPoll, bool contractAdoption, bool meetings)
+        {
+            var foundShelter = await FindShelter(shelterId);
+            var foundAdoption = foundShelter.Adoptions.FirstOrDefault(x => x.Id == adoptionId);
+            if(foundShelter != null && foundAdoption != null) 
+            {
+                foundAdoption.PreAdoptionPoll = preAdoptionPoll;
+                foundAdoption.ContractAdoption = contractAdoption;
+                foundAdoption.Meetings = meetings;
+                return true;
+            }
+            return false;
+
+        }
     }
 }

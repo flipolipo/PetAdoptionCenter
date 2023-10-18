@@ -475,6 +475,21 @@ public class SheltersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [HttpPut]
+    public async Task<IActionResult> UpdateAdoption(Guid shelterId, Guid adoptionId, bool preAdoptionPoll, bool contractAdoption, bool meetings) 
+    {
+        bool updated = await _shelterRepository.UpdateAdoption(shelterId, adoptionId, preAdoptionPoll, contractAdoption, meetings);
+        if (updated) 
+        {
+            var updatedAdoption = await _shelterRepository.GetShelterAdoptionById(shelterId, adoptionId);
+            return Ok(updatedAdoption);
+        } 
+        return NotFound();
+    }
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPut("{shelterId}/pets/basicHealthInfo/{basicHelthInfoId}")]
     public async Task<IActionResult> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size, bool isNeutred)
     {
