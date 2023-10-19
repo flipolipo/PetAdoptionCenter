@@ -397,9 +397,19 @@ public class SheltersController : ControllerBase
     {
         var pets = await _shelterRepository.GetAllAdoptedPets(shelterId);
         var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
-        if (petsDto != null)
+        var updatedPetsDto = petsDto.Select(petDto =>
         {
-            return Ok(petsDto);
+            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+            if (matchingPet != null)
+            {
+                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
+            }
+            return petDto;
+        }).ToList();
+
+        if (updatedPetsDto != null)
+        {
+            return Ok(updatedPetsDto);
         }
         return BadRequest();
     }
@@ -407,13 +417,23 @@ public class SheltersController : ControllerBase
    
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet("{shelterId}/tempHouse/{tempHouseId}/pets")]
-    public async Task<ActionResult<IEnumerable<Pet>>> GetAllShelterTempHousesPets(Guid shelterId)
+    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllShelterTempHousesPets(Guid shelterId)
     {
         var pets = await _shelterRepository.GetAllShelterTempHousesPets(shelterId);
-        var petsDto = _mapper.Map<IEnumerable<Pet>>(pets);
-        if (petsDto != null)
+        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+        var updatedPetsDto = petsDto.Select(petDto =>
         {
-            return Ok(petsDto);
+            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+            if (matchingPet != null)
+            {
+                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
+            }
+            return petDto;
+        }).ToList();
+
+        if (updatedPetsDto != null)
+        {
+            return Ok(updatedPetsDto);
         }
         return NotFound();
     }
@@ -423,7 +443,8 @@ public class SheltersController : ControllerBase
     public async Task<ActionResult<PetReadDTO>> GetTempHousePetById(Guid shelterId, Guid petId, Guid tempHouseId)
     {
         var pet = await _shelterRepository.GetTempHousePetById(shelterId, tempHouseId, petId);
-        var petDto = _mapper.Map<UserReadDTO>(pet);
+        var petDto = _mapper.Map<PetReadDTO>(pet);
+        petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
         if (petDto != null)
         {
             return Ok(petDto);

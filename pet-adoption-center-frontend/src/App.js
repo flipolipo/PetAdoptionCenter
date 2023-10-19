@@ -1,16 +1,17 @@
 import './App.css';
 import Home from './Pages/Home/Home';
 import Shelters from './Pages/Shelters/Shelters';
-import Adoption  from './Pages/Adoption/Adoption';
+import Adoption from './Pages/Adoption/Adoption';
 import TemporaryHouse from './Pages/TemporaryHouse/TemporaryHouse';
-import Pets  from './Pages/Pets/Pets';
+import Pets from './Pages/Pets/Pets';
 import PetById from './Pages/Pets/PetsById/PetById';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './Components/Login';
-import Register from './Components/Register';
+
 import Navbar from './Components/Navbar';
 import ScrollHandler from './Components/ScrollHandler';
+import Footer from './Components/Footer';
 function App() {
+
   return (
     <Router>
       <div className="App-container">
@@ -27,10 +28,10 @@ function App() {
             />
             <Route path="/Users/pets" element={<Pets />} />
             <Route path="/Users/pets/:id" element={<PetById />} />
-            <Route path="/sign-in" element={<Login />} />
-            <Route path="/sign-up" element={<Register />} />
+
           </Routes>
         </div>
+        <Footer />
       </div>
     </Router>
   );

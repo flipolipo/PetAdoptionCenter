@@ -544,7 +544,14 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var foundShelter = await FindShelter(shelterId);
             adoption.PetId = petId;
             adoption.UserId = userId;
-            foundShelter.Adoptions.Add(adoption);
+            if (foundShelter != null)
+            {
+                if (adoption.PreAdoptionPoll == true && adoption.Meetings == true && adoption.ContractAdoption == true)
+                {
+                    foundShelter.Adoptions.Add(adoption);
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
             return adoption;
         }
     }

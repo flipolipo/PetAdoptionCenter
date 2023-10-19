@@ -1,7 +1,7 @@
 import React from 'react';
 import './Home.css';
 import { Link } from 'react-router-dom';
-import FlipCard from '../../Components/FlipCard';
+import FlipCardAvailable from '../../Components/FlipCardAvailable';
 
 const Home = () => {
   return (
@@ -19,8 +19,12 @@ const Home = () => {
         </div>
       </div>
       <div className="petsAvailableForAdoption">
+        <div className='pet-inscription'>
         <h2>Pets available for adoption</h2>
-        <FlipCard />
+        </div>
+        <div className='pet-card'>
+        <FlipCardAvailable />
+        </div>
       </div>
     </div>
   );

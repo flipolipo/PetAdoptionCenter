@@ -39,7 +39,22 @@
   text-align: center;
   text-decoration: none;
 }
-@media (max-width: 480px) {
+.petsAvailableForAdoption {
+  display: grid;
+  place-items: center; 
+}
+
+.pet-inscription {
+  font-size: 30px;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 391px) {
   .rectanglePets{
     background-color: rgba(246, 158, 123, 1); 
     border-radius: 10px; 
@@ -63,5 +78,14 @@
     color: var(--color-black);
     text-align: center;
     text-decoration: none;
+  }
+  .pet-inscription{
+    font-size: 20px;
+    font-weight: 700;
+    font-family: var(--font-outfit);
+    color: var(--color-black);
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 20px;
   }
 }

@@ -63,7 +63,6 @@ public class UsersController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
     {
         var userModel = _mapper.Map<User>(userCreateDTO);
@@ -354,15 +353,16 @@ public class UsersController : ControllerBase
     {
         var pets = await _userRepository.GetAllPets();
         var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
-        foreach (var petDto in petsDto)
+        var updatedPetsDto = petsDto.Select(petDto =>
         {
-            foreach (var pet in pets)
+            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+            if (matchingPet != null)
             {
-                petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
             }
-
-        }
-        return Ok(petsDto);
+            return petDto;
+        }).ToList();
+        return Ok(updatedPetsDto);
     }
 
     [HttpGet("pets/{id}", Name = "GetPetById")]
@@ -386,15 +386,16 @@ public class UsersController : ControllerBase
     {
         var pets = await _userRepository.GetAllFavouritePets(id);
         var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
-        foreach (var petDto in petsDto)
+        var updatedPetsDto = petsDto.Select(petDto =>
         {
-            foreach (var pet in pets)
+            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+            if (matchingPet != null)
             {
-                petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
             }
-
-        }
-        return Ok(petsDto);
+            return petDto;
+        }).ToList();
+        return Ok(updatedPetsDto);
     }
 
     [HttpGet("{id}/pets/{petId}", Name = "GetFavouritePetById")]
@@ -454,15 +455,16 @@ public class UsersController : ControllerBase
     {
         var pets = await _userRepository.GetAllAdoptedPet();
         var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
-        foreach (var petDto in petsDto)
+        var updatedPetsDto = petsDto.Select(petDto =>
         {
-            foreach (var pet in pets)
+            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+            if (matchingPet != null)
             {
-                petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
             }
-
-        }
-        return Ok(petsDto);
+            return petDto;
+        }).ToList();
+        return Ok(updatedPetsDto);
     }
 
     [HttpGet("pets/adopted/{id}", Name = "GetAdoptedPetById")]
