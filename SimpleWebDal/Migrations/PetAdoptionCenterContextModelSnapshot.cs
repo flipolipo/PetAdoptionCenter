@@ -360,6 +360,10 @@ namespace SimpleWebDal.Migrations
                     b.Property<Guid>("CalendarId")
                         .HasColumnType("uuid");
 
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");

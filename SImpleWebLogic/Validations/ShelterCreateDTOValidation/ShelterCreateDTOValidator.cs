@@ -11,9 +11,6 @@ public class ShelterCreateDTOValidator : AbstractValidator<ShelterCreateDTO>
       .NotEmpty().WithMessage("Name cannot be empty.")
       .MaximumLength(50).WithMessage("Name cannot exceed 50 characters.");
 
-        RuleFor(shelter => shelter.ShelterCalendar)
-            .NotNull().WithMessage("ShelterCalendar cannot be null.");
-
         RuleFor(shelter => shelter.ShelterAddress)
             .NotNull().WithMessage("ShelterAddress cannot be null.");
 

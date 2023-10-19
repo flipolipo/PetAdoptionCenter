@@ -17,6 +17,7 @@ using SimpleWebDal.Models.WebUser.Enums;
 using SimpleWebDal.DTOs.AnimalDTOs.VaccinationDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs.DiseaseDTOs;
 using SimpleWebDal.DTOs.AdoptionDTOs;
+using System.Drawing;
 
 namespace PetAdoptionCenter.Controllers;
 
@@ -194,7 +195,7 @@ public class SheltersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost, ActionName(nameof(CreateShelter))]
-    public async Task<ActionResult<ShelterReadDTO>> CreateShelter([FromBody] ShelterCreateDTO shelterCreateDTO)
+    public async Task<ActionResult<ShelterReadDTO>> CreateShelter([FromForm] ShelterCreateDTO shelterCreateDTO)
     {
 
         var shelterValidator = _validatorFactory.GetValidator<ShelterCreateDTO>();
@@ -206,10 +207,16 @@ public class SheltersController : ControllerBase
         {
             return BadRequest(validationResult.Errors);
         }
-
         var shelter = _mapper.Map<Shelter>(shelterCreateDTO);
+        if (shelterCreateDTO.ImageFile != null && shelterCreateDTO.ImageFile.Length > 0)
+        {
+            using var memoryStream = new MemoryStream();
+            await shelterCreateDTO.ImageFile.CopyToAsync(memoryStream);
+            shelter.Image = memoryStream.ToArray();
+        }
+        
 
-            var newShelter = await _shelterRepository.CreateShelter(shelter);
+        var newShelter = await _shelterRepository.CreateShelter(shelter);
 
             var readDto = _mapper.Map<ShelterReadDTO>(shelter);
             return CreatedAtRoute(nameof(GetShelterById), new { shelterId = readDto.Id }, readDto);
@@ -474,7 +481,7 @@ public class SheltersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPut("{shelterId}/pets/basicHealthInfo/{basicHelthInfoId}")]
-    public async Task<IActionResult> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size, bool isNeutred)
+    public async Task<IActionResult> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, SimpleWebDal.Models.Animal.Enums.Size size, bool isNeutred)
     {
         bool updated = await _shelterRepository.UpdatePetBasicHealthInfo(shelterId, petId, name, age, size, isNeutred);
 

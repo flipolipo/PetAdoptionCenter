@@ -6,10 +6,10 @@ import TemporaryHouse from './Pages/TemporaryHouse/TemporaryHouse';
 import Pets from './Pages/Pets/Pets';
 import PetById from './Pages/Pets/PetsById/PetById';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
+import Footer from "./Components/Footer"
 import Navbar from './Components/Navbar';
 import ScrollHandler from './Components/ScrollHandler';
-import Footer from './Components/Footer';
+
 function App() {
 
   return (
@@ -31,7 +31,7 @@ function App() {
 
           </Routes>
         </div>
-        <Footer />
+        <Footer/>
       </div>
     </Router>
   );
