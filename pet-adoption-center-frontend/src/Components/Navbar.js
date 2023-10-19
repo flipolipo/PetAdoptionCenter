@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './Navbar.css';
+import Login from './Login';
+import Register from './Register';
 
 const Navbar = () => {
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleClick = () => setMenuOpen(!menuOpen);
@@ -20,12 +23,9 @@ const Navbar = () => {
           <span></span>
           <span></span>
           <span></span>
-          <NavLink to="/sign-in" className="nav-links-logo nav-links-auth">
-            Sign In
-          </NavLink>
-          <NavLink to="/sign-up" className="nav-links-logo nav-links-auth">
-            Sign Up
-          </NavLink>
+          <Login />
+          <Register />
+
         </div>
         <div className="menu" onClick={handleClick}>
           <span></span>
