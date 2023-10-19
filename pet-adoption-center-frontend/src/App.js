@@ -11,6 +11,7 @@ import Register from './Components/Register';
 import Navbar from './Components/Navbar';
 import ScrollHandler from './Components/ScrollHandler';
 import Footer from './Components/Footer';
+
 function App() {
   return (
     <Router>
