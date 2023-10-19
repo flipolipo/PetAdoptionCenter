@@ -21,10 +21,12 @@
 .find-pet {
   cursor: pointer;
   text-decoration: none;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s;
+  border: 2px solid black; 
 }
 
 .button-adoption, .find-pet {
+  cursor: pointer;
   position: sticky;
   font-size: 1.5rem;
   font-weight: 700;
@@ -38,6 +40,9 @@
   width: 280px;
 }
 .find-pet:hover {
+  background-color: rgba(246, 158, 123, 0.8); 
+} 
+.button-adoption:hover {
   background-color: rgba(246, 158, 123, 0.8); 
 } 
 .title-pet{

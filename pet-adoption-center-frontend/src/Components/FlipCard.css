@@ -83,11 +83,16 @@
   width: 70px;
   text-align: center;
   border-radius: 5px;
-  background-color: var(--color-lightsalmon-200);
+  background-color: rgba(246, 158, 123, 0.4);
   margin-left: 10px;
   font-weight: bold;
+  align-items: center; 
+  width: 80px;
+  transition: background-color 0.3s;
 }
-
+.button-pagination:hover{
+  background-color: rgba(246, 158, 123, 1);
+}
 @media (max-width: 391px) {
   .card-container {
     display: flex;
