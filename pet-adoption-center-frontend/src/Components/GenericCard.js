@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import GenderPetLabel from './Enum/GenderPetLabel';
 import SizePetLabel from './Enum/SizePetLabel';
-import './FlipCardAvailable.css';
+import './FlipCard.css';
 
 const GenericCard = ({ pet }) => {
   return (

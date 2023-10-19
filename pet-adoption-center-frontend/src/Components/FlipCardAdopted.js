@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './FlipCard.css';
+import axios from 'axios';
 import GenericCard from './GenericCard';
-import { address_url } from '../Service/url';
+import { address_url } from '../Service/url.js';
 
-const FlipCardAvailable = () => {
-  const [petsAvailable, setPetsAvailable] = useState([]);
+const FlipCardAdopted = () => {
+  const [petsAdopted, setPetsAdopted] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [petsPerPage] = useState(4);
+  const [petsPerPage] = useState(3);
 
   useEffect(() => {
-    GetAvailablePetsForAdoption();
+    GetAdoptedPets();
   }, []);
 
-  async function GetAvailablePetsForAdoption() {
+  async function GetAdoptedPets() {
     try {
-      const response = await axios.get(
-        `${address_url}/Users/pets/available-to-adoption`
-      );
+      const response = await axios.get(`${address_url}/Users/pets/adopted`);
       console.log(response.data);
-      setPetsAvailable(response.data);
+      setPetsAdopted(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -27,8 +25,7 @@ const FlipCardAvailable = () => {
 
   const indexOfLastPet = currentPage * petsPerPage;
   const indexOfFirstPet = indexOfLastPet - petsPerPage;
-  const currentPets = petsAvailable.slice(indexOfFirstPet, indexOfLastPet);
-
+  const currentPets = petsAdopted.slice(indexOfFirstPet, indexOfLastPet);
   return (
     <div>
       <div className="card-container">
@@ -46,7 +43,7 @@ const FlipCardAvailable = () => {
         </button>
         <button
           onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={indexOfLastPet >= petsAvailable.length}
+          disabled={indexOfLastPet >= petsAdopted.length}
           className="button-pagination"
         >
           Next
@@ -56,4 +53,4 @@ const FlipCardAvailable = () => {
   );
 };
 
-export default FlipCardAvailable;
+export default FlipCardAdopted;
