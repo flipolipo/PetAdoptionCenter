@@ -86,26 +86,26 @@
   
   
   
-  button {
+  .footerButton {
       border: none;
       cursor: pointer;
   }
   
-  button:hover {
+  .footerButton {
       opacity: 0.8;
   }
   
-  input {
+  .footerInput {
       color: white;
       font-size: 1.1rem;
       font-weight: 500;
   }
   
-  input:focus {
+  .footerInput:focus {
       outline: 2px solid white;
   }
   
-  input::placeholder {
+  .footerInput::placeholder {
       color: rgba(255, 255, 255, 0.6);
   }
   
