@@ -1,4 +1,3 @@
-
 import Model from 'react-modal'
 import React, { useState } from 'react';
 import axios from 'axios';
@@ -6,8 +5,6 @@ import Modal from 'react-modal';
 import { address_url } from '../Service/url';
 
 Modal.setAppElement('#root');
-
-
 
 const Register = () => {
 
@@ -22,7 +19,6 @@ const Register = () => {
     },
   };
 
-
   async function registerUser() {
     try {
       const response = await axios.post(`${address_url}/Auth/Register`, {
@@ -31,10 +27,8 @@ const Register = () => {
         Password: password
       });
       console.log(response.data);
-
     } catch (error) {
       console.error(error);
-
     }
   }
 
@@ -49,32 +43,28 @@ const Register = () => {
     <div className='signUpButton'>
       <button onClick={() => { setVisible(true); }}>Sign Up</button>
       <Model isOpen={visible} onRequestClose={() => setVisible(false)} style={customStyles}>
-
         <input
+          style={{ color: 'black' }}
           type="username"
           placeholder="Username"
           value={userName}
           onChange={e => setUserName(e.target.value)}
         />
-
         <input
+          style={{ color: 'black' }}
           type="text"
           placeholder="Email"
           value={email}
           onChange={e => setEmail(e.target.value)}
         />
-
         <input
+          style={{ color: 'black' }}
           type="password"
           placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-
-
         <button onClick={registerUser}>Register</button>
-
-
         <button onClick={() => setVisible(false)}>Back</button>
       </Model>
     </div>
