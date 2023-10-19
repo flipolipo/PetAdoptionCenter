@@ -3,6 +3,7 @@ import Model from 'react-modal'
 import React, { useState } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
+import { address_url } from '../Service/url';
 
 Modal.setAppElement('#root');
 
@@ -24,16 +25,16 @@ const Register = () => {
 
   async function registerUser() {
     try {
-      const response = await axios.post('https://localhost:57882/Auth/Register', {
+      const response = await axios.post(`${address_url}/Auth/Register`, {
         Username: userName,
         Email: email,
         Password: password
       });
       console.log(response.data);
-      // Handle success, e.g. close modal and navigate to user dashboard
+
     } catch (error) {
       console.error(error);
-      // Handle error, e.g. show error message to the user
+
     }
   }
 
@@ -48,9 +49,7 @@ const Register = () => {
     <div className='signUpButton'>
       <button onClick={() => { setVisible(true); }}>Sign Up</button>
       <Model isOpen={visible} onRequestClose={() => setVisible(false)} style={customStyles}>
-        <h1>Register Form Here</h1>
 
-        {/* Fields for the form */}
         <input
           type="username"
           placeholder="Username"
