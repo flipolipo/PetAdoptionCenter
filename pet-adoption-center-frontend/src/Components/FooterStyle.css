@@ -2,8 +2,14 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    margin-top: auto;
+    position: fixed;
   }
-  
+  body
+  {
+    display: flex;
+    flex-direction: column;
+  }
   .footer {
     background-color: rgba(236, 137, 97);
     color: #fefefe;

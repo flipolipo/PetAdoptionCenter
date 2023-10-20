@@ -48,6 +48,15 @@ public class SheltersController : ControllerBase
     {
         var shelters = await _shelterRepository.GetAllShelters();
         var sheltersDto = _mapper.Map<IEnumerable<ShelterReadDTO>>(shelters);
+        var updatedSheltersDto = sheltersDto.Select(shelterDto =>
+        {
+            var matchingshelter = shelters.FirstOrDefault(shelter => shelter.Id == shelterDto.Id);
+            if (matchingshelter != null)
+            {
+                shelterDto.ImageBase64 = Convert.ToBase64String(matchingshelter.Image);
+            }
+            return shelterDto;
+        }).ToList();
         if (sheltersDto != null)
         {
             return Ok(sheltersDto);
@@ -93,7 +102,7 @@ public class SheltersController : ControllerBase
         }
         return NotFound();
     }
-    
+
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [HttpDelete("{shelterId}/activities/{activityId}")]
@@ -214,14 +223,14 @@ public class SheltersController : ControllerBase
             await shelterCreateDTO.ImageFile.CopyToAsync(memoryStream);
             shelter.Image = memoryStream.ToArray();
         }
-        
+
 
         var newShelter = await _shelterRepository.CreateShelter(shelter);
 
-            var readDto = _mapper.Map<ShelterReadDTO>(shelter);
-            return CreatedAtRoute(nameof(GetShelterById), new { shelterId = readDto.Id }, readDto);
+        var readDto = _mapper.Map<ShelterReadDTO>(shelter);
+        return CreatedAtRoute(nameof(GetShelterById), new { shelterId = readDto.Id }, readDto);
 
-       
+
     }
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -229,8 +238,8 @@ public class SheltersController : ControllerBase
     public async Task<ActionResult<ActivityReadDTO>> AddActivityToCalendar(Guid shelterId, ActivityCreateDTO activityCreateDTO)
     {
         var activity = _mapper.Map<Activity>(activityCreateDTO);
-            await _shelterRepository.AddActivityToCalendar(shelterId, activity);
-            return Ok(activity);
+        await _shelterRepository.AddActivityToCalendar(shelterId, activity);
+        return Ok(activity);
     }
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -420,8 +429,8 @@ public class SheltersController : ControllerBase
         }
         return BadRequest();
     }
-    
-   
+
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet("{shelterId}/tempHouse/{tempHouseId}/pets")]
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllShelterTempHousesPets(Guid shelterId)
@@ -458,7 +467,7 @@ public class SheltersController : ControllerBase
         }
         return NotFound();
     }
-    
+
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -507,18 +516,18 @@ public class SheltersController : ControllerBase
             return BadRequest(validationResult.Errors);
         }
         var pet = _mapper.Map<Pet>(petCreateDTO);
-       
+
         if (petCreateDTO.ImageFile != null && petCreateDTO.ImageFile.Length > 0)
         {
             using var memoryStream = new MemoryStream();
             await petCreateDTO.ImageFile.CopyToAsync(memoryStream);
             pet.Image = memoryStream.ToArray();
         }
-            await _shelterRepository.AddPet(shelterId, pet);
-            var map = _mapper.Map<PetReadDTO>(pet);
-            return CreatedAtRoute(nameof(GetShelterPetById), new { shelterId = map.ShelterId, petId = map.Id }, map);
+        await _shelterRepository.AddPet(shelterId, pet);
+        var map = _mapper.Map<PetReadDTO>(pet);
+        return CreatedAtRoute(nameof(GetShelterPetById), new { shelterId = map.ShelterId, petId = map.Id }, map);
     }
-    
+
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{shelterId}/pets/{petId}/vaccinations/{vaccinationId}", Name = "GetPetVaccinationById")]

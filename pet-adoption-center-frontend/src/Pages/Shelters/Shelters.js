@@ -14,14 +14,20 @@ useEffect(() => {
   fetchShelters();
 }, []);
   return (
-    <div>
-      <h2>
+    <div className='sheltersContainer'>
+     
         {shelters.map((shelter) => (
-          <div classname="shelterContainer">
-            
+          <div className="shelterCard">
+            <img
+                src={`data:image/jpeg;base64, ${shelter.ImageBase64}`}
+                alt=""
+                width="250px"
+                height="250px"
+              />
+            <h4 className='textContainer'>{shelter.Name}</h4>
           </div>
         ))}
-      </h2>
+     
     </div>
   );
 };
