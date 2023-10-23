@@ -20,7 +20,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
         {
             _dbContext = dbContext;
         }
-        private async Task<Shelter> FindShelter(Guid shelterId)
+        public async Task<Shelter> FindShelter(Guid shelterId)
         {
             var foundShelter = await _dbContext.Shelters.Include(x => x.ShelterCalendar)
                 .ThenInclude(a => a.Activities).Include(y => y.ShelterAddress)
@@ -346,7 +346,14 @@ namespace SimpleWebDal.Repository.ShelterRepo
         public async Task<IEnumerable<User>> GetShelterUsers(Guid shelterId)
         {
             var foundShelter = await FindShelter(shelterId);
-            return foundShelter.ShelterUsers;
+            if (foundShelter != null)
+            {
+                return foundShelter.ShelterUsers;
+            }
+            else
+            {
+                return Enumerable.Empty<User>(); // Return an empty list if shelter is not found
+            }
         }
         public async Task<IEnumerable<User>> GetShelterUsersByRole(Guid shelterId, RoleName role)
         {
@@ -535,6 +542,10 @@ namespace SimpleWebDal.Repository.ShelterRepo
         public async Task<Adoption> GetShelterAdoptionById(Guid shelterId, Guid adoptionId)
         {
             var foundShelter = await FindShelter(shelterId);
+            if (foundShelter == null)
+            {
+                return null; 
+            }
             var adoption = foundShelter.Adoptions.FirstOrDefault(e => e.Id == adoptionId);
             return adoption;
 
