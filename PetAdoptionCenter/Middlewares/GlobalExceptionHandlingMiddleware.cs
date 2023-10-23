@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SimpleWebDal.Exceptions.UserRepository;
 using System.Net;
 using System.Text.Json;
 
@@ -16,6 +17,21 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
         {
             await next(context);
 
+        }
+        catch (UserValidationException ex)
+        {
+            _logger.LogWarning(ex, ex.Message);
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            ProblemDetails problem = new()
+            {
+                Status = (int)HttpStatusCode.BadRequest,
+                Type = "Bad request",
+                Title = "Bad request",
+                Detail = ex.Message
+            };
+            string json = JsonSerializer.Serialize(problem);
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(json);
         }
         catch (Exception ex)
         {

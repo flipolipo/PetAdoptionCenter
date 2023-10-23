@@ -33,6 +33,8 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Disease> GetPetVaccinationById(Guid shelterId, Guid petId, Guid vaccinationId);
         public Task<IEnumerable<Activity>> GetAllActivities(Guid shelterId);
         public Task<Activity> GetActivityById(Guid shelterId, Guid activityId);
+        public Task<IEnumerable<Activity>> GetAllPetActivities(Guid shelterId, Guid petId);
+        public Task<Activity> GetPetActivityById(Guid shelterId, Guid activityId, Guid petId);
         public Task<IEnumerable<Adoption>> GetAllShelterAdoptions(Guid shelterId);
         public Task<Adoption> GetShelterAdoptionById(Guid shelterId, Guid adoptionId);
         #endregion
@@ -43,6 +45,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, Guid petId, TempHouse tempHouse);
         public Task<Pet> AddPet(Guid shelterId, Pet pet);
         public Task<Activity> AddActivityToCalendar(Guid shelterId, Activity activity);
+        public Task<Activity> AddPetActivityToCalendar(Guid shelterId, Guid petId, Activity activity);
         public Task<Vaccination> AddPetVaccination(Guid shelterId, Guid petId, Vaccination vaccination);
         public Task<Disease> AddPetDisease(Guid shelterId, Guid petId, Disease disease);
         public Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption);
@@ -54,6 +57,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<bool> UpdateActivity(Guid shelterId, Guid activityId, string name, DateTime date);
         public Task<bool> AddShelterUser(Guid shelterId, Guid userId, RoleName roleName);
         public Task<bool> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size, bool isNeutred);
+        public Task<bool> UpdatePetActivity(Guid shelterId, Guid petId, Activity activity);
         #endregion
 
         #region //DELETE
@@ -62,6 +66,8 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<bool> DeleteTempHouse(Guid tempHouseId, Guid shelterId);
         public Task<bool> DeleteShelter(Guid shelterId);
         public Task<bool> DeleteShelterUser(Guid shelterId, Guid userId);
+        public Task<bool> DeletePetActivity(Guid shelterId, Guid petId, Guid activityId);
+
         #endregion
 
         #region //UTILITY

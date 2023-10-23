@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleWebDal.Data;
+using SimpleWebDal.Exceptions.UserRepository;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
@@ -18,6 +19,10 @@ public class UserRepository : IUserRepository
 
     public async Task<User> GetUserById(Guid userId)
     {
+        if (userId == Guid.Empty)
+        {
+            throw new UserValidationException("User ID cannot be empty.");
+        }
         var foundUser = await _dbContext.Users
             .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
             .Include(d => d.Roles)
@@ -31,7 +36,7 @@ public class UserRepository : IUserRepository
     {
         if (user == null)
         {
-            throw new ArgumentNullException(nameof(user));
+            throw new UserValidationException("User object cannot be null.");
         }
 
         bool existingUser = await CheckIfUserExistInDataBase(user);
@@ -53,7 +58,7 @@ public class UserRepository : IUserRepository
 
         } else
         {
-            throw new InvalidOperationException("A user with the data provided already exists");
+            throw new UserValidationException("A user with the data provided already exists");
         }
         return user;
     }
@@ -68,8 +73,15 @@ public class UserRepository : IUserRepository
     }
     public async Task<bool> UpdateUser(User user)
     {
+        if (user.Id == Guid.Empty)
+        {
+            throw new UserValidationException("User ID cannot be empty.");
+        }
         var foundUser = await GetUserById(user.Id);
-
+        if (foundUser == null)
+        {
+            throw new UserValidationException("User object cannot be null.");
+        }
         if (foundUser != null)
         {
             var existingAddress = await GetExistingAddressFromDataBase(user);
@@ -95,7 +107,15 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> DeleteUser(Guid userId)
     {
+        if (userId == Guid.Empty)
+        {
+            throw new UserValidationException("User ID cannot be empty.");
+        }
         var foundUser = await GetUserById(userId);
+        if (foundUser == null)
+        {
+            throw new UserValidationException("User object cannot be null.");
+        }
         if (foundUser != null)
         {
             var userAddress = foundUser.BasicInformation.Address;
@@ -114,8 +134,15 @@ public class UserRepository : IUserRepository
     }
     public async Task<IEnumerable<Activity>> GetUserActivities(Guid userId)
     {
+        if (userId == Guid.Empty)
+        {
+            throw new UserValidationException("User ID cannot be empty.");
+        }
         var foundUser = await GetUserById(userId);
-
+        if (foundUser == null)
+        {
+            throw new UserValidationException("User object cannot be null.");
+        }
         if (foundUser != null && foundUser.UserCalendar != null && foundUser.UserCalendar.Activities != null)
         {
             return foundUser.UserCalendar.Activities.ToList();
