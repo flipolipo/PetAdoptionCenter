@@ -507,14 +507,13 @@ public class SheltersController : ControllerBase
     {
         var pet = _mapper.Map<Pet>(petCreateDTO);
 
-        //var petValidator = _validatorFactory.GetValidator<PetCreateDTO>();
-        //var validationResult = petValidator.Validate(petCreateDTO);
+        var petValidator = _validatorFactory.GetValidator<PetCreateDTO>();
+        var validationResult = petValidator.Validate(petCreateDTO);
 
         if (!validationResult.IsValid)
         {
             return BadRequest(validationResult.Errors);
         }
-        var pet = _mapper.Map<Pet>(petCreateDTO);
 
         if (petCreateDTO.ImageFile != null && petCreateDTO.ImageFile.Length > 0)
         {
