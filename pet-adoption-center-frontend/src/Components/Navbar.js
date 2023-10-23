@@ -26,8 +26,8 @@ const Navbar = () => {
           <span></span>
           <span></span>
           <div className='user-auth-div'>
-            <Login user={user} setUser={setUser} />
-            {!user.isLogged && <Register />}
+            <Login className='LoginComponent' user={user} setUser={setUser} />
+            {!user.isLogged && <Register className='RegisterComponent' />}
           </div>
 
         </div>
