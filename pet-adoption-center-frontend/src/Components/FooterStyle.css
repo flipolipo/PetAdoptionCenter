@@ -1,141 +1,138 @@
 .footer {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    margin-top: auto;
-    position: fixed;
-  }
-  body
-  {
-    display: flex;
-    flex-direction: column;
-  }
-  .footer {
-    background-color: rgba(236, 137, 97);
-    color: #fefefe;
-    width: 100%;
-    bottom: 0;
-    left: 0;
-  }
-  
-  .footer .heading {
-    color: #fefefe;
-    max-width: 1010px;
-    width: 90%;
-    text-transform: uppercase;
-    margin: 0 auto;
-    margin-bottom: 3rem;
-    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  margin-top: auto;
+  /* position: fixed; */
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+.footer {
+  background-color: rgba(236, 137, 97);
+  color: #fefefe;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+}
+
+.footer .heading {
+  color: #fefefe;
+  max-width: 1010px;
+  width: 90%;
+  text-transform: uppercase;
+  margin: 0 auto;
+  margin-bottom: 3rem;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.footer .content {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 1.5rem;
+}
+
+.footer .content p {
+  margin-bottom: 1.3rem;
+}
+
+.footer .content a {
+  text-decoration: none;
+  color: #fefefe;
+}
+
+.footer .content a:hover {
+  border-bottom: 1px solid #971717;
+}
+
+.footer .content h4 {
+  margin-bottom: 1.3rem;
+  font-size: 19px;
+}
+
+.footer {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.footer hr {
+  margin: 2rem 0;
+}
+
+@media (max-width: 767px) {
   .footer .content {
     display: flex;
-    justify-content: space-evenly;
-    margin: 1.5rem;
+    flex-direction: column;
+    font-size: 14px;
   }
-  
-  .footer .content p {
-    margin-bottom: 1.3rem;
-  }
-  
-  .footer .content a {
-    text-decoration: none;
-    color: #fefefe;
-  }
-  
-  .footer .content a:hover {
-    border-bottom: 1px solid #971717;
-  }
-  
-  .footer .content h4 {
-    margin-bottom: 1.3rem;
-    font-size: 19px;
-  }
-  
+
   .footer {
-    text-align: center;
-    margin-bottom: 2rem;
+    position: unset;
   }
-  
-  .footer hr {
-    margin: 2rem 0;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .footer .content,
+  .footer {
+    font-size: 14px;
   }
-  
-  @media (max-width: 767px) {
-    .footer .content {
-      display: flex;
-      flex-direction: column;
-      font-size: 14px;
-    }
-  
-    .footer {
-      position: unset;
-    }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .footer {
+    position: unset;
   }
-  
-  @media (min-width: 768px) and (max-width: 1024px) {
-    .footer .content,
-    .footer {
-      font-size: 14px;
-    }
-  }
-  
-  @media (orientation: landscape) and (max-height: 500px) {
-    .footer {
-      position: unset;
-    }
-  }
-   .footer{
-      box-sizing: border-box;
-  }
-  
-  
-  
-  .footerButton {
-      border: none;
-      cursor: pointer;
-  }
-  
-  .footerButton {
-      opacity: 0.8;
-  }
-  
-  .footerInput {
-      color: white;
-      font-size: 1.1rem;
-      font-weight: 500;
-  }
-  
-  .footerInput:focus {
-      outline: 2px solid white;
-  }
-  
-  .footerInput::placeholder {
-      color: rgba(255, 255, 255, 0.6);
-  }
-  
-  /* Button on top of the Input */
-  .wrapper {
-      width: 400px;
-      max-width: 100%;
-      position: relative;
-  }
-  
-  .wrapper input {
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid white;
-      border-radius: 50px;
-      padding: 1rem 2rem;
-      width: 100%;
-  }
-  
-  .wrapper button {
-      background: white;
-      border-radius: 50px;
-      aspect-ratio: 1;
-      height: 80%;
-      
-      position: absolute;
-      top: 10%;
-      right: 5px;
-  }
+}
+.footer {
+  box-sizing: border-box;
+}
+
+.footerButton {
+  border: none;
+  cursor: pointer;
+}
+
+.footerButton {
+  opacity: 0.8;
+}
+
+.footerInput {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.footerInput:focus {
+  outline: 2px solid white;
+}
+
+.footerInput::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Button on top of the Input */
+.wrapper {
+  width: 400px;
+  max-width: 100%;
+  position: relative;
+}
+
+.wrapper input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid white;
+  border-radius: 50px;
+  padding: 1rem 2rem;
+  width: 100%;
+}
+
+.wrapper button {
+  background: white;
+  border-radius: 50px;
+  aspect-ratio: 1;
+  height: 80%;
+
+  position: absolute;
+  top: 10%;
+  right: 5px;
+}
