@@ -183,6 +183,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
         public async Task<Shelter> CreateShelter(Shelter shelter)
         {
             shelter.TempHouses = new List<TempHouse>();
+            shelter.ShelterCalendar = new CalendarActivity();
             _dbContext.Shelters.Add(shelter);
 
 
