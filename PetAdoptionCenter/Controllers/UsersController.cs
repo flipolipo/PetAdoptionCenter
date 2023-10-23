@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimpleWebDal.DTOs.AddressDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
@@ -380,6 +381,7 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
+    [Authorize]
     [HttpGet("{id}/pets")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllFavouritePets(Guid id)
