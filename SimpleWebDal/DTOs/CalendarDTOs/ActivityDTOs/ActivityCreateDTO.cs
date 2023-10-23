@@ -3,5 +3,6 @@
 public class ActivityCreateDTO
 {
     public string Name { get; set; }
-    public DateTimeOffset ActivityDate { get; set; }
+    public DateTimeOffset StartActivityDate { get; set; }
+    public DateTimeOffset EndActivityDate { get; set; }
 }

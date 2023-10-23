@@ -6,17 +6,22 @@ import { fetchCalendarDataForPet } from '../../../Service/fetchCalendarDataForPe
 const PetById = () => {
   const { id } = useParams();
   const [calendarData, setCalendarData] = useState([]);
+  const [selectedActivity, setSelectedActivity] = useState(null);
   useEffect(() => {
     fetchCalendarDataForPet(id)
       .then((data) => {
-        setCalendarData(data);
+        setCalendarData(data.Activities);
+        console.log(data.Activities);
       })
       .catch((error) => console.error('Calendar download error:', error));
   }, [id]);
+  const handleEventClick = (event) => {
+    setSelectedActivity(event);
+  }
   return (
     <div>
       <h1>Details for Pet with ID {id}</h1>
-      <MyCalendar events={calendarData}/>
+      <MyCalendar events={calendarData} onEventClick={handleEventClick}/>
     </div>
   );
 };

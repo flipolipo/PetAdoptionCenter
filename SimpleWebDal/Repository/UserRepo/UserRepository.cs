@@ -54,7 +54,7 @@ public class UserRepository : IUserRepository
             }
 
             _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
 
         } else
         {
@@ -184,7 +184,8 @@ public class UserRepository : IUserRepository
         if (foundUser != null && foundActivity != null)
         {
             foundActivity.Name = activity.Name;
-            foundActivity.ActivityDate = activity.ActivityDate.ToUniversalTime();
+            foundActivity.StartActivityDate = activity.StartActivityDate.ToUniversalTime();
+            foundActivity.EndActivityDate = activity.EndActivityDate.ToUniversalTime();
             await _dbContext.SaveChangesAsync();
             return true;
         }

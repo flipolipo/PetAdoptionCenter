@@ -378,15 +378,16 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var foundShelter = await FindShelter(shelterId);
             return foundShelter.TempHouses.FirstOrDefault(e => e.Id == tempHouseId);
         }
-        public async Task<bool> UpdateActivity(Guid shelterId, Guid activityId, string name, DateTime date)
+        public async Task<bool> UpdateShelterActivity(Guid shelterId, Activity activity)
         {
             var foundShelter = await FindShelter(shelterId);
-            var foundActivity = foundShelter.ShelterCalendar.Activities.FirstOrDefault(e => e.Id == activityId);
+            var foundActivity = foundShelter.ShelterCalendar.Activities.FirstOrDefault(e => e.Id == activity.Id);
 
-            if (foundActivity != null)
+            if (foundShelter != null && foundActivity != null)
             {
-                foundActivity.ActivityDate = date;
-                foundActivity.Name = name;
+                foundActivity.Name = activity.Name;
+                foundActivity.StartActivityDate = activity.StartActivityDate;
+                foundActivity.EndActivityDate = activity.EndActivityDate;
                 await _dbContext.SaveChangesAsync();
                 return true;
             }
@@ -547,7 +548,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             adoption.UserId = userId;
             if (foundShelter != null)
             {
-                if (adoption.PreAdoptionPoll == true && adoption.Meetings == true && adoption.ContractAdoption == true)
+                if (adoption.IsPreAdoptionPoll == true && adoption.IsMeetings == true && adoption.IsContractAdoption == true)
                 {
                     foundShelter.Adoptions.Add(adoption);
                     await _dbContext.SaveChangesAsync();
@@ -602,7 +603,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
             if (foundPet != null && foundActivity != null)
             {
                 foundActivity.Name = activity.Name;
-                foundActivity.ActivityDate = activity.ActivityDate.ToUniversalTime();
+                foundActivity.StartActivityDate = activity.StartActivityDate.ToUniversalTime();
+                foundActivity.EndActivityDate = activity.EndActivityDate.ToUniversalTime();
                 await _dbContext.SaveChangesAsync();
                 return true;
             }

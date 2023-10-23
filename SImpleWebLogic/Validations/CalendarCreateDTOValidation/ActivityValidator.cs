@@ -11,8 +11,12 @@ public class ActivityValidator : AbstractValidator<ActivityCreateDTO>
                 .NotEmpty().WithMessage("Name cannot be empty.")
                 .MaximumLength(50).WithMessage("Name cannot exceed 50 characters.");
 
-        RuleFor(activity => activity.ActivityDate)
+        RuleFor(activity => activity.StartActivityDate)
             .NotEmpty().WithMessage("ActivityDate cannot be empty.")
             .Must(date => date > DateTime.Now).WithMessage("ActivityDate must be in the future.");
+
+        RuleFor(activity => activity.EndActivityDate)
+          .NotEmpty().WithMessage("ActivityDate cannot be empty.")
+          .Must(date => date > DateTime.Now).WithMessage("ActivityDate must be in the future.");
     }
 }
