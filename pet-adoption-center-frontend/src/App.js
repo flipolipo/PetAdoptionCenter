@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navbar';
 import ScrollHandler from './Components/ScrollHandler';
 import Footer from './Components/Footer';
+import ShelterById from './Pages/Shelters/ShelterById';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route path="/Shelters" element={<Shelters />} />
+            <Route path="/Shelters/:id" element={<ShelterById/>}/>
             <Route path="/Shelters/adoptions" element={<Adoption />} />
             <Route
               path="/Shelters/temporaryHouses"

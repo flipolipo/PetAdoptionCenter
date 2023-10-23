@@ -5,19 +5,32 @@ import './Shelters.css';
 
 const Shelters = () => {
   const [shelters, setShelters] = useState([]);
+  const [shelterChosen, setShelterChosen] = useState(false)
+  const [shelterData, setShelterData] = useState({})
 const fetchShelters = async () => {
   const response = await axios.get( 'https://localhost:7292/Shelters?_limit=3');
   setShelters(response.data);
   console.log(response.data)
 };
+
+async function ClickHandler(id)  
+{
+  const response = await axios.get(`https://localhost:7292/Shelters/${id}`)
+setShelterChosen(true)
+setShelterData(response.data)
+}
 useEffect(() => {
   fetchShelters();
 }, []);
   return (
-    <div className='sheltersContainer'>
-     
+    <div>
+      {
+        shelterChosen ? 
+        (<div>{shelterData.Id}</div>) : 
+    (<div className='sheltersContainer'>
         {shelters.map((shelter) => (
-          <div className="shelterCard">
+          
+          <div className="shelterCard" onClick={() => ClickHandler(shelter.Id)}>
             <img
                 src={`data:image/jpeg;base64, ${shelter.ImageBase64}`}
                 alt=""
@@ -26,8 +39,10 @@ useEffect(() => {
               />
             <h4 className='textContainer'>{shelter.Name}</h4>
           </div>
+         
         ))}
-     
+    </div>)
+}
     </div>
   );
 };
