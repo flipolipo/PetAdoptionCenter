@@ -5,11 +5,11 @@
 }
 
 .navbar-container {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
   align-items: center;
   gap: 10px;
-  width: 100%;
+  max-width: 1500px;
 }
 .nav-links-logo {
   text-decoration: none;
@@ -220,9 +220,9 @@ nav ul {
 }
 .modal-content .buttonLogin:hover,
 .modal-content .buttonRegister:hover,
-.modal-content .buttonLogout :hover,
+.modal-content .buttonLogout:hover,
 .buttonSignIn:hover,
-.buttonSignUp :hover {
+.buttonSignUp:hover {
   background-color: rgba(246, 158, 123, 1);
 }
 .user-auth-div {
