@@ -3,10 +3,12 @@ import { Link, NavLink } from 'react-router-dom';
 import './Navbar.css';
 import Login from './Login';
 import Register from './Register';
+import { useUser } from './UserContext';
 
 const Navbar = () => {
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, setUser } = useUser();
 
   const handleClick = () => setMenuOpen(!menuOpen);
 
@@ -23,8 +25,10 @@ const Navbar = () => {
           <span></span>
           <span></span>
           <span></span>
-          <Login />
-          <Register />
+          <div className='user-auth-div'>
+            <Login user={user} setUser={setUser} />
+            {!user.isLogged && <Register />}
+          </div>
 
         </div>
         <div className="menu" onClick={handleClick}>
