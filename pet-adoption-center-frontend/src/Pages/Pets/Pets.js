@@ -3,7 +3,7 @@ import './Pets.css';
 
 const Pets = () => {
   return (
-    <div>Pets</div>
+    <div>This is pets page</div>
   )
 }
 

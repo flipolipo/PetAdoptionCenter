@@ -3,12 +3,12 @@ import './FooterStyle.css';
 
 const Footer = () => {
   return (
-    <div class="footer">
-      <div class="heading">
+    <div className="footer">
+      <div className="heading">
         <h2>Small Palls</h2>
       </div>
-      <div class="content">
-        <div class="services">
+      <div className="content">
+        <div className="services">
           <h4>Services</h4>
           <p>
             <a href="#">App development</a>
@@ -23,35 +23,35 @@ const Footer = () => {
             <a href="#">Web designing</a>
           </p>
         </div>
-        <div class="social-media">
+        <div className="social-media">
           <h4>Social</h4>
           <p>
             <a href="#">
-              <i class="fab fa-linkedin"></i> Linkedin
+              <i className="fab fa-linkedin"></i> Linkedin
             </a>
           </p>
           <p>
             <a href="#">
-              <i class="fab fa-twitter"></i> Twitter
+              <i className="fab fa-twitter"></i> Twitter
             </a>
           </p>
           <p>
             <a href="https://github.com/farazc60">
-              <i class="fab fa-github"></i> Github
+              <i className="fab fa-github"></i> Github
             </a>
           </p>
           <p>
             <a href="https://www.facebook.com/codewithfaraz">
-              <i class="fab fa-facebook"></i> Facebook
+              <i className="fab fa-facebook"></i> Facebook
             </a>
           </p>
           <p>
             <a href="https://www.instagram.com/codewithfaraz">
-              <i class="fab fa-instagram"></i> Instagram
+              <i className="fab fa-instagram"></i> Instagram
             </a>
           </p>
         </div>
-        <div class="links">
+        <div className="links">
           <h4>Quick links</h4>
           <p>
             <a href="#">Home</a>
@@ -66,18 +66,18 @@ const Footer = () => {
             <a href="#">Contact</a>
           </p>
         </div>
-        <div class="details">
-          <h4 class="address">Address</h4>
+        <div className="details">
+          <h4 className="address">Address</h4>
           <p>
             Lorem ipsum dolor sit amet consectetur <br />
             adipisicing elit. Cupiditate, qui!
           </p>
-          <h4 class="mobile">Mobile</h4>
+          <h4 className="mobile">Mobile</h4>
           <p>
             <a href="#">+48 123123123</a>
           </p>
-          <h4 class="mail">Join our newsletter!</h4>
-          <div class="wrapper">
+          <h4 className="mail">Join our newsletter!</h4>
+          <div className="wrapper">
             <input
               className="footerInput"
               type="text"
@@ -89,11 +89,11 @@ const Footer = () => {
                 width="28"
                 height="28"
                 viewBox="0 0 24 24"
-                stroke-width="2"
+                strokeWidth="2"
                 stroke="currentColor"
                 fill="none"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                 <path d="M5 12l14 0"></path>
