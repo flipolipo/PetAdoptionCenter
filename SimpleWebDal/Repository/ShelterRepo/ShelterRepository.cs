@@ -72,7 +72,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
         public async Task<bool> AddShelterUser(Guid shelterId, Guid userId, RoleName roleName)
         {
             var foundShelter = await FindShelter(shelterId);
-            var foundUser = await _dbContext.Users.Include(r => r.Roles).FirstOrDefaultAsync(u => u.Id == userId);
+            var foundUser = await FindUserById(userId);
             if (foundUser != null)
             {
                 var role = new Role()

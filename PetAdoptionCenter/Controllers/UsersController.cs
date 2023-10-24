@@ -382,7 +382,7 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
-    [Authorize]
+    
     [HttpGet("{id}/pets")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllFavouritePets(Guid id)
