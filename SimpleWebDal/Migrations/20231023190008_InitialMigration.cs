@@ -155,7 +155,8 @@ namespace SimpleWebDal.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    ActivityDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    StartActivityDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    EndActivityDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     CalendarActivityId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -249,10 +250,13 @@ namespace SimpleWebDal.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     PetId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    PreAdoptionPoll = table.Column<bool>(type: "boolean", nullable: false),
-                    ContractAdoption = table.Column<bool>(type: "boolean", nullable: false),
-                    Meetings = table.Column<bool>(type: "boolean", nullable: false),
-                    DateOfAdoption = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsPreAdoptionPoll = table.Column<bool>(type: "boolean", nullable: false),
+                    PreadoptionPoll = table.Column<string>(type: "text", nullable: false),
+                    IsContractAdoption = table.Column<bool>(type: "boolean", nullable: false),
+                    ContractAdoption = table.Column<string>(type: "text", nullable: true),
+                    CalendarId = table.Column<Guid>(type: "uuid", nullable: true),
+                    IsMeetings = table.Column<bool>(type: "boolean", nullable: false),
+                    DateOfAdoption = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     ShelterId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
@@ -264,6 +268,11 @@ namespace SimpleWebDal.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Adoptions_CalendarActivities_CalendarId",
+                        column: x => x.CalendarId,
+                        principalTable: "CalendarActivities",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Adoptions_Shelters_ShelterId",
                         column: x => x.ShelterId,
@@ -478,6 +487,12 @@ namespace SimpleWebDal.Migrations
                 name: "IX_Activities_CalendarActivityId",
                 table: "Activities",
                 column: "CalendarActivityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Adoptions_CalendarId",
+                table: "Adoptions",
+                column: "CalendarId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Adoptions_ShelterId",

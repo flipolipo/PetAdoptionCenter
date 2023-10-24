@@ -12,7 +12,7 @@ using SimpleWebDal.Data;
 namespace SimpleWebDal.Migrations
 {
     [DbContext(typeof(PetAdoptionCenterContext))]
-    [Migration("20231023090550_InitialMigration")]
+    [Migration("20231023190008_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -161,20 +161,30 @@ namespace SimpleWebDal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("ContractAdoption")
-                        .HasColumnType("boolean");
+                    b.Property<Guid?>("CalendarId")
+                        .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("DateOfAdoption")
+                    b.Property<string>("ContractAdoption")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset?>("DateOfAdoption")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("Meetings")
+                    b.Property<bool>("IsContractAdoption")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsMeetings")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPreAdoptionPoll")
                         .HasColumnType("boolean");
 
                     b.Property<Guid>("PetId")
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("PreAdoptionPoll")
-                        .HasColumnType("boolean");
+                    b.Property<string>("PreadoptionPoll")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid?>("ShelterId")
                         .HasColumnType("uuid");
@@ -183,6 +193,9 @@ namespace SimpleWebDal.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CalendarId")
+                        .IsUnique();
 
                     b.HasIndex("ShelterId");
 
@@ -323,15 +336,18 @@ namespace SimpleWebDal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTimeOffset>("ActivityDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<Guid>("CalendarActivityId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("EndActivityDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("StartActivityDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -648,6 +664,10 @@ namespace SimpleWebDal.Migrations
 
             modelBuilder.Entity("SimpleWebDal.Models.AdoptionProccess.Adoption", b =>
                 {
+                    b.HasOne("SimpleWebDal.Models.CalendarModel.CalendarActivity", "Activity")
+                        .WithOne()
+                        .HasForeignKey("SimpleWebDal.Models.AdoptionProccess.Adoption", "CalendarId");
+
                     b.HasOne("SimpleWebDal.Models.PetShelter.Shelter", null)
                         .WithMany("Adoptions")
                         .HasForeignKey("ShelterId");
@@ -657,6 +677,8 @@ namespace SimpleWebDal.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Activity");
                 });
 
             modelBuilder.Entity("SimpleWebDal.Models.Animal.Disease", b =>

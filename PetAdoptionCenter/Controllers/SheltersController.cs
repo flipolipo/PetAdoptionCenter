@@ -17,6 +17,7 @@ using SimpleWebDal.Models.WebUser.Enums;
 using SimpleWebDal.DTOs.AnimalDTOs.VaccinationDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs.DiseaseDTOs;
 using SimpleWebDal.DTOs.AdoptionDTOs;
+using SimpleWebDal.Models.AdoptionProccess;
 
 namespace PetAdoptionCenter.Controllers;
 
@@ -317,7 +318,7 @@ public class SheltersController : ControllerBase
     }
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{shelterId}/adoptions/{adoptionId}")]
+    [HttpGet("{shelterId}/adoptions/{adoptionId}", Name = "GetAdoptionById")]
     public async Task<ActionResult<AdoptionReadDTO>> GetAdoptionById(Guid shelterId, Guid adoptionId)
     {
         var adoption = await _shelterRepository.GetShelterAdoptionById(shelterId, adoptionId);
@@ -442,6 +443,48 @@ public class SheltersController : ControllerBase
         return BadRequest();
     }
 
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpDelete("{shelterId}/adoptions")]
+    public async Task<IActionResult> DeleteAdoption(Guid shelterId, Guid adoptionId)
+    {
+        bool deleted = await _shelterRepository.DeleteAdoption(shelterId, adoptionId);
+        if (deleted)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [HttpPut]
+    public async Task<IActionResult> UpdateAdoption(Guid shelterId, Guid adoptionId, bool preAdoptionPoll, bool contractAdoption, bool meetings)
+    {
+        bool updated = await _shelterRepository.UpdateAdoption(shelterId, adoptionId, preAdoptionPoll, contractAdoption, meetings);
+        if (updated)
+        {
+            var updatedAdoption = await _shelterRepository.GetShelterAdoptionById(shelterId, adoptionId);
+            return Ok(updatedAdoption);
+        }
+        return NotFound();
+    }
+
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpPost("{shelterId}/adoptions")]
+    public async Task<ActionResult<Adoption>> AddAdoption([FromBody] AdoptionCreateDTO adoptionCreateDto, Guid shelterId)
+    {
+        var adoption = _mapper.Map<Adoption>(adoptionCreateDto);
+        var newAdoption = await _shelterRepository.AddAdoption(shelterId, adoption.PetId, adoption.UserId, adoption);
+        var adoptionReadDto = _mapper.Map<AdoptionReadDTO>(newAdoption);
+
+        return CreatedAtRoute(nameof(GetAdoptionById), new { shelterId, adoptionId = adoption.Id }, adoptionReadDto);
+    }
 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet("{shelterId}/tempHouse/{tempHouseId}/pets")]

@@ -7,8 +7,8 @@ const localizer = momentLocalizer(moment);
 function MyCalendar({events, onEventClick}) {
   const formattedEvents = events.map((event) => ({
     title: event.Name, 
-    start: new Date(event.ActivityDate), 
-    end: new Date(event.ActivityDate), 
+    start: new Date(event.StartActivityDate), 
+    end: new Date(event.EndActivityDate), 
   }));
   console.log(formattedEvents);
   return (

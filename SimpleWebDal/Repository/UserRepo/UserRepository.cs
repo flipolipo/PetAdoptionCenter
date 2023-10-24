@@ -168,11 +168,16 @@ public class UserRepository : IUserRepository
         var foundUser = await GetUserById(userId);
         if (foundUser != null && foundUser.UserCalendar != null)
         {
-            if (!foundUser.UserCalendar.Activities.Contains(activity))
+            var foundActivity = foundUser.UserCalendar.Activities.FirstOrDefault(a => a.Name == activity.Name && a.StartActivityDate == activity.StartActivityDate && a.EndActivityDate == activity.EndActivityDate);
+            if (!foundUser.UserCalendar.Activities.Contains(foundActivity))
             {
                 foundUser.UserCalendar.Activities.Add(activity);
                 await _dbContext.SaveChangesAsync();
+            } else
+            {
+                throw new Exception("Activity is already exist");
             }
+          
         }
         return activity;
     }

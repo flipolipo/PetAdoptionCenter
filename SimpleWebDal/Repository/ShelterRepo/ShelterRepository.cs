@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleWebDal.Data;
+using SimpleWebDal.Exceptions.UserRepository;
 using SimpleWebDal.Models.AdoptionProccess;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
@@ -540,9 +541,41 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return adoption;
 
         }
+        public async Task<Adoption> InitializeAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption)
+        {
+            if (userId == Guid.Empty)
+            {
+                throw new UserValidationException("User ID cannot be empty.");
+            }
+
+            if (adoption != null)
+            {
+                var foundShelter = await FindShelter(shelterId);
+                var foundPet = await GetShelterPetById(shelterId, petId);
+                var foundUser = await FindUserById(userId);
+                if (foundShelter != null && foundPet != null && foundUser != null && adoption.PreadoptionPoll != null && foundPet.AvaibleForAdoption == true)
+                {
+                    adoption.PetId = foundPet.Id;
+                    adoption.UserId = userId;
+                    adoption.IsPreAdoptionPoll = true;
+                    foundShelter.Adoptions.Add(adoption);
+                    foundUser.Adoptions.Add(adoption);
+                    foundPet.AvaibleForAdoption = false;
+                    foundPet.Status = PetStatus.OnAdoptionProccess;
+                    await _dbContext.SaveChangesAsync();
+                    return adoption;
+                }
+            }
+
+            return null;
+        }
 
         public async Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption)
         {
+            if (userId == Guid.Empty)
+            {
+                throw new UserValidationException("User ID cannot be empty.");
+            }
             var foundShelter = await FindShelter(shelterId);
             adoption.PetId = petId;
             adoption.UserId = userId;
@@ -586,10 +619,14 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var foundPet = await GetShelterPetById(shelterId, petId);
             if (foundPet != null && foundPet.Calendar != null && foundPet.Calendar.Activities != null)
             {
-                if (!foundPet.Calendar.Activities.Contains(activity))
+                var foundActivity = foundPet.Calendar.Activities.FirstOrDefault(a => a.Name == activity.Name && a.StartActivityDate == activity.StartActivityDate && a.EndActivityDate == activity.EndActivityDate);
+                if (!foundPet.Calendar.Activities.Contains(foundActivity))
                 {
                     foundPet.Calendar.Activities.Add(activity);
                     await _dbContext.SaveChangesAsync();
+                } else
+                {
+                    throw new Exception("Activity is already exist");
                 }
             }
             return activity;
@@ -625,7 +662,34 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
             return false;
         }
+        public async Task<bool> DeleteAdoption(Guid shelterId, Guid adoptionId)
+        {
+            var foundShelter = await FindShelter(shelterId);
+            var foundAdoption = foundShelter.Adoptions.FirstOrDefault(x => x.Id == adoptionId);
+            if (foundAdoption != null && foundShelter != null)
+            {
+                foundShelter.Adoptions.Remove(foundAdoption);
+                return true;
+            }
+            return false;
 
+        }
 
+        public async Task<bool> UpdateAdoption(Guid shelterId, Guid adoptionId, bool preAdoptionPoll, bool contractAdoption, bool meetings)
+        {
+            var foundShelter = await FindShelter(shelterId);
+            var foundAdoption = foundShelter.Adoptions.FirstOrDefault(x => x.Id == adoptionId);
+            if (foundShelter != null && foundAdoption != null)
+            {
+                //foundAdoption.PreAdoptionPoll = preAdoptionPoll;
+                //foundAdoption.ContractAdoption = contractAdoption;
+                //foundAdoption.Meetings = meetings;
+                return true;
+            }
+            return false;
+
+        }
+   
     }
+
 }
