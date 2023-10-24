@@ -8,7 +8,7 @@ public class AdoptionCreateDTOValidator : AbstractValidator<AdoptionCreateDTO>
     public AdoptionCreateDTOValidator()
     {
 
-        RuleFor(adoption => adoption.DateOfAdoption)
-            .NotNull().WithMessage("Date of adoption must be provided.");
+        //RuleFor(adoption => adoption.DateOfAdoption)
+        //    .NotNull().WithMessage("Date of adoption must be provided.");
     }
 }
