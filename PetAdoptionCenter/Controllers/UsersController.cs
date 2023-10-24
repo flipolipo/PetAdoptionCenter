@@ -59,7 +59,7 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
-
+/*
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -86,6 +86,7 @@ public class UsersController : ControllerBase
 
         return CreatedAtRoute(nameof(GetUserById), new { id = userReadDTO.Id }, userReadDTO);
     }
+*/
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

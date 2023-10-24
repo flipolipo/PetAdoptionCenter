@@ -31,7 +31,7 @@ public class UserRepository : IUserRepository
             .Include(h => h.Pets).FirstOrDefaultAsync(z => z.Id == userId);
         return foundUser;
     }
-
+    /*
     public async Task<User> AddUser(User user)
     {
         if (user == null)
@@ -62,6 +62,7 @@ public class UserRepository : IUserRepository
         }
         return user;
     }
+    */
     public async Task<IEnumerable<User>> GetAllUsers()
     {
         return await _dbContext.Users
@@ -77,11 +78,7 @@ public class UserRepository : IUserRepository
         {
             throw new UserValidationException("User ID cannot be empty.");
         }
-        var foundUser = await GetUserById(user.Id);
-        if (foundUser == null)
-        {
-            throw new UserValidationException("User object cannot be null.");
-        }
+        var foundUser = await GetUserById(user.Id) ?? throw new UserValidationException("User object cannot be null.");
         if (foundUser != null)
         {
             var existingAddress = await GetExistingAddressFromDataBase(user);
@@ -111,11 +108,7 @@ public class UserRepository : IUserRepository
         {
             throw new UserValidationException("User ID cannot be empty.");
         }
-        var foundUser = await GetUserById(userId);
-        if (foundUser == null)
-        {
-            throw new UserValidationException("User object cannot be null.");
-        }
+        var foundUser = await GetUserById(userId) ?? throw new UserValidationException("User object cannot be null.");
         if (foundUser != null)
         {
             var userAddress = foundUser.BasicInformation.Address;
@@ -138,11 +131,7 @@ public class UserRepository : IUserRepository
         {
             throw new UserValidationException("User ID cannot be empty.");
         }
-        var foundUser = await GetUserById(userId);
-        if (foundUser == null)
-        {
-            throw new UserValidationException("User object cannot be null.");
-        }
+        var foundUser = await GetUserById(userId) ?? throw new UserValidationException("User object cannot be null.");
         if (foundUser != null && foundUser.UserCalendar != null && foundUser.UserCalendar.Activities != null)
         {
             return foundUser.UserCalendar.Activities.ToList();

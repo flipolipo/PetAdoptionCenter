@@ -26,7 +26,7 @@ public interface IUserRepository
 
     #region //POST
     public Task<Activity> AddActivity(Guid userId, Activity activity);
-    public Task<User> AddUser(User user);
+   // public Task<User> AddUser(User user);
     public Task<Pet> AddFavouritePet(Guid userId, Guid petId);
     public Task<Role> AddRole(Guid id, Role role);
     #endregion
