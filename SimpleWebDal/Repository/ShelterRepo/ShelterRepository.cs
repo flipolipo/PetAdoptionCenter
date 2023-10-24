@@ -109,6 +109,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 IsNeutered = isNeutred
             };
             foundPet.BasicHealthInfo = info;
+            await _dbContext.SaveChangesAsync();
+
             return info;
 
         }
@@ -123,6 +125,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 VaccinationName = vaccName
             };
             foundPet.BasicHealthInfo.Vaccinations.Add(vacc);
+            await _dbContext.SaveChangesAsync();
+
             return vacc;
 
         }
@@ -138,30 +142,37 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 IllnessStart = start,
             };
             foundPet.BasicHealthInfo.MedicalHistory.Add(disease);
+            await _dbContext.SaveChangesAsync();
+
             return disease;
         }
         public async Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, Guid petId, TempHouse tempHouse)
         {
             var foundShelter = await FindShelter(shelterId);
-            var foundPetById = await GetShelterPetById(shelterId, petId);
-            var foundUser = await _dbContext.Users
-            .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
-            .Include(d => d.Roles)
-            .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
-            .Include(g => g.Adoptions)
-            .Include(h => h.Pets).FirstOrDefaultAsync(e => e.Id == userId);
             var foundPet = await GetShelterPetById(shelterId, petId);
-            tempHouse.TemporaryOwner = foundUser;
-            tempHouse.TemporaryHouseAddress = foundUser.BasicInformation.Address;
-            tempHouse.PetsInTemporaryHouse = new List<Pet>
+            var foundUser = await FindUserById(userId);
+            if (foundShelter != null && foundPet != null && foundUser != null)
             {
-                foundPet
-            };
-            foundShelter.TempHouses.Add(tempHouse);
-            // foundPet.Status = PetStatus.TemporaryHouse;
-            _dbContext.SaveChanges();
-            return tempHouse;
-
+                if(foundPet.Status != PetStatus.OnAdoptionProccess && foundPet.Status != PetStatus.Adopted) {
+                    //if(foundUser == tempHouse.TemporaryOwner)
+                    //{
+                    //    foundPet.Status = PetStatus.TemporaryHouse;
+                    //    tempHouse.PetsInTemporaryHouse.Add(foundPet);
+                    //    foundUser.Pets.Add(foundPet);
+                    //    await _dbContext.SaveChangesAsync();
+                    //    return tempHouse;
+                    //} 
+                    foundPet.Status = PetStatus.TemporaryHouse;
+                    tempHouse.TemporaryOwner = foundUser;
+                    tempHouse.TemporaryHouseAddress = foundUser.BasicInformation.Address;
+                    tempHouse.PetsInTemporaryHouse = new List<Pet> { foundPet };
+                    foundUser.Pets.Add(foundPet);
+                    foundShelter.TempHouses.Add(tempHouse);
+                    await _dbContext.SaveChangesAsync();
+                    return tempHouse;
+                }
+            }
+            return null;
         }
         public async Task<bool> AddUserToShelter(Guid shelterId, Guid userId, RoleName role)
         {
@@ -251,15 +262,23 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return false;
         }
 
-        public async Task<bool> DeleteTempHouse(Guid tempHouseId, Guid shelterId)
+        public async Task<bool> DeleteTempHouse(Guid tempHouseId, Guid shelterId, Guid petId)
         {
             var foundShelter = await FindShelter(shelterId);
             var temphouse = foundShelter.TempHouses.FirstOrDefault(e => e.Id == tempHouseId);
-
-            if (temphouse != null)
+            var foundUser = temphouse.TemporaryOwner;
+            var foundPet = temphouse.PetsInTemporaryHouse.FirstOrDefault(p => p.Id == petId);
+            if (temphouse != null && foundPet != null && foundUser != null)
             {
-                foundShelter.TempHouses.Remove(temphouse);
-                _dbContext.SaveChanges();
+                foundUser.Pets.Remove(foundPet);
+                temphouse.PetsInTemporaryHouse.Remove(foundPet);
+                foundPet.Status = PetStatus.AtShelter;
+                var howManyPetsInTempHouse = temphouse.PetsInTemporaryHouse.Count();
+                if(howManyPetsInTempHouse <= 1)
+                {
+                    foundShelter.TempHouses.Remove(temphouse);
+                }
+                await _dbContext.SaveChangesAsync();
                 return true;
             }
 
@@ -570,6 +589,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return null;
         }
 
+
         public async Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption)
         {
             if (userId == Guid.Empty)
@@ -624,7 +644,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 {
                     foundPet.Calendar.Activities.Add(activity);
                     await _dbContext.SaveChangesAsync();
-                } else
+                }
+                else
                 {
                     throw new Exception("Activity is already exist");
                 }
@@ -662,34 +683,56 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
             return false;
         }
-        public async Task<bool> DeleteAdoption(Guid shelterId, Guid adoptionId)
+        public async Task<bool> DeleteAdoption(Guid shelterId, Guid adoptionId, Guid userId)
         {
             var foundShelter = await FindShelter(shelterId);
             var foundAdoption = foundShelter.Adoptions.FirstOrDefault(x => x.Id == adoptionId);
+            var foundUser = await FindUserById(userId);
             if (foundAdoption != null && foundShelter != null)
             {
                 foundShelter.Adoptions.Remove(foundAdoption);
+                foundUser.Adoptions.Remove(foundAdoption);
+                await _dbContext.SaveChangesAsync();
                 return true;
             }
             return false;
 
         }
 
-        public async Task<bool> UpdateAdoption(Guid shelterId, Guid adoptionId, bool preAdoptionPoll, bool contractAdoption, bool meetings)
+        public async Task<bool> UpdateAdoption(Guid shelterId, Guid userId, Adoption adoption)
         {
             var foundShelter = await FindShelter(shelterId);
-            var foundAdoption = foundShelter.Adoptions.FirstOrDefault(x => x.Id == adoptionId);
-            if (foundShelter != null && foundAdoption != null)
+            var foundUser = await FindUserById(userId);
+            if (foundShelter != null && foundUser != null)
             {
-                //foundAdoption.PreAdoptionPoll = preAdoptionPoll;
-                //foundAdoption.ContractAdoption = contractAdoption;
-                //foundAdoption.Meetings = meetings;
-                return true;
+                var foundShelterAdoption = foundShelter.Adoptions.FirstOrDefault(x => x.Id == adoption.Id);
+                var foundUserAdoption = foundUser.Adoptions.FirstOrDefault(a => a.Id == adoption.Id);
+
+                if (foundShelterAdoption != null && foundUserAdoption != null)
+                {
+                    foundShelterAdoption.IsPreAdoptionPoll = adoption.IsPreAdoptionPoll;
+                    foundShelterAdoption.PreadoptionPoll = adoption.PreadoptionPoll;
+                    foundShelterAdoption.IsMeetings = adoption.IsMeetings;
+                    foundShelterAdoption.Activity = adoption.Activity;
+                    foundShelterAdoption.IsContractAdoption = adoption.IsContractAdoption;
+                    foundShelterAdoption.ContractAdoption = adoption.ContractAdoption;
+                    foundShelterAdoption.DateOfAdoption = adoption.DateOfAdoption;
+
+                    foundUserAdoption.IsPreAdoptionPoll = adoption.IsPreAdoptionPoll;
+                    foundUserAdoption.PreadoptionPoll = adoption.PreadoptionPoll;
+                    foundUserAdoption.IsMeetings = adoption.IsMeetings;
+                    foundUserAdoption.Activity = adoption.Activity;
+                    foundUserAdoption.IsContractAdoption = adoption.IsContractAdoption;
+                    foundUserAdoption.ContractAdoption = adoption.ContractAdoption;
+                    foundUserAdoption.DateOfAdoption = adoption.DateOfAdoption;
+
+                    await _dbContext.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+
             }
             return false;
-
         }
-   
     }
-
 }

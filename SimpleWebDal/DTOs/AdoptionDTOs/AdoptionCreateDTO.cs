@@ -1,11 +1,14 @@
-﻿using SimpleWebDal.DTOs.AnimalDTOs;
+﻿using SimpleWebDal.DTOs.CalendarDTOs;
 
 namespace SimpleWebDal.DTOs.AdoptionDTOs;
 
 public class AdoptionCreateDTO
 {
-    public bool PreAdoptionPoll { get; set; }
-    public bool ContractAdoption { get; set; }
-    public bool Meetings { get; set; }
-    public DateTime? DateOfAdoption { get; set; }
+    public bool IsPreAdoptionPoll { get; set; }
+    public string PreadoptionPoll { get; set; }
+    public CalendarActivityCreateDTO Activity { get; set; }
+    //public bool IsMeetings { get; set; }
+    //public bool IsContractAdoption { get; set; }
+    //public string? ContractAdoption { get; set; }
+    //public DateTimeOffset? DateOfAdoption { get; set; }
 }
