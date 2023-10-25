@@ -815,5 +815,18 @@ namespace SimpleWebDal.Repository.ShelterRepo
             }
             return false;
         }
+
+        public async Task<IEnumerable<Pet>> GetAllAvaiblePets(Guid shelterId)
+        {
+           var foundShelter = await FindShelter(shelterId);
+           if(foundShelter != null) 
+            {
+                var avaiblePets = foundShelter.ShelterPets.Where(x => x.AvaibleForAdoption == true).ToList();
+              
+                return avaiblePets;
+            }
+            throw new Exception("Shelter not found");
+            
+        }
     }
 }
