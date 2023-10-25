@@ -19,7 +19,7 @@ namespace SimpleWebDal.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Street = table.Column<string>(type: "text", nullable: false),
                     HouseNumber = table.Column<string>(type: "text", nullable: false),
-                    FlatNumber = table.Column<int>(type: "integer", nullable: true),
+                    FlatNumber = table.Column<int>(type: "integer", nullable: false),
                     PostalCode = table.Column<string>(type: "text", nullable: false),
                     City = table.Column<string>(type: "text", nullable: false)
                 },
@@ -76,7 +76,7 @@ namespace SimpleWebDal.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Surname = table.Column<string>(type: "text", nullable: false),
                     Phone = table.Column<string>(type: "text", nullable: false),
-                    AddressId = table.Column<Guid>(type: "uuid", nullable: false)
+                    AddressId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,8 +85,7 @@ namespace SimpleWebDal.Migrations
                         name: "FK_BasicInformations_Addresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -205,8 +204,8 @@ namespace SimpleWebDal.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     RefreshToken = table.Column<string>(type: "text", nullable: true),
                     RefreshTokenExpiration = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    BasicInformationId = table.Column<Guid>(type: "uuid", nullable: true),
-                    UserCalendarId = table.Column<Guid>(type: "uuid", nullable: true),
+                    BasicInformationId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserCalendarId = table.Column<Guid>(type: "uuid", nullable: false),
                     ShelterId = table.Column<Guid>(type: "uuid", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -230,12 +229,14 @@ namespace SimpleWebDal.Migrations
                         name: "FK_AspNetUsers_BasicInformations_BasicInformationId",
                         column: x => x.BasicInformationId,
                         principalTable: "BasicInformations",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_CalendarActivities_UserCalendarId",
                         column: x => x.UserCalendarId,
                         principalTable: "CalendarActivities",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_Shelters_ShelterId",
                         column: x => x.ShelterId,
@@ -252,10 +253,10 @@ namespace SimpleWebDal.Migrations
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     IsPreAdoptionPoll = table.Column<bool>(type: "boolean", nullable: false),
                     PreadoptionPoll = table.Column<string>(type: "text", nullable: false),
-                    IsContractAdoption = table.Column<bool>(type: "boolean", nullable: false),
-                    ContractAdoption = table.Column<string>(type: "text", nullable: true),
                     CalendarId = table.Column<Guid>(type: "uuid", nullable: true),
                     IsMeetings = table.Column<bool>(type: "boolean", nullable: false),
+                    IsContractAdoption = table.Column<bool>(type: "boolean", nullable: false),
+                    ContractAdoption = table.Column<string>(type: "text", nullable: true),
                     DateOfAdoption = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     ShelterId = table.Column<Guid>(type: "uuid", nullable: true)
                 },

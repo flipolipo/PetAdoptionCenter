@@ -438,7 +438,7 @@ namespace SimpleWebDal.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("FlatNumber")
+                    b.Property<int>("FlatNumber")
                         .HasColumnType("integer");
 
                     b.Property<string>("HouseNumber")
@@ -464,7 +464,7 @@ namespace SimpleWebDal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AddressId")
+                    b.Property<Guid?>("AddressId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -515,6 +515,7 @@ namespace SimpleWebDal.Migrations
                         .HasColumnType("integer");
 
                     b.Property<Guid?>("BasicInformationId")
+                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -567,6 +568,7 @@ namespace SimpleWebDal.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<Guid?>("UserCalendarId")
+                        .IsRequired()
                         .HasColumnType("uuid");
 
                     b.Property<string>("UserName")
@@ -776,9 +778,7 @@ namespace SimpleWebDal.Migrations
                 {
                     b.HasOne("SimpleWebDal.Models.WebUser.Address", "Address")
                         .WithOne()
-                        .HasForeignKey("SimpleWebDal.Models.WebUser.BasicInformation", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SimpleWebDal.Models.WebUser.BasicInformation", "AddressId");
 
                     b.Navigation("Address");
                 });
@@ -794,7 +794,9 @@ namespace SimpleWebDal.Migrations
                 {
                     b.HasOne("SimpleWebDal.Models.WebUser.BasicInformation", "BasicInformation")
                         .WithOne()
-                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "BasicInformationId");
+                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "BasicInformationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SimpleWebDal.Models.PetShelter.Shelter", null)
                         .WithMany("ShelterUsers")
@@ -802,7 +804,9 @@ namespace SimpleWebDal.Migrations
 
                     b.HasOne("SimpleWebDal.Models.CalendarModel.CalendarActivity", "UserCalendar")
                         .WithOne()
-                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "UserCalendarId");
+                        .HasForeignKey("SimpleWebDal.Models.WebUser.User", "UserCalendarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BasicInformation");
 

@@ -59,34 +59,34 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
-/*
-
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
-    {
-        var userModel = _mapper.Map<User>(userCreateDTO);
-
-        var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
-        var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
 
 
-        var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
-        var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
+    //[HttpPost]
+    //[ProducesResponseType(StatusCodes.Status201Created)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
+    //{
+    //    var userModel = _mapper.Map<User>(userCreateDTO);
 
-        if (
-            !validationResultBasicInformation.IsValid || !validationResultAddress.IsValid)
-        {
-            return BadRequest();
-        }
+    //    var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
+    //    var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
 
-        var addedUser = await _userRepository.AddUser(userModel);
-        var userReadDTO = _mapper.Map<UserReadDTO>(userModel);
 
-        return CreatedAtRoute(nameof(GetUserById), new { id = userReadDTO.Id }, userReadDTO);
-    }
-*/
+    //    var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
+    //    var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
+
+    //    if (
+    //        !validationResultBasicInformation.IsValid || !validationResultAddress.IsValid)
+    //    {
+    //        return BadRequest();
+    //    }
+
+    //    var addedUser = await _userRepository.AddUser(userModel);
+    //    var userReadDTO = _mapper.Map<UserReadDTO>(userModel);
+
+    //    return CreatedAtRoute(nameof(GetUserById), new { id = userReadDTO.Id }, userReadDTO);
+    //}
+
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
