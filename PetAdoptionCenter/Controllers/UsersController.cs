@@ -54,7 +54,7 @@ public class UsersController : ControllerBase
         var user = await _userRepository.GetUserById(id);
         if (user != null)
         {
-            return Ok(_mapper.Map<UserReadDTO>(user));
+            return Ok(user);
         }
         return NotFound();
     }
@@ -382,7 +382,7 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
-    [Authorize]
+    
     [HttpGet("{id}/pets")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllFavouritePets(Guid id)
