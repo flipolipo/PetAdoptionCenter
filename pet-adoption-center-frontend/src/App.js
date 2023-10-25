@@ -12,7 +12,6 @@ import ScrollHandler from './Components/ScrollHandler';
 import Footer from './Components/Footer';
 import React from 'react';
 import { UserProvider } from './Components/UserContext.js';
-import ShelterById from './Pages/Shelters/ShelterById';
 
 
 function App() {
@@ -36,7 +35,7 @@ function App() {
               <Route path="/Users/pets" element={<Pets />} />
               <Route path="/Users/pets/:id" element={<PetById />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/Shelters/:id" element={<ShelterById />} />
+             
             </Routes>
           </div>
           <Footer />

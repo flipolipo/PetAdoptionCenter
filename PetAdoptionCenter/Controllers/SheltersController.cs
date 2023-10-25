@@ -69,12 +69,14 @@ public class SheltersController : ControllerBase
     public async Task<ActionResult<ShelterReadDTO>> GetShelterById(Guid shelterId)
     {
         var shelter = await _shelterRepository.GetShelterById(shelterId);
+        
         if (shelter == null)
         {
             return NotFound();
         }
 
         var shelterDto = _mapper.Map<ShelterReadDTO>(shelter);
+        shelterDto.ImageBase64 = Convert.ToBase64String(shelter.Image);
         return Ok(shelterDto);
     }
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -366,6 +368,27 @@ public class SheltersController : ControllerBase
         if (pets != null)
         {
             return Ok(pets);
+        }
+        return BadRequest();
+    }
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [HttpGet("{shelterId}/pets/avaible")]
+    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllAvaiblePets(Guid shelterId) 
+    {
+        var pets = await _shelterRepository.GetAllAvaiblePets(shelterId);
+        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+        var updatedPetsDto = petsDto.Select(petDto =>
+        {
+            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+            if (matchingPet != null)
+            {
+                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
+            }
+            return petDto;
+        }).ToList();
+        if (updatedPetsDto != null)
+        {
+            return Ok(updatedPetsDto);
         }
         return BadRequest();
     }

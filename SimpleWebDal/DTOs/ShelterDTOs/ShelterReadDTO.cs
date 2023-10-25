@@ -18,6 +18,7 @@ public class ShelterReadDTO
     public ICollection<PetReadDTO>? ShelterPets { get; set; }
     public ICollection<AdoptionReadDTO>? Adoptions { get; set; }
     public ICollection<TempHouseReadDTO>? TempHouses { get; set; }
+    public string PhoneNumber { get; set; }
     public string ImageBase64 { get; set; }
 }
 

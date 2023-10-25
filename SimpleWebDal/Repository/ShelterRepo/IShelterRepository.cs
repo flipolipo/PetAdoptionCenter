@@ -37,6 +37,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Activity> GetPetActivityById(Guid shelterId, Guid activityId, Guid petId);
         public Task<IEnumerable<Adoption>> GetAllShelterAdoptions(Guid shelterId);
         public Task<Adoption> GetShelterAdoptionById(Guid shelterId, Guid adoptionId);
+        public Task<IEnumerable<Pet>> GetAllAvaiblePets(Guid shelterId);
         #endregion
 
         #region //POST

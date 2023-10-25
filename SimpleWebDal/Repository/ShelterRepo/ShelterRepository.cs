@@ -40,6 +40,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
             .Include(g => g.Adoptions)
+            .Include(i => i.Id)
             .Include(h => h.Pets).FirstOrDefaultAsync(z => z.Id == userId);
             return foundUser;
         }
@@ -142,13 +143,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
         public async Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, Guid petId, TempHouse tempHouse)
         {
             var foundShelter = await FindShelter(shelterId);
-            var foundPetById = await GetShelterPetById(shelterId, petId);
-            var foundUser = await _dbContext.Users
-            .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
-            .Include(d => d.Roles)
-            .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
-            .Include(g => g.Adoptions)
-            .Include(h => h.Pets).FirstOrDefaultAsync(e => e.Id == userId);
+            
+            var foundUser = await FindUserById(userId);
             var foundPet = await GetShelterPetById(shelterId, petId);
             tempHouse.TemporaryOwner = foundUser;
             tempHouse.TemporaryHouseAddress = foundUser.BasicInformation.Address;
@@ -624,6 +620,11 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return false;
         }
 
-
+        public async Task<IEnumerable<Pet>> GetAllAvaiblePets(Guid shelterId)
+        {
+            var foundShelter = await FindShelter(shelterId);
+            var pets = foundShelter.ShelterPets.Where(p => p.AvaibleForAdoption == true);
+            return pets;
+        }
     }
 }
