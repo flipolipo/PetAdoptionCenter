@@ -50,7 +50,9 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Vaccination> AddPetVaccination(Guid shelterId, Guid petId, Vaccination vaccination);
         public Task<Disease> AddPetDisease(Guid shelterId, Guid petId, Disease disease);
         public Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption);
-        public Task<Adoption> InitializeAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption);
+        public Task<Adoption> InitializePetAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption);
+        public Task<Adoption> MeetingsPetFirstTheAdoption(Guid shelterId, Guid petId, Guid userId, Guid adoptionId, Activity activity);
+        public Task<Adoption> ContractForPetAdoption(Guid shelterId, Guid petId, Guid userId, Guid adoptionId, string contractAdoption);
         #endregion
 
         #region //PUT

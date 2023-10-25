@@ -10,12 +10,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navbar';
 import ScrollHandler from './Components/ScrollHandler';
 import Footer from './Components/Footer';
-import React from 'react';
+import React, { useState } from 'react';
 import { UserProvider } from './Components/UserContext.js';
 
 
-function App() {
 
+function App() {
+  const [petData, setPetData] = useState([]);
   return (
     <Router>
       <UserProvider>
@@ -27,13 +28,13 @@ function App() {
             <Routes>
               <Route exact path="/" element={<Home />} />
               <Route path="/Shelters" element={<Shelters />} />
-              <Route path="/Shelters/adoptions" element={<Adoption />} />
+              <Route path="/Shelters/adoptions" element={<Adoption petData={petData} setPetData={setPetData}/>} />
               <Route
                 path="/Shelters/temporaryHouses"
                 element={<TemporaryHouse />}
               />
               <Route path="/Users/pets" element={<Pets />} />
-              <Route path="/Users/pets/:id" element={<PetById />} />
+              <Route path="/Users/pets/:id" element={<PetById petData={petData} setPetData={setPetData} />} />
               <Route path="/profile" element={<Profile />} />
              
             </Routes>

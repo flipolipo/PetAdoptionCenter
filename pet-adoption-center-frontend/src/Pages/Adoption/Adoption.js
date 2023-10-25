@@ -3,11 +3,16 @@ import './Adoption.css';
 import FlipCardAdopted from '../../Components/FlipCardAdopted';
 import FlipCardAvailable from '../../Components/FlipCardAvailable';
 import { Link } from 'react-router-dom';
+import { useUser } from '../../Components/UserContext';
 
-const Adoption = () => {
+
+const Adoption = ({petData, setPetData}) => {
+  const { user, setUser } = useUser();
   const [preadoptionPollVisible, setPreadoptionPollVisible] = useState(false);
   const [meetingsVisible, setMeettingsVisible] = useState(false);
   const [contractAdoptionVisible, setContractAdoptionVisible] = useState(false);
+console.log(user);
+console.log(petData);
 
   const showPreadoptionPoll = () => {
     setPreadoptionPollVisible(true);
@@ -33,6 +38,7 @@ const Adoption = () => {
 
   return (
     <div>
+    UserId =  {user.id}
       <div className="adoption-container">
         {preadoptionPollVisible ? ( 
           <div className="preadoption-poll">

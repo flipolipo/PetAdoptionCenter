@@ -8,6 +8,7 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   max-width: 1500px;
 }
@@ -20,7 +21,9 @@
   font-size: 1.5rem;
   margin: 0 10px;
 }
-
+.user-auth-div{
+  grid-column: 6;
+}
 .nav-menu {
   list-style: none;
   display: flex;
