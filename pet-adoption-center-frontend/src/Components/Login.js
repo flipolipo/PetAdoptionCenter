@@ -66,36 +66,40 @@ const Login = () => {
   }
 
   return (
+
     <div className='signInButton'>
       {!user.isLogged ? (
         <>
-          <button onClick={() => { setVisible(true); }}>Sign In</button>
+          <button className="buttonSignIn" onClick={() => { setVisible(true); }}>Sign In</button>
           <Modal isOpen={visible} onRequestClose={() => setVisible(false)} style={customStyles}>
-            <input
-              className="input-black"
-              type="text"
-              placeholder="Email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-            />
-            <input
-              className="input-black"
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
-            <button onClick={loginUser}>Login</button>
-            <button onClick={() => setVisible(false)}>Back</button>
+            <div className="modal-content">
+              <input
+                className="input-black"
+                type="text"
+                placeholder="Email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+              />
+              <input
+                className="input-black"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
+              <button className="buttonLogin" onClick={loginUser}>Login</button>
+              <button className="buttonLogin" onClick={() => setVisible(false)}>Back</button>
+            </div>
           </Modal>
         </>
       ) : (
         <>
           <h2>Welcome, <Link to="/profile">{user.username}</Link>!</h2>
-          <button onClick={logout}>Logout</button>
+          <button className="buttonLogout" onClick={logout}>Logout</button>
         </>
       )}
     </div>
+
   )
 }
 

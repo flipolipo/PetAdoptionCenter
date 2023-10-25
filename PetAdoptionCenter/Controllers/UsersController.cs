@@ -54,38 +54,39 @@ public class UsersController : ControllerBase
         var user = await _userRepository.GetUserById(id);
         if (user != null)
         {
-            return Ok(_mapper.Map<UserReadDTO>(user));
+            return Ok(user);
         }
         return NotFound();
     }
 
 
 
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
-    {
-        var userModel = _mapper.Map<User>(userCreateDTO);
+    //[HttpPost]
+    //[ProducesResponseType(StatusCodes.Status201Created)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    //public async Task<ActionResult<UserReadDTO>> AddUser(UserCreateDTO userCreateDTO)
+    //{
+    //    var userModel = _mapper.Map<User>(userCreateDTO);
 
-        var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
-        var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
+    //    var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
+    //    var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
 
 
-        var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
-        var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
+    //    var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
+    //    var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
 
-        if (
-            !validationResultBasicInformation.IsValid || !validationResultAddress.IsValid)
-        {
-            return BadRequest();
-        }
+    //    if (
+    //        !validationResultBasicInformation.IsValid || !validationResultAddress.IsValid)
+    //    {
+    //        return BadRequest();
+    //    }
 
-        var addedUser = await _userRepository.AddUser(userModel);
-        var userReadDTO = _mapper.Map<UserReadDTO>(userModel);
+    //    var addedUser = await _userRepository.AddUser(userModel);
+    //    var userReadDTO = _mapper.Map<UserReadDTO>(userModel);
 
-        return CreatedAtRoute(nameof(GetUserById), new { id = userReadDTO.Id }, userReadDTO);
-    }
+    //    return CreatedAtRoute(nameof(GetUserById), new { id = userReadDTO.Id }, userReadDTO);
+    //}
+
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -381,7 +382,7 @@ public class UsersController : ControllerBase
         return NotFound();
     }
 
-    [Authorize]
+    
     [HttpGet("{id}/pets")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllFavouritePets(Guid id)

@@ -8,7 +8,7 @@ public class TempHouseReadDTO
 {
     public Guid Id { get; set; }
     public UserReadDTO TemporaryOwner { get; set; }
-    public AddressReadDTO TemporaryHouseAddress { get; set; }
+    public AddressReadDTO? TemporaryHouseAddress { get; set; }
     public ICollection<PetReadDTO>? PetsInTemporaryHouse { get; set; }
     public DateTimeOffset StartOfTemporaryHouseDate { get; set; }
 }

@@ -26,8 +26,8 @@ const Navbar = () => {
           <span></span>
           <span></span>
           <div className='user-auth-div'>
-            <Login user={user} setUser={setUser} />
-            {!user.isLogged && <Register />}
+            <Login className='LoginComponent' user={user} setUser={setUser} />
+            {!user.isLogged && <Register className='RegisterComponent' />}
           </div>
 
         </div>
@@ -62,6 +62,11 @@ const Navbar = () => {
               <NavLink to="/Users/pets" className="nav-links">
                 PETS
               </NavLink>
+              <li className="nav-item-navigation">
+                <NavLink to="/Profile" className="nav-links">
+                  Profile
+                </NavLink>
+              </li>
             </li>
           </ul>
         </div>
