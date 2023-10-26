@@ -410,6 +410,14 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId);
         }
 
+        public async Task<Pet> GetPetById(Guid id)
+        {
+            return await _dbContext.Pets.Include(p => p.BasicHealthInfo).ThenInclude(p => p.Vaccinations)
+                .Include(p => p.BasicHealthInfo).ThenInclude(p => p.MedicalHistory)
+                .Include(p => p.Calendar).ThenInclude(p => p.Activities)
+                .Include(p => p.Users)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
         public async Task<TempHouse> GetTempHouseById(Guid shelterId, Guid tempHouseId)
         {
             var foundShelter = await FindShelter(shelterId);
@@ -587,7 +595,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
             if (adoption != null)
             {
                 var foundShelter = await FindShelter(shelterId);
-                var foundPet = await GetShelterPetById(shelterId, petId);
+                var pet = await GetPetById(petId);
+                var foundPet = await GetShelterPetById(shelterId, pet.Id);
                 var foundUser = await FindUserById(userId);
                 if (foundShelter != null && foundPet != null && foundUser != null && adoption.PreadoptionPoll != null && foundPet.AvaibleForAdoption == true)
                 {
@@ -602,7 +611,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                     foundUser.Pets.Add(foundPet);
                     foundPet.AvaibleForAdoption = false;
                     foundPet.Status = PetStatus.OnAdoptionProccess;
-                   // foundPet.Users.Add(foundUser);
+                    foundPet.Users.Add(foundUser);
                     await _dbContext.SaveChangesAsync();
                     return adoption;
                 }

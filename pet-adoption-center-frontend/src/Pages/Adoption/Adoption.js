@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Adoption.css';
 import FlipCardAdopted from '../../Components/FlipCardAdopted';
 import FlipCardAvailable from '../../Components/FlipCardAvailable';
 import { Link } from 'react-router-dom';
 import { useUser } from '../../Components/UserContext';
+import axios from 'axios';
+import { address_url } from '../../Service/url';
 
 
 const Adoption = ({petData, setPetData}) => {
   const { user, setUser } = useUser();
+  const [userData, setUserData] = useState([]);
   const [preadoptionPollVisible, setPreadoptionPollVisible] = useState(false);
   const [meetingsVisible, setMeettingsVisible] = useState(false);
   const [contractAdoptionVisible, setContractAdoptionVisible] = useState(false);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+        try {
+            const response = await axios.get(`${address_url}/Users/${user.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
+            setUserData(response.data);
+            console.log(response.data);
+
+        } catch (err) {
+           console.log(err);
+        } 
+    };
+
+    fetchProfileData();
+}, [user.id, user.token]);
+
 console.log(user);
 console.log(petData);
 
@@ -63,7 +86,7 @@ console.log(petData);
                   Find your new best friend
                 </Link>
               </div>
-              <div className="adoption-card">
+              <div className="adoption-card-page-adoption">
                 <div className="pet-inscription">
                   <h2 className='title-pet'>Adopted pets</h2>
                 </div>
