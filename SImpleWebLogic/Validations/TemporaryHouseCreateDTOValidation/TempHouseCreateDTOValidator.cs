@@ -15,9 +15,9 @@ public class TempHouseCreateDTOValidator : AbstractValidator<TempHouseCreateDTO>
         //    .NotNull().WithMessage("TemporaryHouseAddress cannot be null.");
         //    //.SetValidator(new AddressCreateDTOValidator());
 
-        RuleFor(tempHouse => tempHouse.StartOfTemporaryHouseDate)
-            .NotEmpty().WithMessage("StartOfTemporaryHouseDate cannot be empty.")
-            .Must(date => date > DateTime.Now).WithMessage("StartOfTemporaryHouseDate must be in the future.");
+        //RuleFor(tempHouse => tempHouse.StartOfTemporaryHouseDate)
+        //    .NotEmpty().WithMessage("StartOfTemporaryHouseDate cannot be empty.")
+        //    .Must(date => date > DateTime.Now).WithMessage("StartOfTemporaryHouseDate must be in the future.");
     }
 }
 
