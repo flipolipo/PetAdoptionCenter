@@ -88,6 +88,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
         {
             var foundShelter = await FindShelter(shelterId);
             pet.Calendar = new CalendarActivity();
+            pet.Users = new List<User>();
             foundShelter.ShelterPets.Add(pet);
             await _dbContext.SaveChangesAsync();
             return pet;
@@ -601,6 +602,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                     foundUser.Pets.Add(foundPet);
                     foundPet.AvaibleForAdoption = false;
                     foundPet.Status = PetStatus.OnAdoptionProccess;
+                   // foundPet.Users.Add(foundUser);
                     await _dbContext.SaveChangesAsync();
                     return adoption;
                 }
