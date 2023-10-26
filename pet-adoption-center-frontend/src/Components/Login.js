@@ -3,7 +3,8 @@ import axios from 'axios';
 import Modal from 'react-modal';
 import { address_url } from '../Service/url';
 import { useUser } from './UserContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Avatar from 'react-avatar';
 
 Modal.setAppElement('#root');
 
@@ -19,10 +20,12 @@ const customStyles = {
 };
 
 const Login = () => {
+  const navigate = useNavigate();
   const { user, setUser } = useUser();
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const userNameToUpperCase = user.username.charAt(0).toUpperCase() + user.username.slice(1);
 
   async function loginUser() {
     try {
@@ -63,6 +66,9 @@ const Login = () => {
       token: '',
       isLogged: false
     });
+    setEmail('');
+    setPassword('');
+    navigate('/');
   }
 
   return (
@@ -93,10 +99,21 @@ const Login = () => {
           </Modal>
         </>
       ) : (
-        <>
-          <h2>Welcome, <Link to="/profile">{user.username}</Link>!</h2>
-          <button className="buttonLogout" onClick={logout}>Logout</button>
-        </>
+        <div className='welcome-section-container'>
+          <div className="welcome-section">
+            <div className="icon-container"><Link to="/profile" className="usernameProfiles">
+              <Avatar className="user-avatar" size="50" round={true} name={user.username} />
+              <p>{userNameToUpperCase}</p></Link>
+            </div>
+
+            <div className="icon-container" onClick={logout}>
+              <span className="material-symbols-outlined" onClick={logout} >
+                logout
+              </span>
+              <p className="logoutText" >Logout</p>
+            </div>
+          </div>
+        </div>
       )}
     </div>
 

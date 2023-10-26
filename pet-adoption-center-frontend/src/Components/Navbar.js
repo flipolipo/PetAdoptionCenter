@@ -62,11 +62,6 @@ const Navbar = () => {
               <NavLink to="/Users/pets" className="nav-links">
                 PETS
               </NavLink>
-              <li className="nav-item-navigation">
-                <NavLink to="/Profile" className="nav-links">
-                  Profile
-                </NavLink>
-              </li>
             </li>
           </ul>
         </div>

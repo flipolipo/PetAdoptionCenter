@@ -1,9 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 body {
   background-image: url('./../public/Photo/background.png');
-  background-size: cover; 
-  background-repeat: repeat; 
+  background-size: cover;
+  background-repeat: repeat;
   margin: 0;
   line-height: normal;
   height: 100%;
@@ -45,4 +45,3 @@ body {
   background-color: white;
   z-index: 1000;
 }
-

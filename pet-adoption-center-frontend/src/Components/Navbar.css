@@ -203,9 +203,11 @@ nav ul {
 
 .modal-content .buttonLogin,
 .modal-content .buttonRegister,
-.modal-content .buttonLogout,
+.buttonLogout,
 .buttonSignIn,
-.buttonSignUp {
+.buttonSignUp,
+.editButton,
+.saveButton {
   padding: 10px;
   width: 70px;
   cursor: pointer;
@@ -220,7 +222,9 @@ nav ul {
 }
 .modal-content .buttonLogin:hover,
 .modal-content .buttonRegister:hover,
-.modal-content .buttonLogout:hover,
+.saveButton:hover,
+.editButton:hover,
+.buttonLogout:hover,
 .buttonSignIn:hover,
 .buttonSignUp:hover {
   background-color: rgba(246, 158, 123, 1);
@@ -234,4 +238,66 @@ nav ul {
 .LoginComponent,
 .RegisterComponent {
   align-self: center;
+}
+.user-auth-div {
+  grid-column: 6;
+}
+.navbar-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  max-width: 1500px;
+}
+.welcome-section {
+  gap: 15px;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.usernameProfiles {
+  font-weight: bold;
+  color: #333;
+  align-items: center;
+}
+.welcome-section-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.welcome-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.material-symbols-outlined {
+  font-size: 50px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.material-symbols-outlined:hover {
+  color: #007bff;
+}
+.logoutText {
+  cursor: pointer;
 }
