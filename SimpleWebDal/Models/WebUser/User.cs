@@ -16,6 +16,7 @@ public class User : IdentityUser<Guid>
         Id = Guid.NewGuid(),
         Activities = new List<Activity>()
     };
+    public Guid? ShelterId { get; set; }
     public ICollection<Role>? Roles { get; set; }
     public ICollection<Adoption>? Adoptions { get; set; }
     public ICollection<Pet>? Pets { get; set; }

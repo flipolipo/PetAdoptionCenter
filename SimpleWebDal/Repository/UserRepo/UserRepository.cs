@@ -96,7 +96,7 @@ public class UserRepository : IUserRepository
             foundUser.BasicInformation.Name = user.BasicInformation.Name;
             foundUser.BasicInformation.Surname = user.BasicInformation.Surname;
             foundUser.BasicInformation.Phone = user.BasicInformation.Phone;
-
+           
             await _dbContext.SaveChangesAsync();
             return true;
         }

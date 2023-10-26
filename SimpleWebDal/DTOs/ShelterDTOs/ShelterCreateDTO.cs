@@ -13,6 +13,7 @@ public class ShelterCreateDTO
     public string Name { get; set; }
     public AddressCreateDTO ShelterAddress { get; set; }
     public string ShelterDescription { get; set; }
+    public string PhoneNumber { get; set; }
     public IFormFile ImageFile { get; set; }
     //public ICollection<UserCreateDTO>? ShelterUsers { get; set; }
     //public ICollection<PetCreateDTO>? ShelterPets { get; set; }

@@ -384,6 +384,10 @@ namespace SimpleWebDal.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("ShelterDescription")
                         .IsRequired()
                         .HasColumnType("text");

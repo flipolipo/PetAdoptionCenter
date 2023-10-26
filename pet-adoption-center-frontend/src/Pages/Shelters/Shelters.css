@@ -1,17 +1,55 @@
 .sheltersContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content:center;
   flex-wrap: wrap;
   align-self: center;
   justify-self: center;
 }
+.shelters{
+  display:flex;
+  flex-direction: row;
+}
+.searchBar{
+  width: 100%;
+  max-width: 700px;
+  background: rgba(250, 205, 188, 0.604);
+  display: flex;
+  align-items: center;
+  border-radius: 60px;
+  padding: 10px 20px;
+margin-top: 20px;
+margin-bottom: 20px;
+}
+.searchBar input{
+  background: transparent;
+  flex: 1;
+  border: 0;
+  outline: none;
+  padding: 24px 20px;
+  font-size: 20px;
+  color: #1e1d1d
+}
+.searchBar button img{
+  width: 25px;
+}
+.searchBar button{
+  border: 0;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  background:#eda487;
+  cursor: pointer;
 
+}
 .shelterCard {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
  margin-left: 60px;
+ padding: 20px;
+ background-color: #FACEBC;
+ border-radius: 15px;
 }
 .shelterCard:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
@@ -19,4 +57,46 @@
 
 .textContainer {
   padding: 2px 16px;
+}
+.chosenShelterContainer{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.shelterPhotoAndContactInfo{
+  display: flex;
+  flex-direction: row;
+}
+.photoContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #FACEBC;
+  border-radius: 15px;
+  margin-right: 20px;
+  border-style:outset;
+  border-color: #d88a6d;;
+}
+.contactInfoContainer
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #FACEBC;
+  border-radius: 15px;
+  border-style:outset;
+  border-color: #d88a6d;
+}
+.shelterDescription{
+  padding: 20px;
+  background-color: #FACEBC;
+  border-radius: 15px;
+  margin-top: 20px;
+  width: 40vw;
+  height: 25vh;
+  margin-bottom: 25px;
+  border-style:outset;
+  border-color: #d88a6d;;
 }
