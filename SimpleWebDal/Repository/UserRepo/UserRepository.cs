@@ -28,7 +28,8 @@ public class UserRepository : IUserRepository
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
             .Include(g => g.Adoptions)
-            .Include(h => h.Pets).FirstOrDefaultAsync(z => z.Id == userId);
+            .Include(h => h.Pets)
+            .FirstOrDefaultAsync(z => z.Id == userId);
         return foundUser;
     }
     /*
