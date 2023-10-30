@@ -36,17 +36,17 @@ const Footer = () => {
             </a>
           </p>
           <p>
-            <a href="https://github.com/farazc60">
+            <a href="#">
               <i className="fab fa-github"></i> Github
             </a>
           </p>
           <p>
-            <a href="https://www.facebook.com/codewithfaraz">
+            <a href="#">
               <i className="fab fa-facebook"></i> Facebook
             </a>
           </p>
           <p>
-            <a href="https://www.instagram.com/codewithfaraz">
+            <a href="#">
               <i className="fab fa-instagram"></i> Instagram
             </a>
           </p>
