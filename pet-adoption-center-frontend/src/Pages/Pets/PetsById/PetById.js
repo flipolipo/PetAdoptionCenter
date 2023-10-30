@@ -84,8 +84,7 @@ const PetById = ({ petData, setPetData }) => {
     setVisible(true);
   };
   const updateActivity = async () => {
-    try{
-      
+    try {
       const resp = await axios.put(
         `https://localhost:7292/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`,
         {
@@ -94,11 +93,21 @@ const PetById = ({ petData, setPetData }) => {
           EndActivityDate: endDate,
         }
       );
-      console.log(resp)
-    }catch(err){
-      console.log(err)
+      console.log(resp);
+    } catch (err) {
+      console.log(err);
     }
-  
+    
+  };
+  const RemoveActivity = async () => {
+    try {
+      const resp = await axios.delete(
+        `https://localhost:7292/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`
+      );
+      console.log(resp);
+    } catch (err) {
+      console.log(err);
+    }
   };
   return (
     <div>
@@ -119,12 +128,12 @@ const PetById = ({ petData, setPetData }) => {
               <DateTimePicker onChange={(e) => updateStartDate(e)} />
               End Date: <DateTimePicker onChange={(e) => updateEndDate(e)} />
               <button onClick={updateActivity}>done</button>
-              <button onClick={() => setEdit(false)}>go back</button>
+              <button onClick={() => setEdit(false)}>Go back</button>
             </div>
           ) : (
             <div>
-              <button onClick={() => setEdit(true)}>edit</button>
-              <button>Delete</button>
+              <button onClick={() => setEdit(true)}>Edit</button>
+              <input type='button' value='Delete' onClick={RemoveActivity}></input>
             </div>
           )}
         </Modal>
