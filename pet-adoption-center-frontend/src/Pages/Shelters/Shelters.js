@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { address_url } from '../../Service/url';
 import './Shelters.css';
-import '../../Components/FlipCard.css';
+//import '../../Components/F'
 import GenericCard from '../../Components/GenericCard';
 import Fuse from 'fuse.js';
+import FlipCardAvailable from '../../Components/FlipCardAvailable';
 
 const Shelters = () => {
   const [shelters, setShelters] = useState([]);
@@ -37,21 +38,21 @@ const getPetsFromShelter = async (id) => {
 }
   const ClickHandler = useCallback((id) => {
    getPetsFromShelter(id).then(response => {
-    //setShelterData(response.shelter);
-    //setPetsAvailable(response.pets);
-    // setCurrentPets(petsAvailable.slice(
-    //   currentPage * petsPerPage,
-    //   indexOfLastPet - petsPerPage
-    //   ));
+    setShelterData(response.shelter);
+    setPetsAvailable(response.pets);
+    setCurrentPets(petsAvailable.slice(
+      currentPage * petsPerPage,
+      indexOfLastPet - petsPerPage
+      ));
     setCurrentPets(petsAvailable)
     setShelterChosen(true);
     console.log(response)
    }).then(console.log("pets:", petsAvailable))
 
     
-    // setIndexOfLastPet(currentPage * petsPerPage);
-    // setIndexOfFirstPet(indexOfLastPet - petsPerPage);
-    // setCurrentPets(petsAvailable.slice(indexOfFirstPet, indexOfLastPet));
+    setIndexOfLastPet(currentPage * petsPerPage);
+    setIndexOfFirstPet(indexOfLastPet - petsPerPage);
+    setCurrentPets(petsAvailable.slice(indexOfFirstPet, indexOfLastPet));
     
 
    
@@ -80,6 +81,7 @@ const getPetsFromShelter = async (id) => {
           <div className="shelterPhotoAndContactInfo">
             <div className="photoContainer">
               <img
+              className='photo'
                 src={`data:image/jpeg;base64, ${shelterData.ImageBase64}`}
                 alt={shelterData.Name}
               ></img>
@@ -101,25 +103,8 @@ const getPetsFromShelter = async (id) => {
           </div>
           <div>
             <div className="card-container">
-              {petsAvailable.map((pet, index) => (
-                <GenericCard key={index} pet={pet} />
-              ))}
-            </div>
-            <div className="pagination">
-              <button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="button-pagination"
-              >
-                Previous
-              </button>
-              <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={indexOfLastPet >= petsAvailable.length}
-                className="button-pagination"
-              >
-                Next
-              </button>
+              
+              <FlipCardAvailable/>
             </div>
           </div>
         </div>

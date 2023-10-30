@@ -14,7 +14,6 @@ import React, { useState } from 'react';
 import { UserProvider } from './Components/UserContext.js';
 
 
-
 function App() {
   const [petData, setPetData] = useState([]);
   return (
@@ -28,17 +27,23 @@ function App() {
             <Routes>
               <Route exact path="/" element={<Home />} />
               <Route path="/Shelters" element={<Shelters />} />
-              <Route path="/Shelters/adoptions" element={<Adoption petData={petData} setPetData={setPetData}/>} />
+              <Route
+                path="/Shelters/adoptions"
+                element={<Adoption petData={petData} setPetData={setPetData} />}
+              />
               <Route
                 path="/Shelters/temporaryHouses"
                 element={<TemporaryHouse />}
               />
               <Route path="/Users/pets" element={<Pets />} />
-              <Route path="/Users/pets/:id" element={<PetById petData={petData} setPetData={setPetData} />} />
+              <Route
+                path="/Users/pets/:id"
+                element={<PetById petData={petData} setPetData={setPetData} />}
+              />
               <Route path="/profile" element={<Profile />} />
-             
             </Routes>
           </div>
+
           <Footer />
         </div>
       </UserProvider>

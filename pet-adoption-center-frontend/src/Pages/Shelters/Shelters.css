@@ -77,6 +77,7 @@ margin-bottom: 20px;
   margin-right: 20px;
   border-style:outset;
   border-color: #d88a6d;;
+  width: 19vw;
 }
 .contactInfoContainer
 {
@@ -88,6 +89,11 @@ margin-bottom: 20px;
   border-radius: 15px;
   border-style:outset;
   border-color: #d88a6d;
+  max-width: 20vw;
+  width: 19vw;
+  max-height: 20vh;
+  height: 20vh;
+
 }
 .shelterDescription{
   padding: 20px;
@@ -99,4 +105,8 @@ margin-bottom: 20px;
   margin-bottom: 25px;
   border-style:outset;
   border-color: #d88a6d;;
+}
+.photo{
+  width: 15vw;
+  height: 15vw;
 }
