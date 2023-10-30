@@ -64,7 +64,7 @@ const Adoption = ({ petData, setPetData }) => {
       <div className="adoption-container">
         {preadoptionPollVisible ? (
           <div className="preadoption-poll">
-            {user.id && petData ? (
+            {user.id && petData.Id ? (
               <PreadoptionPoll
                 shelterId={petData.ShelterId}
                 petId={petData.Id}
@@ -118,7 +118,13 @@ const Adoption = ({ petData, setPetData }) => {
           </div>
         ) : meetingsVisible ? (
           <div className="meetings">
-            <h2>SPRAWDZAM CZY TO DZIALA (Meetings)</h2>
+             {preadoptionPollVisible ? (
+       <></>
+            ) : (
+              <>
+               
+              </>
+            )}
             <button onClick={hideInfoMeetings}>Close Info Meetings</button>
           </div>
         ) : contractAdoptionVisible ? (

@@ -388,7 +388,7 @@ public class SheltersController : ControllerBase
         //return CreatedAtRoute(nameof(GetAdoptionById), new { shelterId = foundShelter.Id, adoptionId = addedAdoption.Id }, adoptionReadDTO);
     }
 
-    [HttpPost("{shelterId}/adoptions/meetings-adoption")]
+    [HttpPost("{shelterId}/pets/{petId}/users/{userId}/adoptions/{adoptionId}/meetings-adoption")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AdoptionReadDTO>> MeetingsPetAdoption(Guid shelterId, Guid petId, Guid userId, Guid adoptionId, ActivityCreateDTO activityCreateDTO)
@@ -409,7 +409,7 @@ public class SheltersController : ControllerBase
         //return CreatedAtRoute(nameof(GetAdoptionById), new { shelterId = foundShelter.Id, adoptionId = addedAdoption.Id }, adoptionReadDTO);
     }
 
-    [HttpPost("{shelterId}/adoptions/contract-adoption")]
+    [HttpPost("{shelterId}/pets/{petId}/users/{userId}/adoptions/{adoptionId}/contract-adoption")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AdoptionReadDTO>> ContractForPetAdoption(Guid shelterId, Guid petId, Guid userId, Guid adoptionId, string contractAdoption)
