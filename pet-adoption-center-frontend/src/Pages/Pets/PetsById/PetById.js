@@ -109,6 +109,16 @@ const PetById = ({ petData, setPetData }) => {
       console.log(err);
     }
   };
+  const RemoveActivity = async () => {
+    try {
+      const resp = await axios.delete(
+        `https://localhost:7292/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`
+      );
+      console.log(resp);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div>
       {petData && petData.BasicHealthInfo && petDataVisible ? (
