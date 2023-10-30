@@ -7,6 +7,8 @@ import { useUser } from '../../Components/UserContext';
 import axios from 'axios';
 import { address_url } from '../../Service/url';
 import PreadoptionPoll from '../../Components/PreadoptionPoll';
+import { fetchDataForPet } from '../../Service/fetchDataForPet';
+import PetById from '../Pets/PetsById/PetById';
 
 const Adoption = ({ petData, setPetData }) => {
   const { user, setUser } = useUser();
@@ -24,7 +26,7 @@ const Adoption = ({ petData, setPetData }) => {
           },
         });
         setUserData(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } catch (err) {
         console.log(err);
       }
@@ -33,9 +35,9 @@ const Adoption = ({ petData, setPetData }) => {
     fetchProfileData();
   }, [user.id, user.token]);
 
-  console.log(user);
-  console.log(petData);
-  console.log(petData.ShelterId);
+  // console.log(userData.Adoptions);
+  //console.log(petData.Id);
+  // console.log(petData.ShelterId);
 
   const showPreadoptionPoll = () => {
     setPreadoptionPollVisible(true);
@@ -72,7 +74,7 @@ const Adoption = ({ petData, setPetData }) => {
               />
             ) : (
               <>
-                <h2>Please log in and select a pet first</h2>
+                <h2>Please log in and choose your new best friend first</h2>
                 <h3>PREADOPTION POLL</h3>
                 <ul>
                   <li>Are you 18 years or over?*</li>
@@ -118,11 +120,35 @@ const Adoption = ({ petData, setPetData }) => {
           </div>
         ) : meetingsVisible ? (
           <div className="meetings">
-             {preadoptionPollVisible ? (
-       <></>
+            {user.id && userData.Adoptions?.length >= 1 ? (
+              <>
+                <h2>Your Adoptions</h2>
+                {userData.Adoptions?.map((adoption) => (
+                  <div key={adoption.Id} className="adoption-card">
+                     <PetById id={adoption.PetById} petData={petData} setPetData={setPetData} />
+                    <p>
+                      Status:{' '}
+                      {adoption.IsContractAdoption
+                        ? 'Contracted'
+                        : 'Not Contracted'}
+                    </p>
+                  </div>
+                ))}
+              </>
             ) : (
               <>
-               
+                <h2>
+                  Please log in, choose your new best friend and first sign the
+                  pre-adoption questionnaire
+                </h2>
+                <h3>MEETINGS TO KNOW YOUR PET</h3>
+                <p>
+                  To proceed to the next adoption step, you must select at least
+                  one meeting with your chosen pet to get better acquainted. The
+                  meeting should be chosen from the pet's available calendar.
+                  After the meeting has taken place, you need to confirm that
+                  you are still interested in adoption.
+                </p>
               </>
             )}
             <button onClick={hideInfoMeetings}>Close Info Meetings</button>
