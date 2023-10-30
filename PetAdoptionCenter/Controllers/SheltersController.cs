@@ -367,7 +367,7 @@ public class SheltersController : ControllerBase
 
 
     }
-    [HttpPost("{shelterId}/adoptions/inizialize-adoption")]
+    [HttpPost("{shelterId}/pets/{petId}/users/{userId}/adoptions/inizialize-adoption")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<AdoptionReadDTO>> InizializePetAdoption(Guid shelterId, Guid petId, Guid userId, AdoptionCreateDTO adoptionCreateDto)
