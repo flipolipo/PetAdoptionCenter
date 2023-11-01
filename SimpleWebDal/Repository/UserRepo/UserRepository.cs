@@ -2,9 +2,11 @@
 using SimpleWebDal.Data;
 using SimpleWebDal.Exceptions.UserRepository;
 using SimpleWebDal.Models.Animal;
+using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
 using System.Data;
+using System.Reflection;
 
 namespace SimpleWebDal.Repository.UserRepo;
 
@@ -381,6 +383,23 @@ public class UserRepository : IUserRepository
         var pets = await GetAllPets();
         return pets.Where(pet => pet.AvaibleForAdoption == true);
     }
+
+    public async Task<IEnumerable<Pet>> GetFilteredPets(Guid shelterId, PetGender gender, Size size, PetType type)
+    {
+        var allPets = await GetAllPets();
+
+        var filteredPets = allPets
+            .Where(pet =>
+                (shelterId == Guid.Empty || pet.ShelterId == shelterId) &&
+                (gender == PetGender.Unknown || pet.Gender == gender) &&
+                (size == Size.Unknown || pet.BasicHealthInfo.Size == size) &&
+                (type == PetType.Unknown || pet.Type == type))
+            .ToList();
+
+        return filteredPets;
+    }
+
+
 }
 
 

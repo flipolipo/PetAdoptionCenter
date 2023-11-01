@@ -4,22 +4,21 @@ import './FlipCard.css';
 import GenericCard from './GenericCard';
 import { address_url } from '../Service/url';
 
-const FlipCardAvailable = () => {
-  const [petsAvailable, setPetsAvailable] = useState([]);
+const FlipCardAll = () => {
+  const [petsAll, setAllPets] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [petsPerPage] = useState(3);
 
   useEffect(() => {
-    GetAvailablePetsForAdoption();
+    GetAllPets();
   }, []);
 
-  async function GetAvailablePetsForAdoption() {
+  async function GetAllPets() {
     try {
       const response = await axios.get(
-        `${address_url}/Users/pets/available-to-adoption`
+        `${address_url}/Users/pets`
       );
-      console.log(response.data);
-      setPetsAvailable(response.data);
+      setAllPets(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -27,7 +26,7 @@ const FlipCardAvailable = () => {
 
   const indexOfLastPet = currentPage * petsPerPage;
   const indexOfFirstPet = indexOfLastPet - petsPerPage;
-  const currentPets = petsAvailable.slice(indexOfFirstPet, indexOfLastPet);
+  const currentPets = petsAll.slice(indexOfFirstPet, indexOfLastPet);
 
   return (
     <div>
@@ -46,7 +45,7 @@ const FlipCardAvailable = () => {
         </button>
         <button
           onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={indexOfLastPet >= petsAvailable.length}
+          disabled={indexOfLastPet >= petsAll.length}
           className="button-pagination"
         >
           Next
@@ -56,4 +55,4 @@ const FlipCardAvailable = () => {
   );
 };
 
-export default FlipCardAvailable;
+export default FlipCardAll;

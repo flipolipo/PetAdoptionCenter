@@ -8,6 +8,7 @@ using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.BasicInformationDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.RoleDTOs;
+using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
 using SimpleWebDal.Repository.UserRepo;
@@ -502,5 +503,31 @@ public class UsersController : ControllerBase
         }).ToList();
         return Ok(updatedPetsDto);
     }
+
+    [HttpGet("pets/filtered")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetFilteredPets(
+     [FromQuery] Guid shelter,
+     [FromQuery] PetGender gender,
+     [FromQuery] Size size,
+     [FromQuery] PetType type)
+    {
+        var filteredPets = await _userRepository.GetFilteredPets(shelter, gender, size, type);
+        var filteredPetsDto = _mapper.Map<IEnumerable<PetReadDTO>>(filteredPets);
+
+        var updatedPetsDto = filteredPetsDto.Select(petDto =>
+        {
+            var matchingPet = filteredPets.FirstOrDefault(pet => pet.Id == petDto.Id);
+            if (matchingPet != null)
+            {
+                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
+            }
+            return petDto;
+        }).ToList();
+
+        return Ok(updatedPetsDto);
+    }
+
+
     #endregion
 }
