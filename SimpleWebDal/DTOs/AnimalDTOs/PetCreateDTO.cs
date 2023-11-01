@@ -15,5 +15,5 @@ public class PetCreateDTO
     public PetStatus Status { get; set; }
     public bool AvaibleForAdoption { get; set; }
     public IFormFile ImageFile { get; set; }
-    //public ICollection<UserCreateDTO> Users { get; set; } 
+    
 }

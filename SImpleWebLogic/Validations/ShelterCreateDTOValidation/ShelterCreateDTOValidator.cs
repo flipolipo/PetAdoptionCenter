@@ -11,11 +11,13 @@ public class ShelterCreateDTOValidator : AbstractValidator<ShelterCreateDTO>
       .NotEmpty().WithMessage("Name cannot be empty.")
       .MaximumLength(50).WithMessage("Name cannot exceed 50 characters.");
 
-        RuleFor(shelter => shelter.ShelterCalendar)
-            .NotNull().WithMessage("ShelterCalendar cannot be null.");
-
         RuleFor(shelter => shelter.ShelterAddress)
             .NotNull().WithMessage("ShelterAddress cannot be null.");
+
+        RuleFor(shelter => shelter.PhoneNumber)
+            .NotEmpty().WithMessage("PhoneNumber cannot be empty")
+            .MaximumLength(20).WithMessage("PhoneNumber cannot exceed 20 characters");
+            
 
         RuleFor(shelter => shelter.ShelterDescription)
             .MaximumLength(500).WithMessage("ShelterDescription cannot exceed 500 characters.");

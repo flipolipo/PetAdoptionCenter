@@ -1,0 +1,117 @@
+.flip-card {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+.flip-card-front >.image-container > img:first-child{
+object-fit: cover;
+width: 100%;
+}
+.flip-card-front,
+.flip-card-back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+.image-container {
+  position: relative;
+  height: 100%;
+}
+
+.paw-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+}
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 50px;
+  margin: auto;
+}
+
+.card {
+  width: 280px;
+  height: 280px;
+ /* margin: 10px; */
+}
+.more-inf {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(246, 158, 123, 1);
+  border-radius: 10px;
+  padding: 10px;
+  width: 150px;
+  height: 40px;
+  margin-top: 30px;
+}
+.pet-name h3 {
+  background-color: var(--color-lightsalmon-200);
+  width: 100px;
+  height: auto;
+  text-align: center;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+.inf-link {
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+}
+.pagination{
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+.button-pagination{
+  padding: 10px;
+  width: 70px;
+  text-align: center;
+  border-radius: 5px;
+  background-color: rgba(246, 158, 123, 0.4);
+  margin-left: 10px;
+  font-weight: bold;
+  align-items: center; 
+  width: 80px;
+  transition: background-color 0.3s;
+}
+.button-pagination:hover{
+  background-color: rgba(246, 158, 123, 1);
+}
+@media (max-width: 391px) {
+  .card-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+  }
+  .card {
+    width: 100%; 
+    margin: 30px 0;
+    margin-left: 30px; 
+  }
+}
+
+
+

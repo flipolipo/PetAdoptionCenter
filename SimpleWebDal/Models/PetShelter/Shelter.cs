@@ -13,10 +13,12 @@ public class Shelter
     public Guid CalendarId { get; set; }
     public CalendarActivity ShelterCalendar { get; set; }
     public Guid AddressId { get; set; }
+    public string PhoneNumber { get; set; }
     public Address ShelterAddress { get; set; }
     public string ShelterDescription { get; set; }
     public ICollection<User>? ShelterUsers { get; set; }
     public ICollection<Pet>? ShelterPets { get; set; }
     public ICollection<Adoption>? Adoptions { get; set; }
     public ICollection<TempHouse>?  TempHouses { get; set; }
+    public byte[] Image { get; set; }
 }

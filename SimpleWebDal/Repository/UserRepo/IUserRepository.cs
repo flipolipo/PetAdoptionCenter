@@ -1,4 +1,5 @@
 ﻿using SimpleWebDal.Models.Animal;
+using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
 
@@ -20,12 +21,14 @@ public interface IUserRepository
     public Task<IEnumerable<Pet>> GetAllAdoptedPet();
     public Task<IEnumerable<Pet>> GetAllPetsAvailableForAdoption();
     public Task<Pet> GetAdoptedPetById(Guid id);
+    public Task<IEnumerable<Pet>> GetFilteredPets(Guid shelterId, PetGender gender, Size size, PetType type);
+
     #endregion
 
 
     #region //POST
     public Task<Activity> AddActivity(Guid userId, Activity activity);
-    public Task<User> AddUser(User user);
+   // public Task<User> AddUser(User user);
     public Task<Pet> AddFavouritePet(Guid userId, Guid petId);
     public Task<Role> AddRole(Guid id, Role role);
     #endregion

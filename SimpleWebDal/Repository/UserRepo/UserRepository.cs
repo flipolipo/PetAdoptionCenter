@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleWebDal.Data;
+using SimpleWebDal.Exceptions.UserRepository;
 using SimpleWebDal.Models.Animal;
+using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
-
+using System.Data;
+using System.Reflection;
 
 namespace SimpleWebDal.Repository.UserRepo;
 
@@ -18,20 +21,25 @@ public class UserRepository : IUserRepository
 
     public async Task<User> GetUserById(Guid userId)
     {
+        if (userId == Guid.Empty)
+        {
+            throw new UserValidationException("User ID cannot be empty.");
+        }
         var foundUser = await _dbContext.Users
             .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
             .Include(g => g.Adoptions)
-            .Include(h => h.Pets).FirstOrDefaultAsync(z => z.Id == userId);
+            .Include(h => h.Pets)
+            .FirstOrDefaultAsync(z => z.Id == userId);
         return foundUser;
     }
-
+    /*
     public async Task<User> AddUser(User user)
     {
         if (user == null)
         {
-            throw new ArgumentNullException(nameof(user));
+            throw new UserValidationException("User object cannot be null.");
         }
 
         bool existingUser = await CheckIfUserExistInDataBase(user);
@@ -49,12 +57,15 @@ public class UserRepository : IUserRepository
             }
 
             _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
 
+        } else
+        {
+            throw new UserValidationException("A user with the data provided already exists");
         }
         return user;
-
     }
+    */
     public async Task<IEnumerable<User>> GetAllUsers()
     {
         return await _dbContext.Users
@@ -66,8 +77,11 @@ public class UserRepository : IUserRepository
     }
     public async Task<bool> UpdateUser(User user)
     {
-        var foundUser = await GetUserById(user.Id);
-
+        if (user.Id == Guid.Empty)
+        {
+            throw new UserValidationException("User ID cannot be empty.");
+        }
+        var foundUser = await GetUserById(user.Id) ?? throw new UserValidationException("User object cannot be null.");
         if (foundUser != null)
         {
             var existingAddress = await GetExistingAddressFromDataBase(user);
@@ -84,7 +98,7 @@ public class UserRepository : IUserRepository
             foundUser.BasicInformation.Name = user.BasicInformation.Name;
             foundUser.BasicInformation.Surname = user.BasicInformation.Surname;
             foundUser.BasicInformation.Phone = user.BasicInformation.Phone;
-
+           
             await _dbContext.SaveChangesAsync();
             return true;
         }
@@ -93,7 +107,11 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> DeleteUser(Guid userId)
     {
-        var foundUser = await GetUserById(userId);
+        if (userId == Guid.Empty)
+        {
+            throw new UserValidationException("User ID cannot be empty.");
+        }
+        var foundUser = await GetUserById(userId) ?? throw new UserValidationException("User object cannot be null.");
         if (foundUser != null)
         {
             var userAddress = foundUser.BasicInformation.Address;
@@ -112,8 +130,11 @@ public class UserRepository : IUserRepository
     }
     public async Task<IEnumerable<Activity>> GetUserActivities(Guid userId)
     {
-        var foundUser = await GetUserById(userId);
-
+        if (userId == Guid.Empty)
+        {
+            throw new UserValidationException("User ID cannot be empty.");
+        }
+        var foundUser = await GetUserById(userId) ?? throw new UserValidationException("User object cannot be null.");
         if (foundUser != null && foundUser.UserCalendar != null && foundUser.UserCalendar.Activities != null)
         {
             return foundUser.UserCalendar.Activities.ToList();
@@ -139,11 +160,16 @@ public class UserRepository : IUserRepository
         var foundUser = await GetUserById(userId);
         if (foundUser != null && foundUser.UserCalendar != null)
         {
-            if (!foundUser.UserCalendar.Activities.Contains(activity))
+            var foundActivity = foundUser.UserCalendar.Activities.FirstOrDefault(a => a.Name == activity.Name && a.StartActivityDate == activity.StartActivityDate && a.EndActivityDate == activity.EndActivityDate);
+            if (!foundUser.UserCalendar.Activities.Contains(foundActivity))
             {
                 foundUser.UserCalendar.Activities.Add(activity);
                 await _dbContext.SaveChangesAsync();
+            } else
+            {
+                throw new Exception("Activity is already exist");
             }
+          
         }
         return activity;
     }
@@ -155,7 +181,8 @@ public class UserRepository : IUserRepository
         if (foundUser != null && foundActivity != null)
         {
             foundActivity.Name = activity.Name;
-            foundActivity.ActivityDate = activity.ActivityDate.ToUniversalTime();
+            foundActivity.StartActivityDate = activity.StartActivityDate.ToUniversalTime();
+            foundActivity.EndActivityDate = activity.EndActivityDate.ToUniversalTime();
             await _dbContext.SaveChangesAsync();
             return true;
         }
@@ -356,6 +383,23 @@ public class UserRepository : IUserRepository
         var pets = await GetAllPets();
         return pets.Where(pet => pet.AvaibleForAdoption == true);
     }
+
+    public async Task<IEnumerable<Pet>> GetFilteredPets(Guid shelterId, PetGender gender, Size size, PetType type)
+    {
+        var allPets = await GetAllPets();
+
+        var filteredPets = allPets
+            .Where(pet =>
+                (shelterId == Guid.Empty || pet.ShelterId == shelterId) &&
+                (gender == PetGender.Unknown || pet.Gender == gender) &&
+                (size == Size.Unknown || pet.BasicHealthInfo.Size == size) &&
+                (type == PetType.Unknown || pet.Type == type))
+            .ToList();
+
+        return filteredPets;
+    }
+
+
 }
 
 
