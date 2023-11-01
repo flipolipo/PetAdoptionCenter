@@ -24,13 +24,16 @@ namespace SimpleWebDal.Repository.ShelterRepo
         {
             var foundShelter = await _dbContext.Shelters.Include(x => x.ShelterCalendar)
                 .ThenInclude(a => a.Activities).Include(y => y.ShelterAddress)
-                .Include(b => b.ShelterUsers)
+                .Include(b => b.ShelterUsers).ThenInclude(b=>b.BasicInformation)
+                .Include(b => b.ShelterUsers).ThenInclude(b => b.Roles)
+                
                 .Include(c => c.Adoptions).ThenInclude(a => a.Activity).ThenInclude(a => a.Activities)
                 .Include(d => d.TempHouses).ThenInclude(h => h.TemporaryOwner)
                 .Include(d => d.TempHouses).ThenInclude(h => h.TemporaryHouseAddress)
                 .Include(d => d.TempHouses).ThenInclude(h => h.PetsInTemporaryHouse)
                 .Include(f => f.ShelterPets).ThenInclude(h => h.BasicHealthInfo)
                 .Include(f => f.ShelterPets).ThenInclude(h => h.Calendar).ThenInclude(a => a.Activities)
+                
                 .FirstOrDefaultAsync(e => e.Id == shelterId);
             return foundShelter;
         }
