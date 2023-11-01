@@ -15,8 +15,5 @@ public class ShelterCreateDTO
     public string ShelterDescription { get; set; }
     public string PhoneNumber { get; set; }
     public IFormFile ImageFile { get; set; }
-    //public ICollection<UserCreateDTO>? ShelterUsers { get; set; }
-    //public ICollection<PetCreateDTO>? ShelterPets { get; set; }
-    //public ICollection<AdoptionCreateDTO>? Adoptions { get; set; }
-    //public ICollection<TempHouseCreateDTO>? TempHouses { get; set; }
+    
 }

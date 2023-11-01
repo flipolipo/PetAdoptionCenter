@@ -17,7 +17,6 @@ public class PetAdoptionCenterContext : IdentityDbContext<User, IdentityRole<Gui
     public DbSet<User> Users { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<BasicInformation> BasicInformations { get; set; }
-
     public DbSet<Role> Roles { get; set; }
     public DbSet<TempHouse> TempHouses { get; set; }
     public DbSet<Shelter> Shelters { get; set; }
@@ -29,13 +28,10 @@ public class PetAdoptionCenterContext : IdentityDbContext<User, IdentityRole<Gui
     public DbSet<Activity> Activities { get; set; }
     public DbSet<CalendarActivity> CalendarActivities { get; set; }
 
-
-
     public PetAdoptionCenterContext(DbContextOptions<PetAdoptionCenterContext> options) : base(options)
     {
 
     }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

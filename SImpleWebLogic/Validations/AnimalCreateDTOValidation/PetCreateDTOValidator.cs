@@ -15,9 +15,6 @@ public class PetCreateDTOValidator : AbstractValidator<PetCreateDTO>
         RuleFor(pet => pet.Description)
             .MaximumLength(300).WithMessage("Description cannot exceed 300 characters.");
 
-        //RuleFor(pet => pet.Calendar)
-        //    .NotNull().WithMessage("Calendar cannot be null.");
-
         RuleFor(pet => pet.Status)
             .IsInEnum().WithMessage("Invalid PetStatus value.");
 

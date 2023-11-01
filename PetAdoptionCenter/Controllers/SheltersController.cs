@@ -13,7 +13,6 @@ using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Repository.ShelterRepo;
 using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
 using SimpleWebDal.DTOs.TemporaryHouseDTOs;
-using SimpleWebDal.Models.WebUser.Enums;
 using SimpleWebDal.DTOs.AnimalDTOs.VaccinationDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs.DiseaseDTOs;
 using SimpleWebDal.DTOs.AdoptionDTOs;
@@ -192,8 +191,6 @@ public class SheltersController : ControllerBase
             return BadRequest();
         }
 
-        var activityCreate = _mapper.Map(activityCreateDTO, foundActivity);
-
         bool updated = await _shelterRepository.UpdateShelterActivity(shelterId, foundActivity);
         if (updated)
         {
@@ -307,12 +304,12 @@ public class SheltersController : ControllerBase
     {
         var foundShelter = await _shelterRepository.GetShelterById(shelterId);
         var tempHouseModel = _mapper.Map<TempHouse>(tempHouseCreateDTO);
-        //var tempHouseValidator = _validatorFactory.GetValidator<TempHouseCreateDTO>();
-        //var validationResult = tempHouseValidator.Validate(tempHouseCreateDTO);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest();
-        //}
+        var tempHouseValidator = _validatorFactory.GetValidator<TempHouseCreateDTO>();
+        var validationResult = tempHouseValidator.Validate(tempHouseCreateDTO);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest();
+        }
         var addedTemphouse = await _shelterRepository.AddTempHouse(shelterId, userId, petId, tempHouseModel);
         var tempHouseReadDto = _mapper.Map<TempHouseReadDTO>(tempHouseModel);
         return CreatedAtRoute(nameof(GetTempHouseById), new { shelterId = foundShelter.Id, tempHouseId = addedTemphouse.Id }, tempHouseReadDto);
