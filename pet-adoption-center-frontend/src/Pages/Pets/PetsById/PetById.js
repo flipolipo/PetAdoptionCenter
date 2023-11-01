@@ -11,7 +11,7 @@ import Modal from 'react-modal';
 import './PetById.css';
 import GenderPetLabel from '../../../Components/Enum/GenderPetLabel';
 import SizePetLabel from '../../../Components/Enum/SizePetLabel';
-import StatusPetLabel from '../../../Components/Enum/StatusPetLabel'
+import StatusPetLabel from '../../../Components/Enum/StatusPetLabel';
 import FlipCardAvailable from '../../../Components/FlipCardAvailable';
 
 const PetById = ({ petData, setPetData }) => {
@@ -89,11 +89,12 @@ const PetById = ({ petData, setPetData }) => {
     setSelectedActivity(event);
     console.log(event);
     setVisible(true);
+    console.log(petData)
   };
   const goToPetCalendar = () => {
     setShowCalendar(true);
     setPetDataVisible(false);
-  }
+  };
   const updateActivity = async () => {
     try {
       const resp = await axios.put(
@@ -122,56 +123,69 @@ const PetById = ({ petData, setPetData }) => {
   return (
     <div>
       {petData && petData.BasicHealthInfo && petDataVisible ? (
-      <>
-        <div className="pet-by-id-container">
-          <div className="pet-by-id-card-image-name">
-            <img
-              src={`data:image/jpeg;base64, ${petData.ImageBase64}`}
-              alt=""
-              width="250px"
-              height="100%"
-            />
-            <img
-              src={process.env.PUBLIC_URL + '/Photo/whitePaw.png'}
-              alt="Lapka"
-              className="paw-icon"
-            />
-            <h2>{petData.BasicHealthInfo.Name}</h2>
+        <>
+          <div className="pet-by-id-container">
+            <div className="img-and-info">
+              <div className="botton-pet-by-id">
+                <Link to="/Shelters/adoptions">
+                  <button className="pet-button">Adopt Me</button>
+                </Link>
+                <Link to="/Shelters/temporaryHouses">
+                  <button className="pet-button">
+                    Give me a temporary house
+                  </button>
+                </Link>
+                <button className="pet-button">
+                  Adopt me virtually
+                </button>
+                <button className="pet-button" onClick={goToPetCalendar}>
+                  Take me for a walk
+                </button>
+                <button className="pet-button" onClick={goToPetCalendar}>
+                  Make me visit at shelter
+                </button>
+              </div>
+              <div className="pet-by-id-card-image-name">
+                <img className='pet-img'
+                  src={`data:image/jpeg;base64, ${petData.ImageBase64}`}
+                  alt=""
+                 
+                />
+                <img
+                  src={process.env.PUBLIC_URL + '/Photo/whitePaw.png'}
+                  alt="Lapka"
+                  className="paw-icon"
+                />
+                <h2>{petData.BasicHealthInfo.Name}</h2>
+              </div>
+              <div className="more-info-pet-by-id">
+                <h3>Age: {petData.BasicHealthInfo.Age}</h3>
+                <h3>Size: {SizePetLabel(petData.BasicHealthInfo.Size)}</h3>
+                <h3>Gender: {GenderPetLabel(petData.Gender)}</h3>
+                <h3>Status: {StatusPetLabel(petData.Status)}</h3>
+                <h3>
+                  Is available for adoption:{' '}
+                  {petData.AvaibleForAdoption ? 'Yes' : 'No'}
+                </h3>
+               
+              </div>
+            </div>
+            <div className="description-pet-by-id">
+              <h2>Description: {petData.Description}</h2>
+            </div>
           </div>
-          <div className='more-info-pet-by-id'>
-              <h3>Age: {petData.BasicHealthInfo.Age}</h3>
-              <h3>Size: {SizePetLabel(petData.BasicHealthInfo.Size)}</h3>
-              <h3>Gender: {GenderPetLabel(petData.Gender)}</h3>
-              <h3>Status: {StatusPetLabel(petData.Status)}</h3>
-              <h3>Is available for adoption: {petData.AvaibleForAdoption ? 'Yes' : 'No'}</h3>
-              <h3>Shelter: .......</h3>
+
+          <div className="pets-available-to-adoption">
+            <div className="pet-inscription">
+              <h2>Pets available for adoption</h2>
+            </div>
+            <div className="pet-card">
+              <FlipCardAvailable />
+            </div>
           </div>
-          <div className='description-pet-by-id'>
-            <h2>Description: {petData.Description}</h2>
-          </div>
-        </div>
-        <div className='botton-pet-by-id'>
-        <Link to="/Shelters/adoptions">
-          <button className="go-to-adoption">Adopt Me</button>
-        </Link>
-        <Link to="/Shelters/temporaryHouses">
-          <button className="go-to-tempHouse">Give me a temporary house</button>
-        </Link>
-        <button className='go-to-virtual-adoption'>Adopt me virtually</button>
-        <button className='go-to-calendar' onClick={goToPetCalendar}>Take me for a walk</button>
-        <button className='go-to-calendar' onClick={goToPetCalendar}>Make me visit at shelter</button>
-        </div>
-        <div className='pets-available-to-adoption'>
-        <div className="pet-inscription">
-          <h2>Pets available for adoption</h2>
-        </div>
-        <div className="pet-card">
-          <FlipCardAvailable />
-        </div>
-        </div>
-       </> 
-      ) : (null)}
-       {showCalendar && (
+        </>
+      ) : null}
+      {showCalendar && (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Modal
             isOpen={visible}
@@ -199,10 +213,7 @@ const PetById = ({ petData, setPetData }) => {
             )}
           </Modal>
           <h1>Details for Pet with ID {id}</h1>
-          <MyCalendar
-            events={calendarData}
-            onEventClick={handleEventClick}
-          />
+          <MyCalendar events={calendarData} onEventClick={handleEventClick} />
           <form>
             Name:{' '}
             <input
