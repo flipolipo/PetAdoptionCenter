@@ -15,7 +15,6 @@ function GenderFilter({ onChange }) {
       genderValue = 1;
     }
 
-    // Wywołaj funkcję onChange i przekaż wybraną wartość płci (0 lub 1)
     onChange(genderValue);
   };
 
@@ -32,4 +31,3 @@ function GenderFilter({ onChange }) {
 }
 
 export default GenderFilter;
-

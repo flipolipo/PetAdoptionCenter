@@ -31,4 +31,3 @@ function TypeFilter({ onChange }) {
 }
 
 export default TypeFilter;
-

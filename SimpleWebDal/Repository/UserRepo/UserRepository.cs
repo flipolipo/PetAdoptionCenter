@@ -384,21 +384,6 @@ public class UserRepository : IUserRepository
         return pets.Where(pet => pet.AvaibleForAdoption == true);
     }
 
-    public async Task<IEnumerable<Pet>> GetFilteredPets(Guid shelterId, PetGender gender, Size size, PetType type)
-    {
-        var allPets = await GetAllPets();
-
-        var filteredPets = allPets
-            .Where(pet =>
-                (shelterId == Guid.Empty || pet.ShelterId == shelterId) &&
-                (gender == PetGender.Unknown || pet.Gender == gender) &&
-                (size == Size.Unknown || pet.BasicHealthInfo.Size == size) &&
-                (type == PetType.Unknown || pet.Type == type))
-            .ToList();
-
-        return filteredPets;
-    }
-
 
 }
 

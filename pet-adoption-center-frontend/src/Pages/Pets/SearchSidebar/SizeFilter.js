@@ -34,4 +34,3 @@ function SizeFilter({ onChange }) {
 }
 
 export default SizeFilter;
-
