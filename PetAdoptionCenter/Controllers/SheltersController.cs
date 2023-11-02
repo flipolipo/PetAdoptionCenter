@@ -711,7 +711,8 @@ public class SheltersController : ControllerBase
         var vaccination = _mapper.Map<Vaccination>(vaccinationCreateDTO);
 
         var addedVaccination = await _shelterRepository.AddPetVaccination(shelterId, petId, vaccination);
-        return CreatedAtRoute(nameof(GetPetVaccinationById), new { shelterId, petId, vaccinationId = addedVaccination.Id });
+        var vaccinationReadDto = _mapper.Map<VaccinationReadDTO>(vaccination);
+        return CreatedAtRoute(nameof(GetPetVaccinationById), new { shelterId, petId, vaccinationId = addedVaccination.Id }, vaccinationReadDto);
 
     }
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -735,7 +736,8 @@ public class SheltersController : ControllerBase
         var disease = _mapper.Map<Disease>(diseaseCreateDTO);
 
         var addedDisease = await _shelterRepository.AddPetDisease(shelterId, petId, disease);
-        return CreatedAtRoute(nameof(GetPetDiseaseById), new { shelterId, petId, diseaseId = addedDisease.Id });
+        var diseaseReadDto = _mapper.Map<DiseaseReadDTO>(disease);
+        return CreatedAtRoute(nameof(GetPetDiseaseById), new { shelterId, petId, diseaseId = addedDisease.Id }, diseaseReadDto);
 
     }
 

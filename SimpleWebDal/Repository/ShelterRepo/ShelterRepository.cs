@@ -23,13 +23,16 @@ namespace SimpleWebDal.Repository.ShelterRepo
         private async Task<Shelter> FindShelter(Guid shelterId)
         {
             var foundShelter = await _dbContext.Shelters.Include(x => x.ShelterCalendar)
-                .ThenInclude(a => a.Activities).Include(y => y.ShelterAddress)
-                .Include(b => b.ShelterUsers)
+                .ThenInclude(a => a.Activities)
+                .Include(y => y.ShelterAddress)
+                .Include(b => b.ShelterUsers).ThenInclude(r => r.BasicInformation).ThenInclude(a => a.Address)
+                .Include(b => b.ShelterUsers).ThenInclude(r => r.Roles)
                 .Include(c => c.Adoptions).ThenInclude(a => a.Activity).ThenInclude(a => a.Activities)
                 .Include(d => d.TempHouses).ThenInclude(h => h.TemporaryOwner)
                 .Include(d => d.TempHouses).ThenInclude(h => h.TemporaryHouseAddress)
                 .Include(d => d.TempHouses).ThenInclude(h => h.PetsInTemporaryHouse)
-                .Include(f => f.ShelterPets).ThenInclude(h => h.BasicHealthInfo)
+                .Include(f => f.ShelterPets).ThenInclude(h => h.BasicHealthInfo).ThenInclude(v => v.Vaccinations)
+                .Include(f => f.ShelterPets).ThenInclude(h => h.BasicHealthInfo).ThenInclude(v => v.MedicalHistory)
                 .Include(f => f.ShelterPets).ThenInclude(h => h.Calendar).ThenInclude(a => a.Activities)
                 .FirstOrDefaultAsync(e => e.Id == shelterId);
             return foundShelter;

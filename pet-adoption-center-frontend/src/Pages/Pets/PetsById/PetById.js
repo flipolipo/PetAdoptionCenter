@@ -25,6 +25,8 @@ const PetById = ({ petData, setPetData }) => {
   const [edit, setEdit] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [petDataVisible, setPetDataVisible] = useState(true);
+  const [shelterData, setShelterData] = useState([])
+  const [shelterAddress, setShelterAddress] = useState("")
 
   Modal.setAppElement('#root');
 
@@ -42,7 +44,6 @@ const PetById = ({ petData, setPetData }) => {
     fetchCalendarDataForPet(id)
       .then((data) => {
         setCalendarData(data.Activities);
-        //console.log(data.Activities);
       })
       .catch((error) => console.error('Calendar download error:', error));
   }, [id]);
@@ -53,9 +54,18 @@ const PetById = ({ petData, setPetData }) => {
         setPetData(data);
         console.log(data);
       })
+      .then(()=>{
+        fetchShelter();
+      })
+      .then(() => {
+        setShelterAddress(`${shelterData.ShelterAddress.City} ${shelterData.ShelterAddress.Street} ${shelterData.ShelterAddress.HouseNumber}/${shelterData.ShelterAddress.FlatNumber}`) 
+      })
       .catch((error) => console.error('Calendar download error:', error));
   }, [id]);
-
+  useEffect(() => {
+    
+  fetchShelter();
+  }, [])
   const updateEndDate = (e) => {
     const date = new Date(e);
     const iso = date.toISOString();
@@ -66,6 +76,15 @@ const PetById = ({ petData, setPetData }) => {
     const iso = date.toISOString();
     setStartDate(iso);
   };
+  const fetchShelter = async () =>{
+    try{
+      const shelterResponse = await axios.get(`${address_url}/Shelters/${petData.ShelterId}`)
+      setShelterData(shelterResponse.data)
+      console.log(shelterData)
+    }catch(err){
+      console.log("shelter fetch error: " + err)
+    }
+  }
   const handleSubmit = async () => {
     try {
       const resp = await axios.post(
@@ -98,7 +117,7 @@ const PetById = ({ petData, setPetData }) => {
   const updateActivity = async () => {
     try {
       const resp = await axios.put(
-        `https://localhost:7292/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`,
+        `${address_url}/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`,
         {
           Name: activityName,
           StartActivityDate: startDate,
@@ -113,7 +132,7 @@ const PetById = ({ petData, setPetData }) => {
   const RemoveActivity = async () => {
     try {
       const resp = await axios.delete(
-        `https://localhost:7292/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`
+        `${address_url}/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`
       );
       console.log(resp);
     } catch (err) {
@@ -163,6 +182,7 @@ const PetById = ({ petData, setPetData }) => {
                 <h3>Size: {SizePetLabel(petData.BasicHealthInfo.Size)}</h3>
                 <h3>Gender: {GenderPetLabel(petData.Gender)}</h3>
                 <h3>Status: {StatusPetLabel(petData.Status)}</h3>
+                <h3>Shelter Address: {shelterAddress}</h3>
                 <h3>
                   Is available for adoption:{' '}
                   {petData.AvaibleForAdoption ? 'Yes' : 'No'}
@@ -208,7 +228,7 @@ const PetById = ({ petData, setPetData }) => {
             ) : (
               <div>
                 <button onClick={() => setEdit(true)}>edit</button>
-                <button>Delete</button>
+                <button onClick={() => RemoveActivity}>Delete</button>
               </div>
             )}
           </Modal>
