@@ -1,74 +1,99 @@
-.pet-by-id-container{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
+.pet-by-id-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
 }
-.pet-by-id-card-image-name{
-    display: flex;
+.pet-by-id-card-image-name {
+  display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: #FACEBC;
+  background-color: #facebc;
   border-radius: 15px;
   margin-right: 20px;
-  border-style:outset;
-  border-color: #d88a6d;;
+  border-style: outset;
+  border-color: #d88a6d;
   width: 19vw;
   object-fit: cover;
 }
-.pet-img{
-    object-fit: cover;
-    width: 17vw;
-    height: 17vw;
+.pet-img {
+  object-fit: cover;
+  width: 17vw;
+  height: 17vw;
 }
-.more-info-pet-by-id{
-    display: flex;
+.more-info-pet-by-id {
+  display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: #FACEBC;
+  background-color: #facebc;
   border-radius: 15px;
-  border-style:outset;
+  border-style: outset;
   border-color: #d88a6d;
   max-width: 20vw;
   width: 19vw;
   max-height: 20vh;
   height: 20vh;
 }
-.description-pet-by-id{
-    padding: 20px;
-  background-color: #FACEBC;
+.description-pet-by-id {
+  padding: 20px;
+  background-color: #facebc;
   border-radius: 15px;
   margin-top: 20px;
   width: 40vw;
   height: 25vh;
   margin-bottom: 25px;
-  border-style:outset;
+  border-style: outset;
   border-color: #d88a6d;
 }
-.img-and-info{
-    display: flex;
-    flex-direction: row;
+.img-and-info {
+  display: flex;
+  flex-direction: row;
 }
-.botton-pet-by-id{
-    display: flex;
-    flex-direction: column;
-    
+.botton-pet-by-id {
+  display: flex;
+  flex-direction: column;
 }
-.pet-button{
-    cursor: pointer;
-    position: sticky;
-    font-size: 1.5rem;
-    font-weight: 700;
-    font-family: var(--font-outfit);
-    color: var(--color-black);
-    text-align: center;
-    padding: 20px;
-    background-color: rgba(246, 158, 123, 1);
-    margin-top: 10px;
-    border-radius: 10px;
-    width: 280px;
-    margin-right: 20px;
+.pet-button {
+  cursor: pointer;
+  position: sticky;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(246, 158, 123, 1);
+  margin-top: 10px;
+  border-radius: 10px;
+  width: 280px;
+  margin-right: 20px;
+}
+.add-activity-container {
+  display: flex;
+  flex-direction: column;
+  width: 15vw;
+  align-items: center;
+  background-color: rgba(246, 158, 123, 1);
+  border-radius: 10px;
+  padding: 20px;
+  font-weight: bold;
+}
+.activity-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.activity-form button {
+  border: 0;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.activity-form input{
+    border: 0;
+    border-radius: 5px;
+    height: 20px
 }
