@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace SimpleWebDal.Migrations
 {
     /// <inheritdoc />
-    public partial class addRoles : Migration
+    public partial class addReact : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -12,7 +12,7 @@ import ScrollHandler from './Components/ScrollHandler';
 import Footer from './Components/Footer';
 import React, { useState } from 'react';
 import { UserProvider } from './Components/UserContext.js';
-
+import ShelterOwner from './Pages/Profile/ShelterOwner';
 
 function App() {
   const [petData, setPetData] = useState([]);
@@ -41,6 +41,7 @@ function App() {
                 element={<PetById petData={petData} setPetData={setPetData} />}
               />
               <Route path="/profile" element={<Profile />} />
+              <Route path='/ShelterOwner/:shelterId' element={<ShelterOwner />} />
             </Routes>
           </div>
 

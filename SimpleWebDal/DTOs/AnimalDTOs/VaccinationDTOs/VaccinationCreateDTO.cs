@@ -2,6 +2,6 @@
 
 public class VaccinationCreateDTO
 {
-    //public string VaccinationName { get; set; }
-    //public DateTimeOffset date { get; set; }
+    public string VaccinationName { get; set; }
+    public DateTimeOffset date { get; set; }
 }

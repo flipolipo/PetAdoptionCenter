@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.shelter-owner-container {
+  font-family: 'Poppins', sans-serif;
+  padding: 20px;
+  animation: fadeIn 1s ease-in-out;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.shelter-title {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+  border-radius: 10px;
+}
+
+.shelter-info-title,
+.shelter-users-title,
+.shelter-pets-title,
+.shelter-activities-title,
+.shelter-adoptions-title,
+.adoption-info-title {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background: white;
+  border-radius: 10px;
+}
+.shelter-info-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shelter-basic-info {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.shelter-image-container {
+  flex: 1;
+  text-align: center;
+}
+
+.shelter-description {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.shelter-info,
+.shelter-users,
+.shelter-pets,
+.shelter-activities,
+.shelter-adoptions {
+  background-color: #ffffff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shelter-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.shelter-users-list,
+.shelter-pets-list,
+.shelter-activities-list,
+.shelter-adoptions-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.shelter-user-item,
+.shelter-pet-item,
+.shelter-activity-item,
+.adoption-info {
+  background-color: #ffffff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shelter-user-item:hover,
+.shelter-pet-item:hover,
+.shelter-activity-item:hover,
+.adoption-info:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.adoption-general-info,
+.adoption-status {
+  background-color: #f7f7f7;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 10px;
+}
+
+.adoption-poll-info,
+.adoption-contract-info {
+  font-weight: 500;
+  color: #333;
+}

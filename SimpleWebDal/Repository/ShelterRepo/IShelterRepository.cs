@@ -38,6 +38,8 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<IEnumerable<Adoption>> GetAllShelterAdoptions(Guid shelterId);
         public Task<Adoption> GetShelterAdoptionById(Guid shelterId, Guid adoptionId);
         public Task<IEnumerable<Pet>> GetAllAvaiblePets(Guid shelterId);
+        public Task<Adoption> GetAdoptionFromDataBaseById(Guid adoptionId);
+
         #endregion
 
         #region //POST
@@ -51,12 +53,13 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Disease> AddPetDisease(Guid shelterId, Guid petId, Disease disease);
         public Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption);
         public Task<Adoption> InitializePetAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption);
-        public Task<Adoption> MeetingsPetFirstTheAdoption(Guid shelterId, Guid petId, Guid userId, Guid adoptionId, Activity activity);
+        public Task<Adoption> ChooseMeetingDatesForAdoption(Guid shelterId, Guid petId, Guid userId, Guid adoptionId, Guid activityId);
+        public Task<Adoption> PetAdoptionMeetingsDone(Guid adoptionId);
         public Task<Adoption> ContractForPetAdoption(Guid shelterId, Guid petId, Guid userId, Guid adoptionId, string contractAdoption);
         #endregion
 
         #region //PUT
-        public Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city);
+        public Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city, string phone);
         public Task<bool> UpdateShelterPet(Guid shelterId, Guid petId, PetGender gender, PetType type, string description, PetStatus status, bool avaibleForAdoption);
         public Task<bool> UpdateShelterActivity(Guid shelterId, Activity activity);
         public Task<bool> AddShelterUser(Guid shelterId, Guid userId, Role role);
