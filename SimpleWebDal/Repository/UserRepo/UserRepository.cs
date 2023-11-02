@@ -27,7 +27,7 @@ public class UserRepository : IUserRepository
             .Include(b => b.BasicInformation).ThenInclude(c => c.Address)
             .Include(d => d.Roles)
             .Include(e => e.UserCalendar).ThenInclude(f => f.Activities)
-            .Include(g => g.Adoptions)
+            .Include(g => g.Adoptions).ThenInclude(a => a.Activity).ThenInclude(a => a.Activities)
             .Include(h => h.Pets)
             .FirstOrDefaultAsync(z => z.Id == userId);
         return foundUser;
