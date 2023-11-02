@@ -729,7 +729,6 @@ public class SheltersController : ControllerBase
     public async Task<ActionResult<VaccinationReadDTO>> AddVaccination(Guid shelterId, Guid petId, VaccinationCreateDTO vaccinationCreateDTO)
     {
         var vaccination = _mapper.Map<Vaccination>(vaccinationCreateDTO);
-
         var addedVaccination = await _shelterRepository.AddPetVaccination(shelterId, petId, vaccination);
         var vaccinationReadDto = _mapper.Map<VaccinationReadDTO>(vaccination);
         return CreatedAtRoute(nameof(GetPetVaccinationById), new { shelterId, petId, vaccinationId = addedVaccination.Id }, vaccinationReadDto);
