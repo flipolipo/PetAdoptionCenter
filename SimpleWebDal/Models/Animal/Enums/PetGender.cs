@@ -3,5 +3,6 @@
 public enum PetGender
 {
     Male,
-    Female
+    Female,
+    Unknown
 }

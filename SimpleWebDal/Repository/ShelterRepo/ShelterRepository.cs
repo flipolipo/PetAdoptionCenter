@@ -34,6 +34,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 .Include(f => f.ShelterPets).ThenInclude(h => h.BasicHealthInfo).ThenInclude(v => v.Vaccinations)
                 .Include(f => f.ShelterPets).ThenInclude(h => h.BasicHealthInfo).ThenInclude(v => v.MedicalHistory)
                 .Include(f => f.ShelterPets).ThenInclude(h => h.Calendar).ThenInclude(a => a.Activities)
+                
                 .FirstOrDefaultAsync(e => e.Id == shelterId);
             return foundShelter;
         }
@@ -61,14 +62,13 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return filteredUsers;
         }
 
-        //TO FIX!!!!!!!
+
         public async Task<Activity> AddActivityToCalendar(Guid shelterId, Activity activity)
         {
             var foundShelter = await FindShelter(shelterId);
 
             foundShelter.ShelterCalendar.Activities.Add(activity);
-            // _dbContext.Shelters.Update(foundShelter);
-            //_dbContext.Add(activity);
+            
             _dbContext.SaveChanges();
             return activity;
         }
@@ -155,14 +155,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             {
                 if (foundPet.Status != PetStatus.OnAdoptionProccess && foundPet.Status != PetStatus.Adopted && foundPet.Status != PetStatus.TemporaryHouse)
                 {
-                    //if(foundUser == tempHouse.TemporaryOwner)
-                    //{
-                    //    foundPet.Status = PetStatus.TemporaryHouse;
-                    //    tempHouse.PetsInTemporaryHouse.Add(foundPet);
-                    //    foundUser.Pets.Add(foundPet);
-                    //    await _dbContext.SaveChangesAsync();
-                    //    return tempHouse;
-                    //} 
+                     
                     foundPet.Status = PetStatus.TemporaryHouse;
                     tempHouse.TemporaryOwner = foundUser;
                     tempHouse.TemporaryHouseAddress = foundUser.BasicInformation.Address;
@@ -176,7 +169,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return null;
         }
 
-        //TO FIX!!!!!
+        
         public async Task<bool> UpdateTempHouse(Guid shelterId, TempHouse tempHouse, Guid petId)
         {
             var foundShelter = await FindShelter(shelterId);

@@ -12,6 +12,7 @@ import './PetById.css';
 import GenderPetLabel from '../../../Components/Enum/GenderPetLabel';
 import SizePetLabel from '../../../Components/Enum/SizePetLabel';
 import StatusPetLabel from '../../../Components/Enum/StatusPetLabel';
+import FlipCardAvailable from '../../../Components/FlipCardAvailable';
 
 const PetById = ({ petId, userId, adoptionId }) => {
   const { id } = useParams();
@@ -28,6 +29,8 @@ const PetById = ({ petId, userId, adoptionId }) => {
   const [choosenMeeting, setChoosenMeeting] = useState([]);
   const [petAdoptionData, setPetAdoptionData] = useState();
   const [petData, setPetData] = useState({});
+  const [shelterData, setShelterData] = useState([])
+  const [shelterAddress, setShelterAddress] = useState("")
 
   Modal.setAppElement('#root');
 
@@ -66,10 +69,18 @@ const PetById = ({ petId, userId, adoptionId }) => {
         setPetData(data);
        // console.log(data);
       })
-      .catch((error) => console.error('Data download error:', error));
-  };
-  
-
+      .then(()=>{
+        fetchShelter();
+      })
+      .then(() => {
+        setShelterAddress(`${shelterData.ShelterAddress.City} ${shelterData.ShelterAddress.Street} ${shelterData.ShelterAddress.HouseNumber}/${shelterData.ShelterAddress.FlatNumber}`) 
+      })
+      .catch((error) => console.error('Calendar download error:', error));
+  }, [id]);
+  useEffect(() => {
+    
+  fetchShelter();
+  }, [])
   const updateEndDate = (e) => {
     const date = new Date(e);
     const iso = date.toISOString();
@@ -80,6 +91,15 @@ const PetById = ({ petId, userId, adoptionId }) => {
     const iso = date.toISOString();
     setStartDate(iso);
   };
+  const fetchShelter = async () =>{
+    try{
+      const shelterResponse = await axios.get(`${address_url}/Shelters/${petData.ShelterId}`)
+      setShelterData(shelterResponse.data)
+      console.log(shelterData)
+    }catch(err){
+      console.log("shelter fetch error: " + err)
+    }
+  }
   const handleSubmit = async () => {
     try {
       const resp = await axios.post(
@@ -104,6 +124,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
     setSelectedActivity(event);
     //console.log(event);
     setVisible(true);
+    console.log(petData)
   };
   const goToPetCalendar = () => {
     setShowCalendar(true);
@@ -112,7 +133,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
   const updateActivity = async () => {
     try {
       const resp = await axios.put(
-        `https://localhost:7292/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`,
+        `${address_url}/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`,
         {
           Name: activityName,
           StartActivityDate: startDate,
@@ -127,7 +148,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
   const RemoveActivity = async () => {
     try {
       const resp = await axios.delete(
-        `https://localhost:7292/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`
+        `${address_url}/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`
       );
       //console.log(resp);
     } catch (err) {
@@ -221,6 +242,70 @@ const PetById = ({ petId, userId, adoptionId }) => {
             Know your pet
           </button>
         </div>
+      ) : null}
+      {showCalendar && (
+        <>
+          <div className="pet-by-id-container">
+            <div className="img-and-info">
+              <div className="botton-pet-by-id">
+                <Link to="/Shelters/adoptions">
+                  <button className="pet-button">Adopt Me</button>
+                </Link>
+                <Link to="/Shelters/temporaryHouses">
+                  <button className="pet-button">
+                    Give me a temporary house
+                  </button>
+                </Link>
+                <button className="pet-button">
+                  Adopt me virtually
+                </button>
+                <button className="pet-button" onClick={goToPetCalendar}>
+                  Take me for a walk
+                </button>
+                <button className="pet-button" onClick={goToPetCalendar}>
+                  Make me visit at shelter
+                </button>
+              </div>
+              <div className="pet-by-id-card-image-name">
+                <img className='pet-img'
+                  src={`data:image/jpeg;base64, ${petData.ImageBase64}`}
+                  alt=""
+                 
+                />
+                <img
+                  src={process.env.PUBLIC_URL + '/Photo/whitePaw.png'}
+                  alt="Lapka"
+                  className="paw-icon"
+                />
+                <h2>{petData.BasicHealthInfo.Name}</h2>
+              </div>
+              <div className="more-info-pet-by-id">
+                <h3>Age: {petData.BasicHealthInfo.Age}</h3>
+                <h3>Size: {SizePetLabel(petData.BasicHealthInfo.Size)}</h3>
+                <h3>Gender: {GenderPetLabel(petData.Gender)}</h3>
+                <h3>Status: {StatusPetLabel(petData.Status)}</h3>
+                <h3>Shelter Address: {shelterAddress}</h3>
+                <h3>
+                  Is available for adoption:{' '}
+                  {petData.AvaibleForAdoption ? 'Yes' : 'No'}
+                </h3>
+               
+              </div>
+            </div>
+            <div className="description-pet-by-id">
+              <h2>Description: {petData.Description}</h2>
+            </div>
+          </div>
+
+          <div className="pets-available-to-adoption">
+            <div className="pet-inscription">
+              <h2>Pets available for adoption</h2>
+            </div>
+            <div className="pet-card">
+              <FlipCardAvailable />
+            </div>
+          </div>
+        </>
       ) : null}
       {showCalendar && (
         <LocalizationProvider dateAdapter={AdapterDayjs}>

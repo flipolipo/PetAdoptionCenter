@@ -4,6 +4,6 @@ public class Disease
 {
    public Guid Id { get; set; }
     public string NameOfdisease { get; set; }
-    public DateTime IllnessStart { get; set; }
-    public DateTime IllnessEnd { get; set; }
+    public DateTimeOffset IllnessStart { get; set; }
+    public DateTimeOffset IllnessEnd { get; set; }
 }

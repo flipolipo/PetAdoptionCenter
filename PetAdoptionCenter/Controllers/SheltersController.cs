@@ -13,7 +13,6 @@ using SImpleWebLogic.Configuration;
 using SImpleWebLogic.Repository.ShelterRepo;
 using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
 using SimpleWebDal.DTOs.TemporaryHouseDTOs;
-using SimpleWebDal.Models.WebUser.Enums;
 using SimpleWebDal.DTOs.AnimalDTOs.VaccinationDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs.DiseaseDTOs;
 using SimpleWebDal.DTOs.AdoptionDTOs;
@@ -192,8 +191,6 @@ public class SheltersController : ControllerBase
             return BadRequest();
         }
 
-        var activityCreate = _mapper.Map(activityCreateDTO, foundActivity);
-
         bool updated = await _shelterRepository.UpdateShelterActivity(shelterId, foundActivity);
         if (updated)
         {
@@ -307,12 +304,12 @@ public class SheltersController : ControllerBase
     {
         var foundShelter = await _shelterRepository.GetShelterById(shelterId);
         var tempHouseModel = _mapper.Map<TempHouse>(tempHouseCreateDTO);
-        //var tempHouseValidator = _validatorFactory.GetValidator<TempHouseCreateDTO>();
-        //var validationResult = tempHouseValidator.Validate(tempHouseCreateDTO);
-        //if (!validationResult.IsValid)
-        //{
-        //    return BadRequest();
-        //}
+        var tempHouseValidator = _validatorFactory.GetValidator<TempHouseCreateDTO>();
+        var validationResult = tempHouseValidator.Validate(tempHouseCreateDTO);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest();
+        }
         var addedTemphouse = await _shelterRepository.AddTempHouse(shelterId, userId, petId, tempHouseModel);
         var tempHouseReadDto = _mapper.Map<TempHouseReadDTO>(tempHouseModel);
         return CreatedAtRoute(nameof(GetTempHouseById), new { shelterId = foundShelter.Id, tempHouseId = addedTemphouse.Id }, tempHouseReadDto);
@@ -734,7 +731,8 @@ public class SheltersController : ControllerBase
         var vaccination = _mapper.Map<Vaccination>(vaccinationCreateDTO);
 
         var addedVaccination = await _shelterRepository.AddPetVaccination(shelterId, petId, vaccination);
-        return CreatedAtRoute(nameof(GetPetVaccinationById), new { shelterId, petId, vaccinationId = addedVaccination.Id });
+        var vaccinationReadDto = _mapper.Map<VaccinationReadDTO>(vaccination);
+        return CreatedAtRoute(nameof(GetPetVaccinationById), new { shelterId, petId, vaccinationId = addedVaccination.Id }, vaccinationReadDto);
 
     }
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -758,7 +756,8 @@ public class SheltersController : ControllerBase
         var disease = _mapper.Map<Disease>(diseaseCreateDTO);
 
         var addedDisease = await _shelterRepository.AddPetDisease(shelterId, petId, disease);
-        return CreatedAtRoute(nameof(GetPetDiseaseById), new { shelterId, petId, diseaseId = addedDisease.Id });
+        var diseaseReadDto = _mapper.Map<DiseaseReadDTO>(disease);
+        return CreatedAtRoute(nameof(GetPetDiseaseById), new { shelterId, petId, diseaseId = addedDisease.Id }, diseaseReadDto);
 
     }
 
