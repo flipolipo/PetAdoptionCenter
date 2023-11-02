@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import MyCalendar from '../../../Components/BigCalendarActivity/CalendarActivity';
-import { fetchCalendarDataForPet } from '../../../Service/fetchCalendarDataForPet';
-import { fetchDataForPet } from '../../../Service/fetchDataForPet';
+import { fetchDataForPet } from '../../../Service/fetchDataForPet'
+import { fetchCalendarDataForPet } from '../../../Service/fetchCalendarDataForPet'
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { address_url } from '../../../Service/url';
 import axios from 'axios';
 import Modal from 'react-modal';
 import './PetById.css';
 import GenderPetLabel from '../../../Components/Enum/GenderPetLabel';
 import SizePetLabel from '../../../Components/Enum/SizePetLabel';
 import StatusPetLabel from '../../../Components/Enum/StatusPetLabel';
+import { address_url } from '../../../Service/url';
 import FlipCardAvailable from '../../../Components/FlipCardAvailable';
 
-const PetById = ({ petData, setPetData }) => {
+const PetById = ({ petData, setPetData, petId, userId, adoptionId }) => {
   const { id } = useParams();
   const [calendarData, setCalendarData] = useState([]);
   const [selectedActivity, setSelectedActivity] = useState(null);
@@ -25,8 +25,11 @@ const PetById = ({ petData, setPetData }) => {
   const [edit, setEdit] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [petDataVisible, setPetDataVisible] = useState(true);
-  const [shelterData, setShelterData] = useState([])
-  const [shelterAddress, setShelterAddress] = useState("")
+  const [shelterData, setShelterData] = useState([]);
+  const [shelterAddress, setShelterAddress] = useState('');
+  const [message, setMessage] = useState(null);
+  const [choosenMeeting, setChoosenMeeting] = useState([]);
+  const [petAdoptionData, setPetAdoptionData] = useState({});
 
   Modal.setAppElement('#root');
 
@@ -40,51 +43,48 @@ const PetById = ({ petData, setPetData }) => {
       transform: 'translate(-50%, -50%)',
     },
   };
-  useEffect(() => {
-    fetchCalendarDataForPet(id)
-      .then((data) => {
-        setCalendarData(data.Activities);
-      })
-      .catch((error) => console.error('Calendar download error:', error));
-  }, [id]);
 
   useEffect(() => {
-    fetchDataForPet(id)
-      .then((data) => {
-        setPetData(data);
-        console.log(data);
-      })
-      .then(()=>{
-        fetchShelter();
-      })
-      .then(() => {
-        setShelterAddress(`${shelterData.ShelterAddress.City} ${shelterData.ShelterAddress.Street} ${shelterData.ShelterAddress.HouseNumber}/${shelterData.ShelterAddress.FlatNumber}`) 
-      })
-      .catch((error) => console.error('Calendar download error:', error));
+    const fetchData = async (param) => {
+      try {
+        const calendarResponse = await fetchCalendarDataForPet(param);
+        setCalendarData(calendarResponse.Activities);
+
+        const dataResponse = await fetchDataForPet(param);
+        setPetData(dataResponse);
+
+        const shelterResponse = await axios.get(`${address_url}/Shelters/${dataResponse.ShelterId}`);
+        setShelterData(shelterResponse.data);
+
+        const shelterAddr = `${shelterResponse.data.ShelterAddress.City} ${shelterResponse.data.ShelterAddress.Street} ${shelterResponse.data.ShelterAddress.HouseNumber}/${shelterResponse.data.ShelterAddress.FlatNumber}`;
+        setShelterAddress(shelterAddr);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    if (id) {
+      fetchData(id);
+    }
   }, [id]);
-  useEffect(() => {
-    
-  fetchShelter();
-  }, [])
+
   const updateEndDate = (e) => {
     const date = new Date(e);
     const iso = date.toISOString();
     setEndDate(iso);
   };
+
   const updateStartDate = (e) => {
     const date = new Date(e);
     const iso = date.toISOString();
     setStartDate(iso);
   };
-  const fetchShelter = async () =>{
-    try{
-      const shelterResponse = await axios.get(`${address_url}/Shelters/${petData.ShelterId}`)
-      setShelterData(shelterResponse.data)
-      console.log(shelterData)
-    }catch(err){
-      console.log("shelter fetch error: " + err)
-    }
-  }
+
+  const handleEventClick = (event) => {
+    setSelectedActivity(event);
+    setVisible(true);
+  };
+
   const handleSubmit = async () => {
     try {
       const resp = await axios.post(
@@ -95,25 +95,15 @@ const PetById = ({ petData, setPetData }) => {
           EndActivityDate: endDate,
         }
       );
-      console.log('activityName: ' + activityName);
-      console.log('activityStart: ' + startDate);
-      console.log('activityEnd: ' + endDate);
-      console.log('Pet :' + petData);
-      console.log('response: ' + resp.data);
+
+      setCalendarData(resp.data);
+      setMessage('Activity added successfully');
     } catch (err) {
       console.log(err);
+      setMessage('Failed to add activity');
     }
   };
-  const handleEventClick = (event) => {
-    setSelectedActivity(event);
-    console.log(event);
-    setVisible(true);
-    console.log(petData)
-  };
-  const goToPetCalendar = () => {
-    setShowCalendar(true);
-    setPetDataVisible(false);
-  };
+
   const updateActivity = async () => {
     try {
       const resp = await axios.put(
@@ -124,21 +114,48 @@ const PetById = ({ petData, setPetData }) => {
           EndActivityDate: endDate,
         }
       );
-      console.log(resp);
+
+      setCalendarData(resp.data);
+      setMessage('Activity updated successfully');
     } catch (err) {
       console.log(err);
+      setMessage('Failed to update activity');
     }
   };
-  const RemoveActivity = async () => {
+
+  const removeActivity = async () => {
     try {
       const resp = await axios.delete(
         `${address_url}/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`
       );
-      console.log(resp);
+
+      setCalendarData(resp.data);
+      setMessage('Activity deleted successfully');
     } catch (err) {
       console.log(err);
+      setMessage('Failed to delete activity');
     }
   };
+
+  const handleMeetForAdoption = async () => {
+    try {
+      const response = await axios.post(
+        `${address_url}/Shelters/${petData.ShelterId}/pets/${petId}/calendar/activities/${selectedActivity.id}/users/${userId}/adoptions/${adoptionId}/meetings-adoption`
+      );
+
+      setChoosenMeeting(response.data);
+      setMessage('Meeting for adoption added successfully');
+    } catch (error) {
+      console.error(error);
+      setMessage('Failed to add meeting for adoption');
+    }
+  };
+
+  const goToPetCalendar = () => {
+    setShowCalendar(true);
+    setPetDataVisible(false);
+  };
+
   return (
     <div>
       {petData && petData.BasicHealthInfo && petDataVisible ? (
@@ -146,29 +163,35 @@ const PetById = ({ petData, setPetData }) => {
           <div className="pet-by-id-container">
             <div className="img-and-info">
               <div className="botton-pet-by-id">
-                <Link to="/Shelters/adoptions">
-                  <button className="pet-button">Adopt Me</button>
-                </Link>
-                <Link to="/Shelters/temporaryHouses">
-                  <button className="pet-button">
-                    Give me a temporary house
-                  </button>
-                </Link>
-                <button className="pet-button">
-                  Adopt me virtually
-                </button>
-                <button className="pet-button" onClick={goToPetCalendar}>
-                  Take me for a walk
-                </button>
-                <button className="pet-button" onClick={goToPetCalendar}>
-                  Make me visit at shelter
-                </button>
+                {petData.AvaibleForAdoption && (
+                  <>
+                    <Link to="/Shelters/adoptions">
+                      <button className="pet-button">Adopt Me</button>
+                    </Link>
+                    <Link to="/Shelters/temporaryHouses">
+                      <button className="pet-button">
+                        Give me a temporary house
+                      </button>
+                    </Link>
+                  </>
+                )}
+                {petData.Status !== 3 && (
+                  <>
+                    <button className="pet-button">Adopt me virtually</button>
+                    <button className="pet-button" onClick={goToPetCalendar}>
+                      Take me for a walk
+                    </button>
+                    <button className="pet-button" onClick={goToPetCalendar}>
+                      Make me visit at shelter
+                    </button>
+                  </>
+                )}
               </div>
               <div className="pet-by-id-card-image-name">
-                <img className='pet-img'
+                <img
+                  className='pet-img'
                   src={`data:image/jpeg;base64, ${petData.ImageBase64}`}
                   alt=""
-                 
                 />
                 <img
                   src={process.env.PUBLIC_URL + '/Photo/whitePaw.png'}
@@ -187,7 +210,6 @@ const PetById = ({ petData, setPetData }) => {
                   Is available for adoption:{' '}
                   {petData.AvaibleForAdoption ? 'Yes' : 'No'}
                 </h3>
-               
               </div>
             </div>
             <div className="description-pet-by-id">
@@ -228,7 +250,8 @@ const PetById = ({ petData, setPetData }) => {
             ) : (
               <div>
                 <button onClick={() => setEdit(true)}>edit</button>
-                <button onClick={() => RemoveActivity}>Delete</button>
+                <button onClick={removeActivity}>Delete</button>
+                <button onClick={handleMeetForAdoption}>Meet for adoption</button>
               </div>
             )}
           </Modal>
@@ -242,7 +265,7 @@ const PetById = ({ petData, setPetData }) => {
             ></input>
             Start Date: <DateTimePicker onChange={(e) => updateStartDate(e)} />
             End Date: <DateTimePicker onChange={(e) => updateEndDate(e)} />
-            <button onClick={handleSubmit}>asdasd</button>
+            <button onClick={handleSubmit}>Submit</button>
           </form>
         </LocalizationProvider>
       )}
