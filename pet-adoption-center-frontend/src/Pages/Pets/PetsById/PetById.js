@@ -13,6 +13,7 @@ import GenderPetLabel from '../../../Components/Enum/GenderPetLabel';
 import SizePetLabel from '../../../Components/Enum/SizePetLabel';
 import StatusPetLabel from '../../../Components/Enum/StatusPetLabel';
 import FlipCardAvailable from '../../../Components/FlipCardAvailable';
+import { fetchDataForShelter } from '../../../Service/fetchDataForShelter';
 
 const PetById = ({ petId, userId, adoptionId }) => {
   const { id } = useParams();
@@ -28,7 +29,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
   const [message, setMessage] = useState(null);
   const [choosenMeeting, setChoosenMeeting] = useState([]);
   const [petData, setPetData] = useState({});
-  const [shelterData, setShelterData] = useState([]);
+  const [shelterData, setShelterData] = useState({});
   const [shelterAddress, setShelterAddress] = useState('');
 
   Modal.setAppElement('#root');
@@ -55,43 +56,34 @@ const PetById = ({ petId, userId, adoptionId }) => {
     }
   }, [petId]);
 
-  const fetchData = (param) => {
-    fetchCalendarDataForPet(param)
-      .then((data) => {
-        setCalendarData(data.Activities);
-        // console.log(data);
-      })
-      .catch((error) => console.error('Calendar download error:', error));
-
-    fetchDataForPet(param)
-      .then((data) => {
-        setPetData(data);
-        // console.log(data);
-      })
-      .then(() => {
-        fetchShelter();
-      })
-      .then(() => {
-        setShelterAddress(
-          `${shelterData.ShelterAddress.City} ${shelterData.ShelterAddress.Street} ${shelterData.ShelterAddress.HouseNumber}/${shelterData.ShelterAddress.FlatNumber}`
-        );
-      })
-      .catch((error) => console.error('Data download error:', error));
-  };
-  useEffect(() => {
-    fetchShelter();
-  }, []);
-  const fetchShelter = async () => {
+  const fetchData = async (param) => {
     try {
-      const shelterResponse = await axios.get(
-        `${address_url}/Shelters/${petData.ShelterId}`
-      );
-      setShelterData(shelterResponse.data);
-      console.log(shelterData);
-    } catch (err) {
-      console.log('shelter fetch error: ' + err);
+      const calendarData = await fetchCalendarDataForPet(param);
+      setCalendarData(calendarData.Activities);
+
+      const petDataById = await fetchDataForPet(param);
+      setPetData(petDataById);
+      console.log(petDataById);
+
+      if (petDataById && petDataById.ShelterId) {
+        const shelterDataById = await fetchDataForShelter(
+          petDataById.ShelterId
+        );
+        setShelterData(shelterDataById);
+        console.log(shelterDataById);
+        console.log(shelterDataById.Name);
+
+        if (shelterDataById) {
+          setShelterAddress(
+            `${shelterDataById.ShelterAddress.City} ${shelterDataById.ShelterAddress.Street} ${shelterDataById.ShelterAddress.HouseNumber}/${shelterDataById.ShelterAddress.FlatNumber}`
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
     }
   };
+
   const updateEndDate = (e) => {
     const date = new Date(e);
     const iso = date.toISOString();
@@ -226,6 +218,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
                 <h3>Size: {SizePetLabel(petData.BasicHealthInfo.Size)}</h3>
                 <h3>Gender: {GenderPetLabel(petData.Gender)}</h3>
                 <h3>Status: {StatusPetLabel(petData.Status)}</h3>
+                {shelterData && shelterData.Name && (<h3>Shelter name: {shelterData.Name}</h3>)}
                 <h3>Shelter Address: {shelterAddress}</h3>
                 <h3>
                   Is available for adoption:{' '}
