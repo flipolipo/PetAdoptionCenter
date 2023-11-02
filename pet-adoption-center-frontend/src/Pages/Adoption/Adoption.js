@@ -7,8 +7,12 @@ import { useUser } from '../../Components/UserContext';
 import axios from 'axios';
 import { address_url } from '../../Service/url';
 import PreadoptionPoll from '../../Components/PreadoptionPoll';
-import { fetchDataForPet } from '../../Service/fetchDataForPet';
-import PetById from '../Pets/PetsById/PetById';
+import PetById from '../Pets/PetsById/PetById.js';
+import MyCalendar from '../../Components/BigCalendarActivity/CalendarActivity';
+import PreadoptionPollInfo from '../../Components/PreadoptionPollInfo';
+import MeetingsInfo from '../../Components/MeetingsInfo';
+import ContractAdoptionInfo from '../../Components/ContractAdoptionInfo';
+import ContractAdoption from '../../Components/ContractAdoption';
 
 const Adoption = ({ petData, setPetData }) => {
   const { user, setUser } = useUser();
@@ -16,6 +20,9 @@ const Adoption = ({ petData, setPetData }) => {
   const [preadoptionPollVisible, setPreadoptionPollVisible] = useState(false);
   const [meetingsVisible, setMeettingsVisible] = useState(false);
   const [contractAdoptionVisible, setContractAdoptionVisible] = useState(false);
+  const [calendarAdoptionVisible, setCalendarAdoptionVisible] = useState(false);
+  const [signContractAdoptionVisible, setSignContractAdoptionVisible] =
+    useState(false);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -26,7 +33,7 @@ const Adoption = ({ petData, setPetData }) => {
           },
         });
         setUserData(response.data);
-        // console.log(response.data);
+       // console.log(response.data.Adoptions);
       } catch (err) {
         console.log(err);
       }
@@ -35,29 +42,41 @@ const Adoption = ({ petData, setPetData }) => {
     fetchProfileData();
   }, [user.id, user.token]);
 
+  const handleConfirmAdoption = async (adoptionId) => {
+    try {
+      const resp = await axios.post(
+        `${address_url}/Shelters/adoptions/${adoptionId}/meetings-adoption-done`
+      );
+      console.log(resp);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   // console.log(userData.Adoptions);
   //console.log(petData.Id);
   // console.log(petData.ShelterId);
-
-  const showPreadoptionPoll = () => {
+  const handleSignContract = async () => {
+    setSignContractAdoptionVisible(true);
+  };
+  const showPreadoptionPoll = async () => {
     setPreadoptionPollVisible(true);
   };
 
-  const hidePreadoptionPoll = () => {
+  const hidePreadoptionPoll = async () => {
     setPreadoptionPollVisible(false);
   };
-  const showInfoMeetings = () => {
+  const showInfoMeetings = async () => {
     setMeettingsVisible(true);
   };
 
   const hideInfoMeetings = () => {
     setMeettingsVisible(false);
   };
-  const showContractAdoption = () => {
+  const showContractAdoption = async () => {
     setContractAdoptionVisible(true);
   };
 
-  const hideContractAdoption = () => {
+  const hideContractAdoption = async () => {
     setContractAdoptionVisible(false);
   };
 
@@ -73,43 +92,7 @@ const Adoption = ({ petData, setPetData }) => {
                 userId={user.id}
               />
             ) : (
-              <>
-                <h2>Please log in and choose your new best friend first</h2>
-                <h3>PREADOPTION POLL</h3>
-                <ul>
-                  <li>Are you 18 years or over?*</li>
-                  <li>
-                    Are you willing to make the investment in both time and
-                    finances to properly care for and manage your new pet?*
-                  </li>
-                  <li>Is there a fenced backyard?*</li>
-                  <li>How many adults are in your household?*</li>
-                  <li>Do ALL the members of your household want a new pet?*</li>
-                  <li>Have you relinquished or given away any pets before?*</li>
-                  <li>
-                    Please list current pets residing at your home (including
-                    roommates' pets also). Include pets' breed, age, sex,
-                    spay/neuter status, number of years owned, and if they live
-                    indoors or outdoors. *
-                  </li>
-                  <li>
-                    In a 24-hour day, how long would the pet be left alone at a
-                    given time?*
-                  </li>
-                  <li>Where will your new pet be kept when you are home?*</li>
-                  <li>
-                    Where will your new pet be kept when you are NOT at home?*
-                  </li>
-                  <li>
-                    In a 24-hour day, how long would the animal be indoors?*
-                  </li>
-                  <li>Do you already have a veterinarian? If yes, Name:*</li>
-                  <li>
-                    What arrangements would you make for your new animal if you
-                    went on a trip/vacation?*
-                  </li>
-                </ul>
-              </>
+              <PreadoptionPollInfo />
             )}
             <button
               className="close-preadoption-poll"
@@ -122,40 +105,117 @@ const Adoption = ({ petData, setPetData }) => {
           <div className="meetings">
             {user.id && userData.Adoptions?.length >= 1 ? (
               <>
+              {console.log(userData.Adoptions)}
                 <h2>Your Adoptions</h2>
                 {userData.Adoptions?.map((adoption) => (
                   <div key={adoption.Id} className="adoption-card">
-                     <PetById id={adoption.PetById} petData={petData} setPetData={setPetData} />
-                    <p>
+                    <PetById
+                      petId={adoption.PetId}
+                      userId={adoption.UserId}
+                      adoptionId={adoption.Id}
+                      calendarAdoptionId={adoption.CalendarId}
+                    />
+                    <h3>
+                      Calendar Id:
+                      {adoption.CalendarId}
+                    </h3>
+                    <h3>
+                      Adoption Id:
+                      {adoption.Id}
+                    </h3>
+                    <h3>
+                      Pet Id:
+                      {adoption.PetId}
+                    </h3>
+                    <h3>
                       Status:{' '}
                       {adoption.IsContractAdoption
                         ? 'Contracted'
                         : 'Not Contracted'}
-                    </p>
+                    </h3>
+                    <h3>
+                      User Id:
+                      {adoption.UserId}
+                    </h3>
+                    <MyCalendar events={adoption.Activity.Activities} />
+                    {adoption.Activity.Activities?.length >= 1 &&
+                      adoption.Activity.Activities.every(
+                        (a) => new Date(a.EndActivityDate) < new Date()
+                      ) && (
+                        <button
+                          className="confirm-your-choose"
+                          onClick={() => handleConfirmAdoption(adoption.Id)}
+                        >
+                          Confirm your adoption
+                        </button>
+                      )}
                   </div>
                 ))}
               </>
             ) : (
-              <>
-                <h2>
-                  Please log in, choose your new best friend and first sign the
-                  pre-adoption questionnaire
-                </h2>
-                <h3>MEETINGS TO KNOW YOUR PET</h3>
-                <p>
-                  To proceed to the next adoption step, you must select at least
-                  one meeting with your chosen pet to get better acquainted. The
-                  meeting should be chosen from the pet's available calendar.
-                  After the meeting has taken place, you need to confirm that
-                  you are still interested in adoption.
-                </p>
-              </>
+              <MeetingsInfo />
             )}
             <button onClick={hideInfoMeetings}>Close Info Meetings</button>
           </div>
         ) : contractAdoptionVisible ? (
           <div className="contract-adoption">
-            <h2>SPRAWDZAM CZY TO DZIALA (Contract)</h2>
+            {user.id && userData.Adoptions?.length >= 1 ? (
+              <>
+                <h2>Your Adoptions</h2>
+                {userData.Adoptions?.map((adoption) => (
+                  <div key={adoption.PetId} className="adoption-card">
+                    <PetById
+                      petData={petData}
+                      setPetData={setPetData}
+                      petId={adoption.PetId}
+                      userId={adoption.UserId}
+                      adoptionId={adoption.Id}
+                      calendarAdoptionId={adoption.CalendarId}
+                    />
+                    <h3>
+                      Calendar Id:
+                      {adoption.CalendarId}
+                    </h3>
+                    <h3>
+                      Adoption Id:
+                      {adoption.Id}
+                    </h3>
+                    <h3>
+                      Pet Id:
+                      {adoption.PetId}
+                    </h3>
+                    <h3>
+                      Status:{' '}
+                      {adoption.IsContractAdoption
+                        ? 'Contracted'
+                        : 'Not Contracted'}
+                    </h3>
+                    {adoption.IsMeetings && (
+                      <>
+                        <button
+                          className="sign-adoption-contract"
+                          onClick={handleSignContract}
+                        >
+                          Adoption contract
+                        </button>
+                        {signContractAdoptionVisible && (
+                          <ContractAdoption
+                            petData={petData}
+                            setPetData={setPetData}
+                            petId={adoption.PetId}
+                            userId={adoption.UserId}
+                            adoptionId={adoption.Id}
+                            isMeetings={adoption.IsMeetings}
+                          />
+                        )}
+                      </>
+                    )}
+                  </div>
+                ))}
+              </>
+            ) : (
+              <ContractAdoptionInfo />
+            )}
             <button onClick={hideContractAdoption}>
               Close Contract Adoption
             </button>

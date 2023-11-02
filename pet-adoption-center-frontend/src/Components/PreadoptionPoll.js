@@ -22,6 +22,7 @@ const PreadoptionPoll = ({ shelterId, petId, userId }) => {
 
   const [formErrors, setFormErrors] = useState({});
   const [preadoptionPollData, setPreadoptionPollData] = useState('');
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
