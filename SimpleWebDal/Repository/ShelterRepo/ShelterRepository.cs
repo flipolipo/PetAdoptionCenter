@@ -10,6 +10,7 @@ using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 using SimpleWebDal.Models.WebUser.Enums;
 using SImpleWebLogic.Repository.ShelterRepo;
+using System.ComponentModel.DataAnnotations;
 
 namespace SimpleWebDal.Repository.ShelterRepo
 {
@@ -434,7 +435,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return false;
         }
 
-        public async Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city)
+        public async Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city, string phone)
         {
             var foundShelter = await FindShelter(shelterId);
 
@@ -442,6 +443,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             {
                 foundShelter.ShelterDescription = description;
                 foundShelter.Name = name;
+                foundShelter.PhoneNumber = phone;
                 foundShelter.ShelterAddress.Street = street;
                 foundShelter.ShelterAddress.PostalCode = postalCode;
                 foundShelter.ShelterAddress.HouseNumber = houseNumber;

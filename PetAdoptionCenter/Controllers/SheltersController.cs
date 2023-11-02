@@ -206,9 +206,9 @@ public class SheltersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPut("{shelterId}")]
-    public async Task<IActionResult> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city)
+    public async Task<IActionResult> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city, string phone)
     {
-        bool updated = await _shelterRepository.UpdateShelter(shelterId, name, description, street, houseNumber, postalCode, city);
+        bool updated = await _shelterRepository.UpdateShelter(shelterId, name, description, street, houseNumber, postalCode, city, phone);
 
         if (updated)
         {
@@ -261,7 +261,7 @@ public class SheltersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost("{shelterId}/users")]
-    public async Task<ActionResult<UserReadDTO>> AddUser(Guid shelterId, Guid userId, RoleCreateDTO roleCreateDTO)
+    public async Task<ActionResult<UserReadDTO>> AddUser(Guid shelterId, [FromQuery] Guid userId, RoleCreateDTO roleCreateDTO)
     {
         var foundUser = await _shelterRepository.FindUserById(userId);
         var roleModel = _mapper.Map<Role>(roleCreateDTO);

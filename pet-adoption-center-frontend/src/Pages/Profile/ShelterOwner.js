@@ -4,6 +4,7 @@ import './ShelterOwner.css';
 import { address_url } from '../../Service/url';
 import { useParams } from 'react-router-dom';
 import { useUser } from '../../Components/UserContext';
+import MyCalendar from '../../Components/BigCalendarActivity/CalendarActivity';
 
 
 const ShelterOwner = () => {
@@ -17,6 +18,103 @@ const ShelterOwner = () => {
     const [profileData, setProfileData] = useState(null);
     const [openSection, setOpenSection] = useState(null);
     const [usersProfileData, setUsersProfileData] = useState([]);
+    const [editMode, setEditMode] = useState(false);
+    const [editedName, setEditedName] = useState('');
+    const [editedDescription, setEditedDescription] = useState('');
+    const [editedStreet, setEditedStreet] = useState('');
+    const [editedHouseNumber, setEditedHouseNumber] = useState('');
+    const [editedPostalCode, setEditedPostalCode] = useState('');
+    const [editedCity, setEditedCity] = useState('');
+    const [editedPhone, setEditedPhone] = useState('');
+    const [userId, setUserId] = useState('');
+    const [role, setRole] = useState('');
+
+    const handleAddUser = async (e) => {
+        e.preventDefault();
+        console.log(role)
+        console.log(userId)
+        try {
+            const response = await axios.post(
+                `${address_url}/Shelters/${shelterId}/users`,
+                {
+                    title: role
+                }, {
+                params:
+                {
+                    userId: userId
+                }
+            },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            if (response.status === 200) {
+                console.log("User succesfuly added")
+            } else {
+
+                console.error('Failed to add user to shelter. Status:', response.status);
+            }
+        } catch (error) {
+            console.error('Failed to add user to shelter:', error);
+        }
+    };
+
+
+
+    useEffect(() => {
+
+        if (shelterDetails) {
+            setEditedName(shelterDetails.Name || '');
+            setEditedDescription(shelterDetails.ShelterDescription || '');
+            setEditedStreet(shelterDetails.ShelterAddress?.Street || '');
+            setEditedHouseNumber(shelterDetails.ShelterAddress?.HouseNumber || '');
+            setEditedPostalCode(shelterDetails.ShelterAddress?.PostalCode || '');
+            setEditedCity(shelterDetails.ShelterAddress?.City || '');
+            setEditedPhone(shelterDetails.PhoneNumber || '');
+        }
+    }, [shelterDetails]);
+
+    const handleUpdateShelter = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.put(
+                `${address_url}/Shelters/${shelterId}`,
+                null,
+                {
+                    params: {
+                        name: editedName,
+                        description: editedDescription,
+                        street: editedStreet,
+                        houseNumber: editedHouseNumber,
+                        postalCode: editedPostalCode,
+                        city: editedCity,
+                        phone: editedPhone
+                    },
+                    headers: {
+                        'Authorization': `Bearer ${user.token}`
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+
+                const updatedShelter = response.data;
+                setShelterDetails(updatedShelter);
+                setEditMode(false);
+            } else {
+
+            }
+        } catch (error) {
+            console.error('Failed to update the shelter:', error);
+        }
+    };
+
+
 
     useEffect(() => {
 
@@ -115,9 +213,9 @@ const ShelterOwner = () => {
                                         </ul>
                                     </div>
                                 )}
-                            </div>
 
-                            <div className="shelter-image-container">
+                            </div>
+                            {shelterDetails.ImageBase64 && (<div className="shelter-image-container">
                                 <img
                                     src={`data:image/jpeg;base64, ${shelterDetails.ImageBase64}`}
                                     alt="Shelter"
@@ -125,7 +223,23 @@ const ShelterOwner = () => {
                                     width="250px"
                                     height="100%"
                                 />
-                            </div>
+                            </div>)}
+
+                            {editMode ? (
+                                <form onSubmit={handleUpdateShelter}>
+                                    <input type="text" value={editedName} onChange={(e) => setEditedName(e.target.value)} />
+                                    <textarea value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} />
+                                    <input type="text" value={editedStreet} onChange={(e) => setEditedStreet(e.target.value)} />
+                                    <input type="text" value={editedHouseNumber} onChange={(e) => setEditedHouseNumber(e.target.value)} />
+                                    <input type="text" value={editedPostalCode} onChange={(e) => setEditedPostalCode(e.target.value)} />
+                                    <input type="text" value={editedCity} onChange={(e) => setEditedCity(e.target.value)} />
+                                    <input type="text" value={editedPhone} onChange={(e) => setEditedPhone(e.target.value)} />
+                                    <button type="submit">Save Changes</button>
+                                    <button type="button" onClick={() => setEditMode(false)}>Cancel</button>
+                                </form>
+                            ) : (
+                                <button onClick={() => setEditMode(true)}>Edit Shelter</button>
+                            )}
                         </div>
                         <div className="shelter-description">
                             <p ><strong>Description:</strong></p>
@@ -141,19 +255,30 @@ const ShelterOwner = () => {
                 </div>
                 {openSection === 'ShelterUsers' && (
                     <div className="shelter-users">
-
                         <h2 className="shelter-users-title">Shelter Users:</h2>
                         <ul className="shelter-users-list">
                             {usersProfileData.map(userData => (
-                                <li className="shelter-user-item">
+                                <li className="shelter-user-item" key={userData.Id}>
                                     <p><strong>Name:</strong> {userData.BasicInformation.Name}</p>
                                     <p><strong>Surname:</strong> {userData.BasicInformation.Surname}</p>
                                     <p><strong>Phone:</strong> {userData.BasicInformation.Phone}</p>
                                     <p><strong>Email:</strong> {userData.Email}</p>
-
                                 </li>
                             ))}
                         </ul>
+
+                        {/* User Addition Form */}
+                        <form >
+                            <label>
+                                User ID:
+                                <input type="text" value={userId} onChange={(e) => setUserId(e.target.value)} />
+                            </label>
+                            <label>
+                                Role:
+                                <input type="text" value={role} onChange={(e) => setRole(e.target.value)} />
+                            </label>
+                            <button type="submit" onClick={handleAddUser}>Add User to Shelter</button>
+                        </form>
                     </div>
                 )}
             </div>
@@ -179,24 +304,7 @@ const ShelterOwner = () => {
                 )}
             </div>
 
-            <div className="section">
-                <div className="section-header" onClick={() => setOpenSection(openSection === 'ShelterActivities' ? null : 'ShelterActivities')}>
-                    Shelter Activities <span className={openSection === 'ShelterActivities' ? 'arrow-down' : 'arrow-right'}>➤</span>
-                </div>
-                {openSection === 'ShelterActivities' && (
-                    <div className="shelter-activities">
 
-                        <h2 className="shelter-activities-title">Shelter Activities:</h2>
-                        <ul className="shelter-activities-list">
-                            {shelterActivities.map(activity => (
-                                <li className="shelter-activity-item" key={activity.Id}>
-                                    <p><strong>Activity Name:</strong> {activity.Name}</p>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-            </div>
 
             <div className="section">
                 <div className="section-header" onClick={() => setOpenSection(openSection === 'ShelterAdoptions' ? null : 'ShelterAdoptions')}>
@@ -233,6 +341,8 @@ const ShelterOwner = () => {
                     </div>
                 )}
             </div>
+
+            <MyCalendar events={shelterActivities} />
         </div>
     );
 
