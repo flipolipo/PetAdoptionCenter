@@ -4,6 +4,5 @@ public enum Size
 {
     Small,
     Medium,
-    Large,
-    Unknown
+    Large
 }

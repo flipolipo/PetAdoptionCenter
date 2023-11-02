@@ -80,7 +80,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
         }
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.log('shelter fetch error: ' + error);
     }
   };
 
@@ -133,7 +133,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
           EndActivityDate: endDate,
         }
       );
-      //console.log(resp);
+      console.log(resp);
     } catch (err) {
       console.log(err);
     }
@@ -191,12 +191,6 @@ const PetById = ({ petId, userId, adoptionId }) => {
                     <button className="pet-button" onClick={goToPetCalendar}>
                       Make me visit at shelter
                     </button>
-                    <button
-                      className="go-to-calendar"
-                      onClick={goToPetCalendar}
-                    >
-                      My calendar
-                    </button>
                   </>
                 )}
               </div>
@@ -218,7 +212,9 @@ const PetById = ({ petId, userId, adoptionId }) => {
                 <h3>Size: {SizePetLabel(petData.BasicHealthInfo.Size)}</h3>
                 <h3>Gender: {GenderPetLabel(petData.Gender)}</h3>
                 <h3>Status: {StatusPetLabel(petData.Status)}</h3>
-                {shelterData && shelterData.Name && (<h3>Shelter name: {shelterData.Name}</h3>)}
+                {shelterData && shelterData.Name && (
+                  <h3>Shelter name: {shelterData.Name}</h3>
+                )}
                 <h3>Shelter Address: {shelterAddress}</h3>
                 <h3>
                   Is available for adoption:{' '}
@@ -257,19 +253,22 @@ const PetById = ({ petId, userId, adoptionId }) => {
           >
             {edit ? (
               <div className="modal-content">
-                Title:{' '}
-                <input
-                  onChange={(e) => setActivityName(e.target.value)}
-                  type="text"
-                ></input>
-                Start Date:{' '}
-                <DateTimePicker onChange={(e) => updateStartDate(e)} />
-                End Date: <DateTimePicker onChange={(e) => updateEndDate(e)} />
-                <button onClick={updateActivity}>done</button>
-                <button onClick={() => setEdit(false)}>go back</button>
+                <div className="activity-form">
+                  Title:{' '}
+                  <input
+                    onChange={(e) => setActivityName(e.target.value)}
+                    type="text"
+                  ></input>
+                  Start Date:{' '}
+                  <DateTimePicker onChange={(e) => updateStartDate(e)} />
+                  End Date:{' '}
+                  <DateTimePicker onChange={(e) => updateEndDate(e)} />
+                  <button onClick={updateActivity}>done</button>
+                  <button onClick={() => setEdit(false)}>go back</button>
+                </div>
               </div>
             ) : (
-              <div>
+              <div className="edit-remove-meet-buttons">
                 <button onClick={() => setEdit(true)}>Edit</button>
                 <button onClick={() => RemoveActivity}>Delete</button>
                 <button onClick={handleMeetForAdoption}>
@@ -280,16 +279,21 @@ const PetById = ({ petId, userId, adoptionId }) => {
           </Modal>
           <h1>Details for Pet with ID {id}</h1>
           <MyCalendar events={calendarData} onEventClick={handleEventClick} />
-          <form>
-            Name:{' '}
-            <input
-              type="text"
-              onChange={(e) => setActivityName(e.target.value)}
-            ></input>
-            Start Date: <DateTimePicker onChange={(e) => updateStartDate(e)} />
-            End Date: <DateTimePicker onChange={(e) => updateEndDate(e)} />
-            <button onClick={handleSubmit}>asdasd</button>
-          </form>
+          <div className="add-activity-container">
+            <h3>Add activity!</h3>
+
+            <form className="activity-form">
+              Name:{' '}
+              <input
+                type="text"
+                onChange={(e) => setActivityName(e.target.value)}
+              ></input>
+              Start Date:{' '}
+              <DateTimePicker onChange={(e) => updateStartDate(e)} />
+              End Date: <DateTimePicker onChange={(e) => updateEndDate(e)} />
+              <button onClick={handleSubmit}>Add</button>
+            </form>
+          </div>
         </LocalizationProvider>
       )}
     </div>

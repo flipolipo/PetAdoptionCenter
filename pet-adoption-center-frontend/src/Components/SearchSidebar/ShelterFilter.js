@@ -1,29 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useUser } from '../../../Components/UserContext';
-import { address_url } from '../../../Service/url';
+import { address_url } from '../../Service/url';
 
 function ShelterFilter({ onChange }) {
-  const { user } = useUser();
   const [shelters, setShelters] = useState([]);
-  const [error, setError] = useState(null);
   const [selectedShelter, setSelectedShelter] = useState('');
 
   useEffect(() => {
     const fetchShelters = async () => {
       try {
-        const response = await axios.get(`${address_url}/Shelters`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
+        const response = await axios.get(`${address_url}/Shelters`);
         setShelters(response.data);
-      } catch (err) {
-        setError(err.message);
+      } catch (error) {
+        console.log(error.message);
       }
     };
     fetchShelters();
-  }, [user.id, user.token]);
+  }, []);
 
   const handleShelterChange = (event) => {
     const shelterId = event.target.value;
@@ -39,7 +32,7 @@ function ShelterFilter({ onChange }) {
         {shelters ? (
           shelters.map((shelter) => (
             <option key={shelter.Id} value={shelter.Id}>
-              {shelter.Name}
+              {`${shelter.Name} in ${shelter.ShelterAddress.City}`}
             </option>
           ))
         ) : null}
@@ -49,4 +42,3 @@ function ShelterFilter({ onChange }) {
 }
 
 export default ShelterFilter;
-
