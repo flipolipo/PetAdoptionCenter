@@ -34,6 +34,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 .Include(f => f.ShelterPets).ThenInclude(h => h.BasicHealthInfo).ThenInclude(v => v.Vaccinations)
                 .Include(f => f.ShelterPets).ThenInclude(h => h.BasicHealthInfo).ThenInclude(v => v.MedicalHistory)
                 .Include(f => f.ShelterPets).ThenInclude(h => h.Calendar).ThenInclude(a => a.Activities)
+                
                 .FirstOrDefaultAsync(e => e.Id == shelterId);
             return foundShelter;
         }

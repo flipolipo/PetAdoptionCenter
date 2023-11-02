@@ -5,6 +5,8 @@ import { address_url } from '../../Service/url';
 import UserRoleName from '../../Components/Enum/UserRoleName';
 import MyCalendar from '../../Components/BigCalendarActivity/CalendarActivity';
 import './Profile.css';
+import ShelterOwner from './ShelterOwner';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
 
@@ -15,7 +17,7 @@ const Profile = () => {
     const [openSection, setOpenSection] = useState(null);
     const [isEditingBasicInfo, setIsEditingBasicInfo] = useState(false);
     const [editedBasicInfo, setEditedBasicInfo] = useState(null);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
@@ -120,6 +122,7 @@ const Profile = () => {
                         <h2>Basic Information</h2>
                         {isEditingBasicInfo ? (
                             <div>
+                                {user.id}
                                 <label>Name:
                                     <input type="text" name="Name" value={editedBasicInfo.Name} onChange={handleInputChange} />
                                 </label>
@@ -130,11 +133,21 @@ const Profile = () => {
                                     <input type="text" name="Phone" value={editedBasicInfo.Phone} onChange={handleInputChange} />
                                 </label>
                                 <label>Street:
-                                    <input type="text" name="Street" value={editedBasicInfo.Address.Street} onChange={handleInputChange} />
+                                    <input type="text" name="Street" value={editedBasicInfo?.Address?.Street || ""} onChange={handleInputChange} />
                                 </label>
                                 <label>City:
-                                    <input type="text" name="City" value={editedBasicInfo.Address.City} onChange={handleInputChange} />
+                                    <input type="text" name="City" value={editedBasicInfo?.Address?.City || ""} onChange={handleInputChange} />
                                 </label>
+                                <label>Postal Code:
+                                    <input type="text" name="PostalCode" value={editedBasicInfo?.Address?.PostalCode || ""} onChange={handleInputChange} />
+                                </label>
+                                <label>House Number:
+                                    <input type="text" name="HouseNumber" value={editedBasicInfo?.Address?.HouseNumber || ""} onChange={handleInputChange} />
+                                </label>
+                                <label>Flat Number:
+                                    <input type="text" name="FlatNumber" value={editedBasicInfo?.Address?.FlatNumber || ""} onChange={handleInputChange} />
+                                </label>
+
                                 <button className="saveButton" onClick={saveEditedBasicInfo}>Save</button>
                             </div>
                         ) : (
@@ -142,7 +155,7 @@ const Profile = () => {
                                 <p>Name: {profileData.BasicInformation?.Name}</p>
                                 <p>Surname: {profileData.BasicInformation?.Surname}</p>
                                 <p>Phone: {profileData.BasicInformation?.Phone}</p>
-                                <p>Address: {profileData.BasicInformation?.Address?.Street}, {profileData.BasicInformation?.Address?.City}</p>
+                                <p>Address: {profileData.BasicInformation?.Address?.Street},{editedBasicInfo?.Address?.HouseNumber},{editedBasicInfo?.Address?.FlatNumber} {profileData.BasicInformation?.Address?.City},{profileData.BasicInformation?.Address?.PostalCode}</p>
                                 <button className='editButton' onClick={startEditingBasicInfo}>Edit</button>
                             </div>
                         )}
@@ -196,12 +209,25 @@ const Profile = () => {
                 {openSection === 'Roles' && (
                     <div className="rolesProfiles">
                         <h2>Your Roles</h2>
-                        {profileData.Roles?.map(role => (
-                            <div key={role.Id} className="role-card">
-                                <p>Role ID: {role.Id}</p>
-                                <p>Role title: {UserRoleName(role.Title)}</p>
-                            </div>
-                        ))}
+                        {profileData.Roles?.map(role => {
+                            if (UserRoleName(role.Title) === 'Shelter Owner') {
+                                return (
+                                    <div key={role.Id} className="role-card">
+                                        <p>Role ID: {role.Id}</p>
+                                        <p>Role title: {UserRoleName(role.Title)}</p>
+                                        <button onClick={() => navigate(`/ShelterOwner/${profileData.ShelterId}`)}>Go to Shelter</button>
+                                    </div>
+                                );
+                            } else {
+
+                                return (
+                                    <div key={role.Id} className="role-card">
+                                        <p>Role ID: {role.Id}</p>
+                                        <p>Role title: {UserRoleName(role.Title)}</p>
+                                    </div>
+                                );
+                            }
+                        })}
                     </div>
                 )}
             </div>
