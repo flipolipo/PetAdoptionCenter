@@ -7,12 +7,12 @@ namespace SImpleWebLogic.Validations.WebUserValidation.RoleCreateValidations
     {
         public UserCreateDTOValidator()
         {
-            RuleFor(user => user.Roles)
-                .NotNull() 
-                .ForEach(role =>
-                {
-                    role.SetValidator(new RoleCreateDTOValidator()); 
-                });
+            //RuleFor(user => user.Roles)
+            //    .NotNull() 
+            //    .ForEach(role =>
+            //    {
+            //        role.SetValidator(new RoleCreateDTOValidator()); 
+            //    });
         }
     }
 }

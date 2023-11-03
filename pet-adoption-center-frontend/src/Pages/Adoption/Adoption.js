@@ -6,14 +6,12 @@ import { Link, useParams } from 'react-router-dom';
 import { useUser } from '../../Components/UserContext';
 import axios from 'axios';
 import { address_url } from '../../Service/url';
-import PreadoptionPoll from '../../Components/PreadoptionPoll';
 import PetById from '../Pets/PetsById/PetById.js';
 import MyCalendar from '../../Components/BigCalendarActivity/CalendarActivity';
 import PreadoptionPollInfo from '../../Components/PreadoptionPollInfo';
 import MeetingsInfo from '../../Components/MeetingsInfo';
 import ContractAdoptionInfo from '../../Components/ContractAdoptionInfo';
 import ContractAdoption from '../../Components/ContractAdoption';
-import { fetchDataForPet } from '../../Service/fetchDataForPet.js';
 
 const Adoption = ({ petData, setPetData }) => {
   const { id } = useParams();
@@ -28,7 +26,6 @@ const Adoption = ({ petData, setPetData }) => {
     useState(false);
   const [selectedPetId, setSelectedPetId] = useState(null);
   const [selectedAdoptionId, setSelectedAdoptionId] = useState(null);
-  const [selectedPetData, setSelectedPetData] = useState({});
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -47,19 +44,6 @@ const Adoption = ({ petData, setPetData }) => {
 
     fetchProfileData();
   }, [user.id, user.token]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const responseData = await fetchDataForPet(id);
-        setSelectedPetData(responseData);
-        console.log(responseData.ShelterId);
-      } catch (err) {
-        console.log('shelter fetch error: ' + err);
-      }
-    };
-    fetchData();
-  }, []);
 
   const handleConfirmAdoption = async (adoptionId) => {
     try {
@@ -103,12 +87,9 @@ const Adoption = ({ petData, setPetData }) => {
     <div>
       <div className="adoption-container">
         {preadoptionPollVisible ? (
-          <div className="preadoption-poll">
+          <div className="button-more-info-1">
             <PreadoptionPollInfo />
-            <button
-              className="close-preadoption-poll"
-              onClick={hidePreadoptionPoll}
-            >
+            <button className="button-adoption-1" onClick={hidePreadoptionPoll}>
               Close Preadoption Poll
             </button>
           </div>
@@ -233,8 +214,11 @@ const Adoption = ({ petData, setPetData }) => {
           <>
             <div className="adoption-button-card">
               <div className="button-more-info">
-                {user.id && id && selectedPetData ? (
-                  <Link to={`/Shelters/adoptions/pets/${id}/users/${user.id}`}>
+                {user.id && id ? (
+                  <Link
+                    to={`/Shelters/adoptions/pets/${id}/users/${user.id}`}
+                    className="find-pet"
+                  >
                     Preadoption Poll
                   </Link>
                 ) : (

@@ -234,10 +234,10 @@ namespace SimpleWebDal.Migrations
                     b.Property<Guid?>("BasicHealthInfoId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("IllnessEnd")
+                    b.Property<DateTimeOffset>("IllnessEnd")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("IllnessStart")
+                    b.Property<DateTimeOffset>("IllnessStart")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NameOfdisease")
@@ -313,7 +313,7 @@ namespace SimpleWebDal.Migrations
                     b.Property<Guid?>("BasicHealthInfoId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTimeOffset>("Date")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("VaccinationName")

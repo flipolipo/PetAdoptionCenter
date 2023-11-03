@@ -7,8 +7,8 @@ namespace SImpleWebLogic.Validations.WebUserValidation.RoleCreateValidations
     {
         public RoleCreateDTOValidator()
         {
-            RuleFor(role => role.Title)
-             .IsInEnum();
+            //RuleFor(role => role.Title)
+            // .IsInEnum();
         }
     }
 }
