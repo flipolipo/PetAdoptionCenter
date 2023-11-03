@@ -63,9 +63,10 @@ const getPetsFromShelter = async (id) => {
   function handleSubmit(event) {
     event.preventDefault();
     const fuse = new Fuse(shelters, {
-      keys: ['Name', 'shelterAddress.City', 'shelterAddress.Street'],
+      keys: ['Name', 'ShelterAddress.City', 'ShelterAddress.Street'],
     });
-    console.log(event);
+    console.log(shelters)
+    
     const results = fuse.search(searchBarInput);
     console.log(results);
     setSearchResults(results);
