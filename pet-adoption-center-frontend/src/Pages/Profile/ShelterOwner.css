@@ -121,3 +121,9 @@
   font-weight: 500;
   color: #333;
 }
+
+.shelter-pets-list {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
