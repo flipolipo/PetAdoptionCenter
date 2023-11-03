@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Adoption.css';
 import FlipCardAdopted from '../../Components/FlipCardAdopted';
 import FlipCardAvailable from '../../Components/FlipCardAvailable';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useUser } from '../../Components/UserContext';
 import axios from 'axios';
 import { address_url } from '../../Service/url';
@@ -13,8 +13,11 @@ import PreadoptionPollInfo from '../../Components/PreadoptionPollInfo';
 import MeetingsInfo from '../../Components/MeetingsInfo';
 import ContractAdoptionInfo from '../../Components/ContractAdoptionInfo';
 import ContractAdoption from '../../Components/ContractAdoption';
+import { fetchDataForPet } from '../../Service/fetchDataForPet.js';
 
 const Adoption = ({ petData, setPetData }) => {
+  const { id } = useParams();
+  console.log(id);
   const { user, setUser } = useUser();
   const [userData, setUserData] = useState([]);
   const [preadoptionPollVisible, setPreadoptionPollVisible] = useState(false);
@@ -23,6 +26,9 @@ const Adoption = ({ petData, setPetData }) => {
   const [calendarAdoptionVisible, setCalendarAdoptionVisible] = useState(false);
   const [signContractAdoptionVisible, setSignContractAdoptionVisible] =
     useState(false);
+  const [selectedPetId, setSelectedPetId] = useState(null);
+  const [selectedAdoptionId, setSelectedAdoptionId] = useState(null);
+  const [selectedPetData, setSelectedPetData] = useState({});
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -33,7 +39,7 @@ const Adoption = ({ petData, setPetData }) => {
           },
         });
         setUserData(response.data);
-       // console.log(response.data.Adoptions);
+        // console.log(response.data.Adoptions);
       } catch (err) {
         console.log(err);
       }
@@ -41,6 +47,19 @@ const Adoption = ({ petData, setPetData }) => {
 
     fetchProfileData();
   }, [user.id, user.token]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseData = await fetchDataForPet(id);
+        setSelectedPetData(responseData);
+        console.log(responseData.ShelterId);
+      } catch (err) {
+        console.log('shelter fetch error: ' + err);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleConfirmAdoption = async (adoptionId) => {
     try {
@@ -85,15 +104,7 @@ const Adoption = ({ petData, setPetData }) => {
       <div className="adoption-container">
         {preadoptionPollVisible ? (
           <div className="preadoption-poll">
-            {user.id && petData.Id ? (
-              <PreadoptionPoll
-                shelterId={petData.ShelterId}
-                petId={petData.Id}
-                userId={user.id}
-              />
-            ) : (
-              <PreadoptionPollInfo />
-            )}
+            <PreadoptionPollInfo />
             <button
               className="close-preadoption-poll"
               onClick={hidePreadoptionPoll}
@@ -105,7 +116,7 @@ const Adoption = ({ petData, setPetData }) => {
           <div className="meetings">
             {user.id && userData.Adoptions?.length >= 1 ? (
               <>
-              {console.log(userData.Adoptions)}
+                {console.log(userData.Adoptions)}
                 <h2>Your Adoptions</h2>
                 {userData.Adoptions?.map((adoption) => (
                   <div key={adoption.Id} className="adoption-card">
@@ -165,12 +176,10 @@ const Adoption = ({ petData, setPetData }) => {
                 {userData.Adoptions?.map((adoption) => (
                   <div key={adoption.PetId} className="adoption-card">
                     <PetById
-                      petData={petData}
-                      setPetData={setPetData}
                       petId={adoption.PetId}
                       userId={adoption.UserId}
                       adoptionId={adoption.Id}
-                      calendarAdoptionId={adoption.CalendarId}
+                      // onAdoptMeClick={handleAdoptMeClick}
                     />
                     <h3>
                       Calendar Id:
@@ -224,12 +233,21 @@ const Adoption = ({ petData, setPetData }) => {
           <>
             <div className="adoption-button-card">
               <div className="button-more-info">
-                <button
-                  className="button-adoption"
-                  onClick={showPreadoptionPoll}
-                >
-                  Preadoption Poll
-                </button>
+                {user.id && id && selectedPetData ? (
+                  <Link to={`/Shelters/adoptions/pets/${id}/users/${user.id}`}>
+                    Preadoption Poll
+                  </Link>
+                ) : (
+                  <div className="button-more-info">
+                    <button
+                      className="button-adoption"
+                      onClick={showPreadoptionPoll}
+                    >
+                      Preadoption Poll
+                    </button>
+                  </div>
+                )}
+
                 <button className="button-adoption" onClick={showInfoMeetings}>
                   Meetings to know your pet
                 </button>

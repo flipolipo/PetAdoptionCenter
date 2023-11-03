@@ -42,6 +42,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
+      zIndex: 4
     },
   };
   useEffect(() => {
@@ -110,6 +111,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
       console.log('Pet :' + petData);
       console.log('response: ' + resp.data); */
       setCalendarData(resp.data);
+      console.log("calendar data", resp.data)
     } catch (err) {
       console.log(err);
     }
@@ -171,9 +173,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
               <div className="botton-pet-by-id">
                 {petData.AvaibleForAdoption && (
                   <>
-                    <Link to="/Shelters/adoptions">
-                      <button className="pet-button">Adopt Me</button>
-                    </Link>
+                    <Link to={`/Shelters/adoptions/pets/${id}`}> Adopt Me </Link>
                     <Link to="/Shelters/temporaryHouses">
                       <button className="pet-button">
                         Give me a temporary house
@@ -226,18 +226,18 @@ const PetById = ({ petId, userId, adoptionId }) => {
               <h2>Description: {petData.Description}</h2>
             </div>
           </div>
-
-          <div className="pets-available-to-adoption">
+{petData.Status !== 4 && (<div className="pets-available-to-adoption">
             <div className="pet-inscription">
               <h2>Pets available for adoption</h2>
             </div>
             <div className="pet-card">
               <FlipCardAvailable />
             </div>
-          </div>
+          </div> )}
+          
         </>
       ) : null}
-      {petId && petDataVisible ? (
+      {petData && petId && petDataVisible ? (
         <div className="meetings-button-pet-adoption">
           <button className="go-to-calendar" onClick={goToPetCalendar}>
             Know your pet

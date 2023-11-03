@@ -14,3 +14,6 @@ code {
 .routes{
   min-height: calc(100vh - 238px - 266px);
 }
+.ReactModal__Overlay--after-open{
+  z-index: 4;
+}

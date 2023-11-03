@@ -13,6 +13,7 @@ import Footer from './Components/Footer';
 import React, { useState } from 'react';
 import { UserProvider } from './Components/UserContext.js';
 import ShelterOwner from './Pages/Profile/ShelterOwner';
+import PreadoptionPoll from './Components/PreadoptionPoll.js';
 
 function App() {
   const [petData, setPetData] = useState([]);
@@ -30,6 +31,14 @@ function App() {
               <Route
                 path="/Shelters/adoptions"
                 element={<Adoption petData={petData} setPetData={setPetData} />}
+              />
+               <Route
+                path="/Shelters/adoptions/pets/:id"
+                element={<Adoption/>}
+              />
+                 <Route
+                path="/Shelters/adoptions/pets/:id/users/:userId"
+                element={<PreadoptionPoll/>}
               />
               <Route
                 path="/Shelters/temporaryHouses"
