@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { address_url } from '../Service/url';
+import { Link, useParams } from 'react-router-dom';
 
-const PreadoptionPoll = ({ shelterId, petId, userId }) => {
+const PreadoptionPoll = ({ shelterId }) => {
+  const { id, userId } = useParams();
+  console.log(shelterId);
+  console.log(id);
+  console.log(userId);
+
   const [formData, setFormData] = useState({
     over18: '',
     willingToInvest: '',
@@ -22,6 +28,7 @@ const PreadoptionPoll = ({ shelterId, petId, userId }) => {
 
   const [formErrors, setFormErrors] = useState({});
   const [preadoptionPollData, setPreadoptionPollData] = useState('');
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,10 +68,11 @@ const PreadoptionPoll = ({ shelterId, petId, userId }) => {
       console.log(requestData);
       try {
         const response = await axios.post(
-          `${address_url}/Shelters/${shelterId}/pets/${petId}/users/${userId}/adoptions/inizialize-adoption`,
+          //  `${address_url}/Shelters/${shelterId}/pets/${id}/users/${userId}/adoptions/inizialize-adoption`,
           requestData
         );
         setPreadoptionPollData(formDataString);
+        setSubmissionSuccess(true);
       } catch (error) {}
     }
   };
@@ -246,7 +254,7 @@ const PreadoptionPoll = ({ shelterId, petId, userId }) => {
       {formErrors.vacationArrangements && (
         <p className="error-message">{formErrors.vacationArrangements}</p>
       )}
-      <button type="submit">Submit</button>
+        <button type="submit">Submit</button>
     </form>
   );
 };
