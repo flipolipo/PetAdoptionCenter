@@ -80,6 +80,9 @@ const PreadoptionPoll = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = {};
+    if (formData.over18 !== 'Yes') {
+      errors.over18 = 'You must be 18 years or older to submit this form.';
+    }
     for (const key in formData) {
       if (!formData[key]) {
         errors[key] = 'This field is required.';
