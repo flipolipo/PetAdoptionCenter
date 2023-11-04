@@ -5,7 +5,7 @@ import SearchSidebar from '../../Components/SearchSidebar/SearchSidebar';
 import './Pets.css';
 
 const Pets = () => {
-  const [ setPetData ] = useState(null);
+  const [ petData, setPetData ] = useState(null);
 
   useEffect(() => {
     const fetchPetData = async () => {
