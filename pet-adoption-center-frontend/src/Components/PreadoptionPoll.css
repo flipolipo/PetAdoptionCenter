@@ -1,0 +1,82 @@
+.preadoption-form {
+    text-align: left;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+  }
+  
+  .preadoption-form-h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .preadoption-form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .preadoption-form select,
+  .preadoption-form input[type="text"],
+  .preadoption-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .preadoption-form .error-message {
+    color: red;
+    margin-top: 5px;
+  }
+  
+  .preadoption-form button {
+    position: sticky;
+    background-color:  rgba(246, 158, 123, 1);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 700;
+    font-family: var(--font-outfit);
+    color: var(--color-black);
+    text-align: center;
+  }
+  
+  .preadoption-form button:hover {
+    background-color: rgba(246, 158, 123, 0.8); 
+  }
+  .preadoption-poll-find-pet-container {
+    display: flex;
+    justify-content: center; 
+  }
+
+  .preadoption-poll-find-pet {
+    cursor: pointer;
+    position: sticky;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: var(--font-outfit);
+    color: var(--color-black);
+    text-align: center;
+    padding: 10px; 
+    background-color: rgba(246, 158, 123, 1);
+    margin-top: 10px;
+    border-radius: 10px;
+    width: 180px; 
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border: 2px solid black;
+    word-wrap: break-word;
+    align-content: center;
+  }
+  
+  .preadoption-poll-find-pet:hover {
+    background-color: rgba(246, 158, 123, 0.8);
+  }

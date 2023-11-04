@@ -1,6 +1,5 @@
 ﻿using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.CalendarModel;
-using SimpleWebDal.Models.PetShelter;
 using SimpleWebDal.Models.WebUser;
 
 namespace SimpleWebDal.Models.TemporaryHouse;

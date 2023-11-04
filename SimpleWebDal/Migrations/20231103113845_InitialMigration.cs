@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace SimpleWebDal.Migrations
 {
     /// <inheritdoc />
-    public partial class addReact : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -115,8 +115,8 @@ namespace SimpleWebDal.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     NameOfdisease = table.Column<string>(type: "text", nullable: false),
-                    IllnessStart = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IllnessEnd = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IllnessStart = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    IllnessEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     BasicHealthInfoId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
@@ -135,7 +135,7 @@ namespace SimpleWebDal.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     VaccinationName = table.Column<string>(type: "text", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     BasicHealthInfoId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>

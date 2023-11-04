@@ -12,8 +12,8 @@ using SimpleWebDal.Data;
 namespace SimpleWebDal.Migrations
 {
     [DbContext(typeof(PetAdoptionCenterContext))]
-    [Migration("20231101185638_addReact")]
-    partial class addReact
+    [Migration("20231103113845_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -237,10 +237,10 @@ namespace SimpleWebDal.Migrations
                     b.Property<Guid?>("BasicHealthInfoId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("IllnessEnd")
+                    b.Property<DateTimeOffset>("IllnessEnd")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("IllnessStart")
+                    b.Property<DateTimeOffset>("IllnessStart")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NameOfdisease")
@@ -316,7 +316,7 @@ namespace SimpleWebDal.Migrations
                     b.Property<Guid?>("BasicHealthInfoId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTimeOffset>("Date")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("VaccinationName")

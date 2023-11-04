@@ -30,7 +30,11 @@ const PetById = ({ petId, userId, adoptionId }) => {
   const [choosenMeeting, setChoosenMeeting] = useState([]);
   const [petData, setPetData] = useState({});
   const [shelterData, setShelterData] = useState({});
-  const [shelterAddress, setShelterAddress] = useState('');
+  const [shelterAddress, setShelterAddress] = useState({
+    street: '',
+    number: '',
+    city: '',
+  });
 
   Modal.setAppElement('#root');
 
@@ -42,7 +46,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
       bottom: 'auto',
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
-      zIndex: 4
+      zIndex: 4,
     },
   };
   useEffect(() => {
@@ -75,9 +79,13 @@ const PetById = ({ petId, userId, adoptionId }) => {
         console.log(shelterDataById.Name);
 
         if (shelterDataById) {
-          setShelterAddress(
-            `${shelterDataById.ShelterAddress.City} ${shelterDataById.ShelterAddress.Street} ${shelterDataById.ShelterAddress.HouseNumber}/${shelterDataById.ShelterAddress.FlatNumber}`
-          );
+          setShelterAddress({
+            street: shelterDataById.ShelterAddress.Street,
+            number: shelterDataById.ShelterAddress.FlatNumber
+              ? `${shelterDataById.ShelterAddress.HouseNumber}/${shelterDataById.ShelterAddress.FlatNumber}`
+              : shelterDataById.ShelterAddress.HouseNumber,
+            city: shelterDataById.ShelterAddress.City,
+          });
         }
       }
     } catch (error) {
@@ -111,7 +119,7 @@ const PetById = ({ petId, userId, adoptionId }) => {
       console.log('Pet :' + petData);
       console.log('response: ' + resp.data); */
       setCalendarData(resp.data);
-      console.log("calendar data", resp.data)
+      console.log('calendar data', resp.data);
     } catch (err) {
       console.log(err);
     }
@@ -173,7 +181,13 @@ const PetById = ({ petId, userId, adoptionId }) => {
               <div className="botton-pet-by-id">
                 {petData.AvaibleForAdoption && (
                   <>
-                    <Link to={`/Shelters/adoptions/pets/${id}`}> Adopt Me </Link>
+                    <Link
+                      to={`/Shelters/adoptions/pets/${id}`}
+                      className="find-pet"
+                    >
+                      {' '}
+                      Adopt Me{' '}
+                    </Link>
                     <Link to="/Shelters/temporaryHouses">
                       <button className="pet-button">
                         Give me a temporary house
@@ -208,33 +222,80 @@ const PetById = ({ petId, userId, adoptionId }) => {
                 <h2>{petData.BasicHealthInfo.Name}</h2>
               </div>
               <div className="more-info-pet-by-id">
-                <h3>Age: {petData.BasicHealthInfo.Age}</h3>
-                <h3>Size: {SizePetLabel(petData.BasicHealthInfo.Size)}</h3>
-                <h3>Gender: {GenderPetLabel(petData.Gender)}</h3>
-                <h3>Status: {StatusPetLabel(petData.Status)}</h3>
+                <p>
+                  <span className="small-font">Age: </span>
+                  <span className="large-font">
+                    {petData.BasicHealthInfo.Age}
+                  </span>
+                </p>
+
+                <p>
+                  <span className="small-font">Size: </span>
+                  <span className="large-font">
+                    {SizePetLabel(petData.BasicHealthInfo.Size)}
+                  </span>
+                </p>
+
+                <p>
+                  <span className="small-font">Gender: </span>
+                  <span className="large-font">
+                    {GenderPetLabel(petData.Gender)}
+                  </span>
+                </p>
+
+                <p>
+                  <span className="small-font">Status: </span>
+                  <span className="large-font">
+                    {StatusPetLabel(petData.Status)}
+                  </span>
+                </p>
+
                 {shelterData && shelterData.Name && (
-                  <h3>Shelter name: {shelterData.Name}</h3>
+                  <p>
+                    <span className="small-font">Shelter name: </span>
+                    <span className="large-font">{shelterData.Name}</span>
+                  </p>
                 )}
-                <h3>Shelter Address: {shelterAddress}</h3>
-                <h3>
-                  Is available for adoption:{' '}
-                  {petData.AvaibleForAdoption ? 'Yes' : 'No'}
-                </h3>
+                <span className="small-font">Shelter Address: </span>
+                <p className="address-shelter">
+                  <span className="small-font">street: </span>
+                  <span className="large-font">{shelterAddress.street}</span>
+                </p>
+                <p className="address-shelter">
+                  <span className="small-font">number: </span>
+                  <span className="large-font">{shelterAddress.number}</span>
+                </p>
+                <p className="address-shelter">
+                  <span className="small-font">city: </span>
+                  <span className="large-font">{shelterAddress.city}</span>
+                </p>
+                <p>
+                  <span className="small-font">
+                    Is available for adoption:{' '}
+                  </span>
+                  <span className="large-font">
+                    {petData.AvaibleForAdoption ? 'Yes' : 'No'}
+                  </span>
+                </p>
               </div>
             </div>
             <div className="description-pet-by-id">
-              <h2>Description: {petData.Description}</h2>
+              <p>
+                <span className="small-font">Description: </span>
+                <span className="large-font">{petData.Description}</span>
+              </p>
             </div>
           </div>
-{petData.Status !== 4 && (<div className="pets-available-to-adoption">
-            <div className="pet-inscription">
-              <h2>Pets available for adoption</h2>
+          {petData.Status !== 4 && (
+            <div className="pets-available-to-adoption">
+              <div className="pet-inscription">
+                <h2>Pets available for adoption</h2>
+              </div>
+              <div className="pet-card">
+                <FlipCardAvailable />
+              </div>
             </div>
-            <div className="pet-card">
-              <FlipCardAvailable />
-            </div>
-          </div> )}
-          
+          )}
         </>
       ) : null}
       {petData && petId && petDataVisible ? (

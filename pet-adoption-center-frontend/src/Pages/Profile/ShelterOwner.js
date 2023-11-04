@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { useUser } from '../../Components/UserContext';
 import MyCalendar from '../../Components/BigCalendarActivity/CalendarActivity';
 import GenericCard from '../../Components/GenericCard';
+import Modal from 'react-modal';
 
 const ShelterOwner = () => {
     const { shelterId } = useParams();
@@ -29,6 +30,79 @@ const ShelterOwner = () => {
     const [userId, setUserId] = useState('');
     const [role, setRole] = useState('');
     const [petsAvailable, setPetsAvailable] = useState([]);
+    const [imageFile, setImageFile] = useState(null);
+    const [visible, setVisible] = useState(false);
+    const [formData, setFormData] = useState({
+        Type: '',
+        Gender: '',
+        BasicHealthInfo: {
+            Name: '',
+            Age: '',
+            Size: '',
+            IsNeutered: false,
+        },
+        Description: '',
+        Status: '',
+        AvaibleForAdoption: false,
+        ImageFile: null,
+    });
+
+
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+
+        if (name.startsWith('BasicHealthInfo.')) {
+            const nestedProperty = name.split('.')[1];
+            setFormData({
+                ...formData,
+                BasicHealthInfo: {
+                    ...formData.BasicHealthInfo,
+                    [nestedProperty]: type === 'checkbox' ? checked : value,
+                },
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: type === 'checkbox' ? checked : value,
+            });
+        }
+        console.log(formData)
+    };
+
+
+
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+
+        try {
+            const response = await axios.post(
+                `${address_url}/Shelters/${shelterId}/pets`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            if (response.status === 201) {
+
+                console.log('Pet added successfully');
+
+                setImageFile(null);
+
+            } else {
+                console.error('Failed to add pet. Status:', response.status);
+            }
+        } catch (error) {
+            console.error('Failed to add pet:', error);
+        }
+
+    };
 
     function deletePetHandler(shelterId, petId) {
         const url = `${address_url}/Shelters/${shelterId}/pets/${petId}`;
@@ -62,6 +136,7 @@ const ShelterOwner = () => {
     useEffect(() => {
         GetAvailablePetsForAdoption();
     }, []);
+
 
     async function GetAvailablePetsForAdoption() {
         try {
@@ -448,6 +523,116 @@ const ShelterOwner = () => {
                 {openSection === 'ShelterPets' && (
                     <div className="shelter-pets">
                         <h2 className="shelter-pets-title">Shelter {shelterId} Pets:</h2>
+                        <>
+                            <button className="buttonSignIn" onClick={() => { setVisible(true); }}>Add Pet</button>
+                            <Modal isOpen={visible} onRequestClose={() => setVisible(false)} >
+                                <div className="modal-shelter-pets-content">
+                                    <form onSubmit={handleSubmit}>
+                                        <label>
+                                            Type:
+                                            <input
+                                                type="number"
+                                                name="Type"
+                                                value={formData.Type}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
+
+                                        <label>
+                                            Gender:
+                                            <input
+                                                type="number"
+                                                name="Gender"
+                                                value={formData.Gender}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
+
+                                        <label>
+                                            Name:
+                                            <input
+                                                type="text"
+                                                name="BasicHealthInfo.Name"
+                                                value={formData.BasicHealthInfo.Name}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
+
+                                        <label>
+                                            Age:
+                                            <input
+                                                type="number"
+                                                name="BasicHealthInfo.Age"
+                                                value={formData.BasicHealthInfo.Age}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
+
+                                        <label>
+                                            Size:
+                                            <input
+                                                type="number"
+                                                name="BasicHealthInfo.Size"
+                                                value={formData.BasicHealthInfo.Size}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
+
+                                        <label>
+                                            Is Neutered:
+                                            <input
+                                                type="checkbox"
+                                                name="BasicHealthInfo.IsNeutered"
+                                                checked={formData.BasicHealthInfo.IsNeutered}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
+
+                                        <label>
+                                            Description:
+                                            <textarea
+                                                name="Description"
+                                                value={formData.Description}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
+
+                                        <label>
+                                            Status:
+                                            <input
+                                                type="number"
+                                                name="Status"
+                                                value={formData.Status}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
+
+                                        <label>
+                                            Available For Adoption:
+                                            <input
+                                                type="checkbox"
+                                                name="AvaibleForAdoption"
+                                                checked={formData.AvaibleForAdoption}
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
+
+                                        <label>
+                                            Image File:
+                                            <input
+                                                type="file"
+                                                name="ImageFile"
+                                                onChange={(e) => setFormData({ ...formData, ImageFile: e.target.files[0] })}
+                                            />
+                                        </label>
+
+                                        <button type="submit">Submit</button>
+                                    </form>
+
+                                    <button className="buttonPetAddBack" onClick={() => setVisible(false)}>Back</button>
+                                </div>
+                            </Modal>
+                        </>
                         <ul className="shelter-pets-list">
                             {petsAvailable.map((pet, index) => (
                                 <p>
