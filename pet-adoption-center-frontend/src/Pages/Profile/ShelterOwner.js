@@ -30,7 +30,7 @@ const ShelterOwner = () => {
     const [userId, setUserId] = useState('');
     const [role, setRole] = useState('');
     const [petsAvailable, setPetsAvailable] = useState([]);
-    const [imageFile, setImageFile] = useState(null); // State to store the selected image file
+    const [imageFile, setImageFile] = useState(null);
     const [visible, setVisible] = useState(false);
     const [formData, setFormData] = useState({
         Type: '',
@@ -48,12 +48,9 @@ const ShelterOwner = () => {
     });
 
 
-
-    // Update the 'pet' state when handling form input changes
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
 
-        // Handle nested properties correctly
         if (name.startsWith('BasicHealthInfo.')) {
             const nestedProperty = name.split('.')[1];
             setFormData({
@@ -93,11 +90,11 @@ const ShelterOwner = () => {
             );
 
             if (response.status === 201) {
-                // Pet added successfully
+
                 console.log('Pet added successfully');
-                // Reset the form fields and image selection
+
                 setImageFile(null);
-                // ... (reset other form fields)
+
             } else {
                 console.error('Failed to add pet. Status:', response.status);
             }
