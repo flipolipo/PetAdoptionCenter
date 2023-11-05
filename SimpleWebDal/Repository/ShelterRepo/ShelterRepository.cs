@@ -647,7 +647,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
         {
             var foundAdoption = await GetAdoptionFromDataBaseById(adoptionId);
          
-                if (foundAdoption.IsPreAdoptionPoll == true && foundAdoption.PreadoptionPoll != null)
+                if (foundAdoption.IsPreAdoptionPoll == true && foundAdoption.PreadoptionPoll != null )
                 {
                     if (foundAdoption.Activity.Activities.Count >= 1)
                     {

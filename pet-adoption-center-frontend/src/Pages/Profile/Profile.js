@@ -5,7 +5,6 @@ import { address_url } from '../../Service/url';
 import UserRoleName from '../../Components/Enum/UserRoleName';
 import MyCalendar from '../../Components/BigCalendarActivity/CalendarActivity';
 import './Profile.css';
-import ShelterOwner from './ShelterOwner';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {

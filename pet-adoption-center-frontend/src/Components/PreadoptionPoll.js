@@ -7,8 +7,8 @@ import './PreadoptionPoll.css';
 
 const PreadoptionPoll = () => {
   const { id, userId } = useParams();
-  console.log(id);
-  console.log(userId);
+  //console.log(id);
+ // console.log(userId);
 
   const [formData, setFormData] = useState({
     over18: '',
@@ -38,7 +38,7 @@ const PreadoptionPoll = () => {
       try {
         const responseData = await fetchDataForPet(id);
         setPetSelectedData(responseData);
-        console.log(responseData.ShelterId);
+       // console.log(responseData.ShelterId);
         setSubmissionSuccess(false);
         setPreadoptionPollVisible(true);
       } catch (err) {
@@ -110,7 +110,7 @@ const PreadoptionPoll = () => {
           requestData
         );
         setPreadoptionPollData(formDataString);
-        console.log(response);
+        //console.log(response);
         setSubmissionSuccess(true);
         setPreadoptionPollVisible(false);
       } catch (error) {}
@@ -127,7 +127,7 @@ const PreadoptionPoll = () => {
             page to schedule a meeting with the pet.</h2>
             </div>
             <div className='preadoption-poll-find-pet-container'>
-          <Link to={`/Shelters/adoptions/pets/${id}`} className='preadoption-poll-find-pet'>GO BACK</Link>
+          <Link to={`/Shelters/adoptions`} className='preadoption-poll-find-pet'>GO BACK</Link>
           </div>
         </>
       ) : (

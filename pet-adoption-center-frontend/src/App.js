@@ -14,6 +14,9 @@ import React, { useState } from 'react';
 import { UserProvider } from './Components/UserContext.js';
 import ShelterOwner from './Pages/Profile/ShelterOwner';
 import PreadoptionPoll from './Components/PreadoptionPoll.js';
+import Meetings from './Components/Meetings.js';
+import AdoptionById from './Pages/Adoption/AdoptionById.js/AdoptionById.js';
+import ContractAdoption from './Components/ContractAdoption.js';
 
 function App() {
   const [petData, setPetData] = useState([]);
@@ -32,13 +35,25 @@ function App() {
                 path="/Shelters/adoptions"
                 element={<Adoption petData={petData} setPetData={setPetData} />}
               />
-               <Route
+              <Route
                 path="/Shelters/adoptions/pets/:id"
-                element={<Adoption/>}
+                element={<Adoption />}
               />
-                 <Route
+              <Route
                 path="/Shelters/adoptions/pets/:id/users/:userId"
-                element={<PreadoptionPoll/>}
+                element={<PreadoptionPoll />}
+              />
+              <Route
+                path="/Shelters/adoptions/pets/users/:userId"
+                element={<Meetings />}
+              />
+              <Route
+                path="/Shelters/adoptions/:adoptionId/pets/:petId/users/:userId"
+                element={<AdoptionById />}
+              />
+              <Route
+                path="/Shelters/adoptions/:adoptionId/pets/:petId/users/:userId/contract-adoption"
+                element={<ContractAdoption />}
               />
               <Route
                 path="/Shelters/temporaryHouses"
@@ -50,7 +65,10 @@ function App() {
                 element={<PetById petData={petData} setPetData={setPetData} />}
               />
               <Route path="/profile" element={<Profile />} />
-              <Route path='/ShelterOwner/:shelterId' element={<ShelterOwner />} />
+              <Route
+                path="/ShelterOwner/:shelterId"
+                element={<ShelterOwner />}
+              />
             </Routes>
           </div>
 
