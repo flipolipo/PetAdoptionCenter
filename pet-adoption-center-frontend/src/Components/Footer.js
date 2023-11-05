@@ -1,5 +1,7 @@
 import React from 'react';
 import './FooterStyle.css';
+import { address_url } from '../Service/url';
+import { Routes } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -7,6 +9,7 @@ const Footer = () => {
       <div className="heading">
         <h2>Small Palls</h2>
       </div>
+     
       <div className="content">
         <div className="services">
           <h4>Services</h4>
@@ -54,23 +57,23 @@ const Footer = () => {
         <div className="links">
           <h4>Quick links</h4>
           <p>
-            <a href="#">Home</a>
+            <a href="/">Home</a>
           </p>
           <p>
-            <a href="#">About</a>
+            <a href="/Users/pets">Pets</a>
           </p>
           <p>
-            <a href="#">Blogs</a>
+            <a href="/Shelters">Shelters</a>
           </p>
           <p>
-            <a href="#">Contact</a>
+            <a href="/Shelters/Adoptions">Adoption</a>
           </p>
         </div>
         <div className="details">
           <h4 className="address">Address</h4>
           <p>
-            Lorem ipsum dolor sit amet consectetur <br />
-            adipisicing elit. Cupiditate, qui!
+            Katowice Mariacka 3a/72 <br />
+            40-855
           </p>
           <h4 className="mobile">Mobile</h4>
           <p>
@@ -104,6 +107,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
+     
       <footer>
         <hr />
         Mozna tu coś napisać quote
