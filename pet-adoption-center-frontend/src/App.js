@@ -17,6 +17,7 @@ import PreadoptionPoll from './Components/PreadoptionPoll.js';
 import Meetings from './Components/Meetings.js';
 import AdoptionById from './Pages/Adoption/AdoptionById.js/AdoptionById.js';
 import ContractAdoption from './Components/ContractAdoption.js';
+import ConfirmAdoption from './Components/ConfirmAdoption.js';
 
 function App() {
   const [petData, setPetData] = useState([]);
@@ -54,6 +55,10 @@ function App() {
               <Route
                 path="/Shelters/adoptions/:adoptionId/pets/:petId/users/:userId/contract-adoption"
                 element={<ContractAdoption />}
+              />
+              <Route
+                path="/Shelters/adoptions/:adoptionId/pets/:petId/users/:userId/confirm-adoption"
+                element={<ConfirmAdoption />}
               />
               <Route
                 path="/Shelters/temporaryHouses"

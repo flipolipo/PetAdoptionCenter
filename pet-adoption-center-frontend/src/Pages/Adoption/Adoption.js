@@ -73,12 +73,12 @@ const Adoption = () => {
         ) : meetingsVisible ? (
           <div className="meetings">
             <MeetingsInfo />
-            <button onClick={hideInfoMeetings}>Close Info Meetings</button>
+            <button className="button-adoption-1" onClick={hideInfoMeetings}>Close Info Meetings</button>
           </div>
         ) : contractAdoptionVisible ? (
           <div className="contract-adoption">
             <ContractAdoptionInfo />
-            <button onClick={hideContractAdoption}>
+            <button className="button-adoption-1" onClick={hideContractAdoption}>
               Close Contract Adoption
             </button>
           </div>

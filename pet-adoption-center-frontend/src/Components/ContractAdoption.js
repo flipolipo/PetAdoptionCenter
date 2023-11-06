@@ -6,6 +6,7 @@ import GenderPetLabel from '../Components/Enum/GenderPetLabel';
 import TypePetLabel from '../Components/Enum/TypePetLabel';
 import SizePetLabel from './Enum/SizePetLabel';
 import { Link, useParams } from 'react-router-dom';
+import './ContractAdoption.css'
 
 const ContractAdoption = () => {
   const { adoptionId, petId, userId } = useParams();
@@ -310,7 +311,7 @@ This agreement has been drawn up in two identical copies, one
       ) : (
         <>
           {contractAdoptionVisible && (
-            <form onSubmit={handleSubmit}>
+            <form className='contract-adopion-form' onSubmit={handleSubmit}>
               <label>ADOPTION AGREEMENT FOR A PET No. {adoptionId}</label>
               <label>
                 {' '}
@@ -336,7 +337,6 @@ This agreement has been drawn up in two identical copies, one
               {formErrors.adopterName && (
                 <p className="error-message">{formErrors.adopterName}</p>
               )}
-              <label>,</label>
               <label>(surname): </label>
               <input
                 type="text"
@@ -348,7 +348,6 @@ This agreement has been drawn up in two identical copies, one
               {formErrors.adopterSurname && (
                 <p className="error-message">{formErrors.adopterSurname}</p>
               )}
-              <label>,</label>
               <label>PESEL</label>
               <input
                 type="text"
@@ -373,7 +372,6 @@ This agreement has been drawn up in two identical copies, one
               {formErrors.cityName && (
                 <p className="error-message">{formErrors.cityName}</p>
               )}
-              <label>,</label>
               <label>at</label>
               <input
                 type="text"
@@ -385,7 +383,6 @@ This agreement has been drawn up in two identical copies, one
               {formErrors.streetName && (
                 <p className="error-message">{formErrors.streetName}</p>
               )}
-              <label>,</label>
               <label>no</label>
               <input
                 type="text"
@@ -397,7 +394,6 @@ This agreement has been drawn up in two identical copies, one
               {formErrors.houseNumber && (
                 <p className="error-message">{formErrors.houseNumber}</p>
               )}
-              <label>,</label>
               <label>
                 hereinafter referred to as the Adopter, hereinafter collectively
                 referred to as the Parties.
@@ -409,26 +405,20 @@ This agreement has been drawn up in two identical copies, one
               {petAdoptionData && petAdoptionData.BasicHealthInfo && (
                 <label>Name: {petAdoptionData.BasicHealthInfo.Name}</label>
               )}
-              <label>,</label>
               <label>Gender: {GenderPetLabel(petAdoptionData.Gender)}</label>
-              <label>,</label>
               <label>Type: {TypePetLabel(petAdoptionData.Type)}</label>
-              <label>,</label>
               {petAdoptionData && petAdoptionData.BasicHealthInfo && (
                 <>
                   <label>Age: {petAdoptionData.BasicHealthInfo.Age}</label>
-                  <label>,</label>
                   <label>
                     Size: {SizePetLabel(petAdoptionData.BasicHealthInfo.Size)}
                   </label>
-                  <label>,</label>
                   <label>
                     Is neutred:{' '}
                     {petAdoptionData.BasicHealthInfo.IsNeutered ? 'Yes' : 'No'}
                   </label>
                 </>
               )}
-              <label>,</label>
               <label>Vaccinations name:</label>
               <ul>
                 {petAdoptionData &&
@@ -593,7 +583,7 @@ This agreement has been drawn up in two identical copies, one
                 .......................... (Seal and signature of Shelter
                 employee)
               </label>
-              <button type="submit">Submit</button>
+              <button className='contract-adoption-to-sign-button' type="submit">Submit</button>
             </form>
           )}
         </>
