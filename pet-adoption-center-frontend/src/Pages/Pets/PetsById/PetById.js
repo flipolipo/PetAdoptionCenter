@@ -16,7 +16,7 @@ import FlipCardAvailable from '../../../Components/FlipCardAvailable';
 import { fetchDataForShelter } from '../../../Service/fetchDataForShelter';
 import { FetchDataForAdoption } from '../../../Service/FetchDataForAdoption';
 
-const PetById = ({ petId, petAdoptionId, userAdoptionId, adoptionById }) => {
+const PetById = ({ petId, petAdoptionId, userAdoptionId, adoptionById, petProfileId}) => {
   console.log(adoptionById);
   const { id } = useParams();
   const [calendarData, setCalendarData] = useState([]);
@@ -65,6 +65,12 @@ const PetById = ({ petId, petAdoptionId, userAdoptionId, adoptionById }) => {
       fetchData(petId);
     }
   }, [petId]);
+
+  useEffect(() => {
+    if (petProfileId) {
+      fetchData(petProfileId);
+    }
+  }, [petProfileId]);
 
   useEffect(() => {
     if (petAdoptionId) {
@@ -232,7 +238,7 @@ const PetById = ({ petId, petAdoptionId, userAdoptionId, adoptionById }) => {
                     </Link>
                   </>
                 )}
-                {petData.Status !== 3 && !petId && !petAdoptionId && (
+                {petData.Status !== 3 && !petId && !petAdoptionId && !petProfileId && (
                   <>
                     {' '}
                     <button className="pet-button">Adopt me virtually</button>
