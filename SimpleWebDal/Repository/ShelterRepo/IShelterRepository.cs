@@ -51,7 +51,6 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Activity> AddPetActivityToCalendar(Guid shelterId, Guid petId, Activity activity);
         public Task<Vaccination> AddPetVaccination(Guid shelterId, Guid petId, Vaccination vaccination);
         public Task<Disease> AddPetDisease(Guid shelterId, Guid petId, Disease disease);
-        public Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption);
         public Task<Adoption> InitializePetAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption);
         public Task<Adoption> ChooseMeetingDatesForAdoption(Guid shelterId, Guid petId, Guid userId, Guid adoptionId, Guid activityId);
         public Task<Adoption> PetAdoptionMeetingsDone(Guid adoptionId);
@@ -75,7 +74,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<bool> DeleteShelter(Guid shelterId);
         public Task<bool> DeleteShelterUser(Guid shelterId, Guid userId);
         public Task<bool> DeletePetActivity(Guid shelterId, Guid petId, Guid activityId);
-        public Task<bool> DeleteAdoption(Guid shelterId, Guid adoptionId, Guid userId);
+        public Task<bool> DeleteAdoption(Guid shelterId, Guid adoptionId, Guid petId, Guid userId);
 
         #endregion
 

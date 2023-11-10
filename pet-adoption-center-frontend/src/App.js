@@ -18,6 +18,10 @@ import Meetings from './Components/Meetings.js';
 import AdoptionById from './Pages/Adoption/AdoptionById.js/AdoptionById.js';
 import ContractAdoption from './Components/ContractAdoption.js';
 import ConfirmAdoption from './Components/ConfirmAdoption.js';
+import Register from './Components/Register.js';
+import PreadoptionPollInfo from './Components/PreadoptionPollInfo.js';
+import MeetingsInfo from './Components/MeetingsInfo.js';
+import ContractAdoptionInfo from './Components/ContractAdoptionInfo.js';
 
 function App() {
   const [petData, setPetData] = useState([]);
@@ -27,14 +31,26 @@ function App() {
         <div className="App-container">
           <ScrollHandler />
           <Navbar />
-
           <div className="routes">
             <Routes>
+              <Route exact path="/user/register" element={<Register />} />
               <Route exact path="/" element={<Home />} />
               <Route path="/Shelters" element={<Shelters />} />
               <Route
                 path="/Shelters/adoptions"
                 element={<Adoption petData={petData} setPetData={setPetData} />}
+              />
+              <Route
+                path="/Shelters/adoptions/preadoption-poll"
+                element={<PreadoptionPollInfo />}
+              />
+                <Route
+                path="/Shelters/adoptions/meetings-info"
+                element={<MeetingsInfo />}
+              />
+                  <Route
+                path="/Shelters/adoptions/contract-adoption-info"
+                element={<ContractAdoptionInfo />}
               />
               <Route
                 path="/Shelters/adoptions/pets/:id"

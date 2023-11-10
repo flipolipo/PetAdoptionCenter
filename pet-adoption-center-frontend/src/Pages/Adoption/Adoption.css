@@ -97,3 +97,7 @@
     color: var(--color-black);
   }
 }
+.adoption-process{
+  font-size: 1.5rem;
+  text-align: left;
+}

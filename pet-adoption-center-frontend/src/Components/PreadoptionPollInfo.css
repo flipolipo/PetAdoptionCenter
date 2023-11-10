@@ -1,6 +1,15 @@
 .preadoption-poll-info-ul {
     text-align: left; 
+    margin-left: 40px;
+    margin-bottom: 20px;
   }
   .preadoption-poll-info-h {
     padding: 20px;
   }
+  .preadoption-login-find-your-pet {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+ 
+  

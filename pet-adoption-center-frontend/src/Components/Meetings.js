@@ -30,7 +30,7 @@ const Meetings = () => {
   }, [userId.id, userId.token]);
 
   return (
-    <div  className="adoption-main-page-container">
+    <div className="adoption-main-page-container">
       {userId && userData.Adoptions?.length >= 1 && (
         <>
           {console.log(userData.Adoptions)}
@@ -39,22 +39,22 @@ const Meetings = () => {
             <div key={adoption.Id} className="adoption-card-meetings">
               <PetById
                 petId={adoption.PetId}
-                userId={adoption.UserId}
-                adoptionId={adoption.Id}
-                calendarAdoptionId={adoption.CalendarId}
               />
               <h3 className="adoption-main-page">
                 Status:{' '}
                 {adoption.IsContractAdoption ? 'Contracted' : 'Not Contracted'}
               </h3>
-              <Link
+              {adoption.IsPreAdoptionPoll && !adoption.IsMeetings && (<Link
                 to={`/Shelters/adoptions/${adoption.Id}/pets/${adoption.PetId}/users/${adoption.UserId}`}
-                className="adoption-main-page-link">
+                className="adoption-main-page-link"
+              >
+                Choose meeting
+              </Link>) /* : ((<Link
+                to={`/Shelters/adoptions/${adoption.Id}/pets/${adoption.PetId}/users/${adoption.UserId}`}
+                className="adoption-main-page-link"
+              >
                 Show more
-              </Link>
-              {!adoption.IsMeetings && (
-                <MyCalendar events={adoption.Activity.Activities}  className="adoption-main-page-calendar"/>
-              )}
+              </Link>)) */}
               {adoption.Activity.Activities?.length >= 1 &&
                 adoption.Activity.Activities.every(
                   (a) => new Date(a.EndActivityDate) < new Date()
@@ -62,17 +62,28 @@ const Meetings = () => {
                 !adoption.IsMeetings &&
                 !adoption.IsContractAdoption && (
                   <Link
-                    to={`/Shelters/adoptions/${adoption.Id}/pets/${adoption.PetId}/users/${adoption.UserId}`}
-                    className="adoption-main-page-link">
+                    to={`/Shelters/adoptions/${adoption.Id}/pets/${adoption.PetId}/users/${adoption.UserId}/confirm-adoption`}
+                    className="adoption-main-page-link"
+                  >
                     Confirm your adoption
                   </Link>
                 )}
               {adoption.IsMeetings && !adoption.IsContractAdoption && (
                 <Link
-                  to={`/Shelters/adoptions/${adoption.Id}/pets/${adoption.PetId}/users/${adoption.UserId}`}
-                  className="adoption-main-page-link">
+                  to={`/Shelters/adoptions/${adoption.Id}/pets/${adoption.PetId}/users/${adoption.UserId}/contract-adoption`}
+                  className="adoption-main-page-link"
+                >
                   Contract adoption
                 </Link>
+              )}
+              {!adoption.IsMeetings && (
+                <>
+                  <h2>Adoption Meeting Calendar</h2>
+                  <MyCalendar
+                    events={adoption.Activity.Activities}
+                    className="adoption-main-page-calendar"
+                  />
+                </>
               )}
             </div>
           ))}

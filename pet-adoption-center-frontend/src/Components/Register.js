@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 import { address_url } from '../Service/url';
+import { Link } from 'react-router-dom';
 
 Modal.setAppElement('#root');
 
@@ -16,12 +17,13 @@ const customStyles = {
   },
 };
 
-const Register = ({ isLogged }) => {
+const Register = () => {
 
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userName, setUserName] = useState('');
+  const [successRegister, setSuccessRegister] = useState(false);
 
   async function registerUser() {
     try {
@@ -33,17 +35,18 @@ const Register = ({ isLogged }) => {
       if (response.status >= 200 && response.status < 300) {
         console.log('User registered successfully!');
         console.log(response)
-        setVisible(false);
+        setSuccessRegister(true);
       }
     }
     catch (error) {
       console.error(error);
+    }finally {
+      setVisible(false); 
     }
   }
 
   return (
     <div className='signUpButton'>
-      {!isLogged && <button className="buttonSignUp" onClick={() => { setVisible(true); }}>Sign Up</button>}
       <Modal isOpen={visible} onRequestClose={() => setVisible(false)} style={customStyles}>
         <div className="modal-content">
           <input
@@ -68,9 +71,12 @@ const Register = ({ isLogged }) => {
             onChange={e => setPassword(e.target.value)}
           />
           <button className="buttonRegister" onClick={registerUser}>Register</button>
-          <button className="buttonRegister" onClick={() => setVisible(false)}>Back</button>
+          <Link to={`/`}>Home</Link>
         </div>
       </Modal>
+      {successRegister && <><h2>You have been successfully registered</h2>
+      <Link to={`/`}>Back</Link>
+      </>}
     </div>
   );
 }

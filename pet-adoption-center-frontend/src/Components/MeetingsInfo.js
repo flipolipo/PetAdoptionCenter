@@ -4,10 +4,11 @@ import './MeetingsInfo.css';
 const MeetingsInfo = () => {
   return (
     <div className="meetingsInfo-container">
+      <div className='go-to-home-adoption'>
       <h2 className="meetingsInfo-h2">
-        Please LOG IN, CHOOSE your new best friend and first SIGN the
-        pre-adoption QUESTIONNAIRE
+        First SIGN the pre-adoption QUESTIONNAIRE
       </h2>
+      </div>
       <h3 className="meetingsInfo-h3">MEETINGS TO KNOW YOUR PET</h3>
       <p className="meetingsInfo-container-p">
         To proceed to the next adoption step, you must SELECT AT LEAST ONE

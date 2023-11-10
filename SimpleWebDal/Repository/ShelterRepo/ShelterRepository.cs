@@ -697,24 +697,24 @@ namespace SimpleWebDal.Repository.ShelterRepo
             }
             return null;
         }
-        public async Task<Adoption> AddAdoption(Guid shelterId, Guid petId, Guid userId, Adoption adoption)
+        public async Task<bool> DeleteAdoption(Guid shelterId, Guid adoptionId, Guid petId, Guid userId)
         {
-            if (userId == Guid.Empty)
-            {
-                throw new UserValidationException("User ID cannot be empty.");
-            }
             var foundShelter = await FindShelter(shelterId);
-            adoption.PetId = petId;
-            adoption.UserId = userId;
-            if (foundShelter != null)
+            var pet = await GetPetById(petId);
+            var foundPet = await GetShelterPetById(shelterId, pet.Id);
+            var foundUser = await FindUserById(userId);
+            var foundAdoption = await GetAdoptionFromDataBaseById(adoptionId);
+            if (foundShelter != null && pet != null && foundPet != null && foundUser != null && foundAdoption != null)
             {
-                if (adoption.IsPreAdoptionPoll == true && adoption.IsMeetings == true && adoption.IsContractAdoption == true)
-                {
-                    foundShelter.Adoptions.Add(adoption);
-                    await _dbContext.SaveChangesAsync();
-                }
+                foundShelter.Adoptions.Remove(foundAdoption);
+                foundUser.Adoptions.Remove(foundAdoption);
+                foundPet.Status = PetStatus.AtShelter;
+                foundPet.AvaibleForAdoption = true;
+                await _dbContext.SaveChangesAsync();
+                return true;
             }
-            return adoption;
+            return false;
+
         }
 
         public async Task<IEnumerable<Activity>> GetAllPetActivities(Guid shelterId, Guid petId)
@@ -793,21 +793,21 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
             return false;
         }
-        public async Task<bool> DeleteAdoption(Guid shelterId, Guid adoptionId, Guid userId)
-        {
-            var foundShelter = await FindShelter(shelterId);
-            var foundAdoption = foundShelter.Adoptions.FirstOrDefault(x => x.Id == adoptionId);
-            var foundUser = await FindUserById(userId);
-            if (foundAdoption != null && foundShelter != null)
-            {
-                foundShelter.Adoptions.Remove(foundAdoption);
-                foundUser.Adoptions.Remove(foundAdoption);
-                await _dbContext.SaveChangesAsync();
-                return true;
-            }
-            return false;
+        //public async Task<bool> DeleteAdoption(Guid shelterId, Guid adoptionId, Guid userId)
+        //{
+        //    var foundShelter = await FindShelter(shelterId);
+        //    var foundAdoption = foundShelter.Adoptions.FirstOrDefault(x => x.Id == adoptionId);
+        //    var foundUser = await FindUserById(userId);
+        //    if (foundAdoption != null && foundShelter != null)
+        //    {
+        //        foundShelter.Adoptions.Remove(foundAdoption);
+        //        foundUser.Adoptions.Remove(foundAdoption);
+        //        await _dbContext.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    return false;
 
-        }
+        //}
 
         public async Task<bool> UpdateAdoption(Guid shelterId, Guid userId, Adoption adoption)
         {

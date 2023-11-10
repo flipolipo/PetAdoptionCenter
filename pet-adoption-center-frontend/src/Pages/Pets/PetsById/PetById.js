@@ -16,7 +16,13 @@ import FlipCardAvailable from '../../../Components/FlipCardAvailable';
 import { fetchDataForShelter } from '../../../Service/fetchDataForShelter';
 import { FetchDataForAdoption } from '../../../Service/FetchDataForAdoption';
 
-const PetById = ({ petId, petAdoptionId, userAdoptionId, adoptionById, petProfileId}) => {
+const PetById = ({
+  petId,
+  petAdoptionId,
+  userAdoptionId,
+  adoptionById,
+  petProfileId,
+}) => {
   console.log(adoptionById);
   const { id } = useParams();
   const [calendarData, setCalendarData] = useState([]);
@@ -216,7 +222,7 @@ const PetById = ({ petId, petAdoptionId, userAdoptionId, adoptionById, petProfil
   };
 
   return (
-    <div className='pet-by-id-container-all'>
+    <div className="pet-by-id-container-all">
       {petData && petData.BasicHealthInfo && petDataVisible ? (
         <>
           <div className="pet-by-id-container">
@@ -238,18 +244,21 @@ const PetById = ({ petId, petAdoptionId, userAdoptionId, adoptionById, petProfil
                     </Link>
                   </>
                 )}
-                {petData.Status !== 3 && !petId && !petAdoptionId && !petProfileId && (
-                  <>
-                    {' '}
-                    <button className="pet-button">Adopt me virtually</button>
-                    <button className="pet-button" onClick={goToPetCalendar}>
-                      Take me for a walk
-                    </button>
-                    <button className="pet-button" onClick={goToPetCalendar}>
-                      Make me visit at shelter
-                    </button>
-                  </>
-                )}
+                {petData.Status !== 3 &&
+                  !petId &&
+                  !petAdoptionId &&
+                  !petProfileId && (
+                    <>
+                      {' '}
+                      <button className="pet-button">Adopt me virtually</button>
+                      <button className="pet-button" onClick={goToPetCalendar}>
+                        Take me for a walk
+                      </button>
+                      <button className="pet-button" onClick={goToPetCalendar}>
+                        Make me visit at shelter
+                      </button>
+                    </>
+                  )}
               </div>
               <div className="pet-by-id-card-image-name">
                 <img
@@ -370,45 +379,8 @@ const PetById = ({ petId, petAdoptionId, userAdoptionId, adoptionById, petProfil
       petDataVisible &&
       !adoptionData.IsMeetings ? (
         <div className="meetings-button-pet-adoption">
-          <button className="button-link-for-adoption" onClick={goToPetCalendar}>
-            Know your pet
-          </button>
-        </div>
-      ) : null}
-      {console.log(adoptionData.Activity)}
-      {petAdoptionId &&
-        adoptionById &&
-        adoptionData.Activity &&
-        console.log(adoptionData.Activity.Activities)}
-      {petAdoptionId &&
-        adoptionById &&
-        adoptionData.Activity &&
-        adoptionData.Activity.Activities &&
-        adoptionData.Activity.Activities?.length >= 1 &&
-        adoptionData.Activity.Activities.every(
-          (a) => new Date(a.EndActivityDate) < new Date()
-        ) &&
-        !adoptionData.IsMeetings && (
-          <>
-            <Link
-              className="button-link-for-adoption"
-              to={`/Shelters/adoptions/${adoptionById}/pets/${petAdoptionId}/users/${userAdoptionId}/confirm-adoption`}
-            >
-              Confirm adoption
-            </Link>
-          </>
-        )}
-
-      {adoptionData.IsMeetings && !adoptionData.IsContractAdoption && (
-        <Link className="button-link-for-adoption"
-          to={`/Shelters/adoptions/${adoptionById}/pets/${petAdoptionId}/users/${userAdoptionId}/contract-adoption`}
-        >
-          Contract adoption
-        </Link>
-      )}
-
-      {showCalendar && (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <h2>Small Palls Pet's Calendar</h2>
+          {petAdoptionId  && <h2>Click on the meeting.</h2>}
           <Modal
             isOpen={visible}
             onRequestClose={() => setVisible(false)}
@@ -442,27 +414,119 @@ const PetById = ({ petId, petAdoptionId, userAdoptionId, adoptionById, petProfil
                   <button onClick={handleMeetForAdoption}>
                     Meet for adoption
                   </button>
-                )}
+                )} 
               </div>
             )}
-            {activityAddedToAdoption && (
+           {activityAddedToAdoption && (
               <div className="adoption-success-message">
                 <p>{meetingsSuccessMessage}</p>
                 {retryMeetings ? (
                   <button onClick={handleMeetForAdoption}>Try Again</button>
                 ) : (
-                  <Link className="button-link-go-back" to={`/Shelters/adoptions/pets/users/${userAdoptionId}`}>
+                  <Link
+                    className="button-link-go-back"
+                    to={`/Shelters/adoptions/pets/users/${userAdoptionId}`}
+                  >
                     Go back
                   </Link>
                 )}
               </div>
+            )} 
+          </Modal>
+          <MyCalendar events={calendarData} onEventClick={handleEventClick} />
+        </div>
+      ) : null}
+      {console.log(adoptionData.Activity)}
+      {petAdoptionId &&
+        adoptionById &&
+        adoptionData.Activity &&
+        console.log(adoptionData.Activity.Activities)}
+    {/*   {petAdoptionId &&
+        adoptionById &&
+        adoptionData.Activity &&
+        adoptionData.Activity.Activities &&
+        adoptionData.Activity.Activities?.length >= 1 &&
+        adoptionData.Activity.Activities.every(
+          (a) => new Date(a.EndActivityDate) < new Date()
+        ) &&
+        !adoptionData.IsMeetings && (
+          <>
+            <Link
+              className="button-link-for-adoption"
+              to={`/Shelters/adoptions/${adoptionById}/pets/${petAdoptionId}/users/${userAdoptionId}/confirm-adoption`}
+            >
+              Confirm/ delete adoption
+            </Link>
+          </>
+        )} */}
+
+     {/*  {adoptionData.IsMeetings && !adoptionData.IsContractAdoption && (
+        <Link
+          className="button-link-for-adoption"
+          to={`/Shelters/adoptions/${adoptionById}/pets/${petAdoptionId}/users/${userAdoptionId}/contract-adoption`}
+        >
+          Contract adoption
+        </Link>
+      )}
+ */}
+      {showCalendar && (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Modal
+            isOpen={visible}
+            onRequestClose={() => setVisible(false)}
+            style={customStyles}
+          >
+            {edit ? (
+              <div className="modal-content">
+                <div className="activity-form">
+                  Title:{' '}
+                  <input
+                    onChange={(e) => setActivityName(e.target.value)}
+                    type="text"
+                  ></input>
+                  Start Date:{' '}
+                  <DateTimePicker onChange={(e) => updateStartDate(e)} />
+                  End Date:{' '}
+                  <DateTimePicker onChange={(e) => updateEndDate(e)} />
+                  <button onClick={updateActivity}>done</button>
+                  <button onClick={() => setEdit(false)}>go back</button>
+                </div>
+              </div>
+            ) : (
+              <div className="edit-remove-meet-buttons">
+                {!petAdoptionId && (
+                  <>
+                    <button onClick={() => setEdit(true)}>Edit</button>
+                    <button onClick={() => RemoveActivity}>Delete</button>
+                  </>
+                )}
+              {/*   {petAdoptionId && !activityAddedToAdoption && (
+                  <button onClick={handleMeetForAdoption}>
+                    Meet for adoption
+                  </button>
+                )} */}
+              </div>
             )}
+            {/* {activityAddedToAdoption && (
+              <div className="adoption-success-message">
+                <p>{meetingsSuccessMessage}</p>
+                {retryMeetings ? (
+                  <button onClick={handleMeetForAdoption}>Try Again</button>
+                ) : (
+                  <Link
+                    className="button-link-go-back"
+                    to={`/Shelters/adoptions/pets/users/${userAdoptionId}`}
+                  >
+                    Go back
+                  </Link>
+                )}
+              </div>
+            )} */}
           </Modal>
           <MyCalendar events={calendarData} onEventClick={handleEventClick} />
           {!petAdoptionId && (
             <div className="add-activity-container">
               <h3>Add activity!</h3>
-
               <form className="activity-form">
                 Name:{' '}
                 <input

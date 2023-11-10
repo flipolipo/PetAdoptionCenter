@@ -1,13 +1,27 @@
 import React from 'react';
 import './PreadoptionPollInfo.css';
+import { useUser } from './UserContext';
+import Login from './Login';
+import { Link } from 'react-router-dom';
 
 const PreadoptionPollInfo = () => {
+  const { user } = useUser();
   return (
     <div className="preadoption-poll-info">
       {' '}
-      <h2 className='preadoption-poll-info-h'>Please LOG IN and CHOOSE your new best friend first</h2>
-       <h2 className='preadoption-poll-info-h'>PREADOPTION POLL</h2>
-      <ul className='preadoption-poll-info-ul'>
+      <div className="preadoption-login-find-your-pet">
+        {!user.isLogged && (
+          <>
+            {' '}
+            <h2 className="preadoption-poll-info-h">Please</h2>
+            <Login className="LoginComponent" />
+            <h2 className="preadoption-poll-info-h">and </h2>
+          </>
+        )}
+        <Link to={`/Users/pets`}>FIND your new best friend</Link> <h2 className="preadoption-poll-info-h">first</h2>
+      </div>
+      <h2 className="preadoption-poll-info-h">PREADOPTION POLL</h2>
+      <ul className="preadoption-poll-info-ul">
         <li>Are you 18 years or over?*</li>
         <li>
           Are you willing to make the investment in both time and finances to

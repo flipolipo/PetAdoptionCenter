@@ -320,7 +320,7 @@ This agreement has been drawn up in two identical copies, one
               {shelterAdoptionData && ownerName && (
                 <label>
                   {' '}
-                  Shelter {shelterAdoptionData.Name}
+                  Shelter {shelterAdoptionData.Name}{' '} 
                   represented by {ownerName.name} {ownerName.surname}, acting as
                   an authorized person based on the relevant register data,{' '}
                 </label>

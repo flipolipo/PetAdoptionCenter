@@ -439,10 +439,10 @@ public class SheltersController : ControllerBase
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [HttpDelete("{shelterId}/adoptions/{adoptionId}")]
-    public async Task<IActionResult> DeleteAdoption(Guid shelterId, Guid adoptionId, Guid userId)
+    [HttpDelete("{shelterId}/adoptions/{adoptionId}/pets/{petId}/users/{userId}")]
+    public async Task<IActionResult> DeleteAdoption(Guid shelterId, Guid adoptionId, Guid petId, Guid userId)
     {
-        bool deleted = await _shelterRepository.DeleteAdoption(shelterId, adoptionId, userId);
+        bool deleted = await _shelterRepository.DeleteAdoption(shelterId, adoptionId, petId, userId);
         if (deleted)
         {
             return NoContent();
