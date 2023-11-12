@@ -43,11 +43,11 @@ const ConfirmAdoption = () => {
       try {
         const adoptionResponseData = await FetchDataForAdoption(adoptionId);
         setAdoptionData(adoptionResponseData);
-        console.log(adoptionResponseData.IsPreAdoptionPoll);
+       /*  console.log(adoptionResponseData.IsPreAdoptionPoll);
         console.log(adoptionResponseData.PreadoptionPoll);
         console.log(adoptionResponseData.IsMeetings);
         console.log(adoptionResponseData.IsContractAdoption);
-        console.log(adoptionResponseData.ContractAdoption);
+        console.log(adoptionResponseData.ContractAdoption); */
       } catch (error) {
         console.error('Adoption download error:', error);
       }
@@ -84,6 +84,7 @@ const ConfirmAdoption = () => {
       setConfirmAdoption(resp);
       setSubmissionSuccess(true);
       setConfirmAdoptionVisible(false);
+      setDeleteAdoptionVisible(false);
     } catch (err) {
       console.log(err);
     }
@@ -98,6 +99,7 @@ const ConfirmAdoption = () => {
       setDeleteAdoption(resp);
       setDeleteSuccess(true);
       setDeleteAdoptionVisible(false);
+      setConfirmAdoptionVisible(false);
     } catch (err) {
       console.log(err);
     }

@@ -635,6 +635,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                 if (foundAdoption.PetId == foundPet.Id && foundAdoption.UserId == userId && foundAdoption.IsPreAdoptionPoll == true && foundAdoption.PreadoptionPoll != null && foundActivity != null)
                 {
                     foundAdoption.Activity.Activities.Add(foundActivity);
+                    foundPet.Calendar.Activities.Remove(foundActivity);
                     await _dbContext.SaveChangesAsync();
                     return foundAdoption;
                 }

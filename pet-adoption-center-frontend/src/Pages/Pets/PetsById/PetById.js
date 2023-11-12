@@ -15,6 +15,8 @@ import StatusPetLabel from '../../../Components/Enum/StatusPetLabel';
 import FlipCardAvailable from '../../../Components/FlipCardAvailable';
 import { fetchDataForShelter } from '../../../Service/fetchDataForShelter';
 import { FetchDataForAdoption } from '../../../Service/FetchDataForAdoption';
+import { useUser } from '../../../Components/UserContext';
+import { FaSpinner } from 'react-icons/fa';
 
 const PetById = ({
   petId,
@@ -23,8 +25,9 @@ const PetById = ({
   adoptionById,
   petProfileId,
 }) => {
-  console.log(adoptionById);
+  console.log(petId);
   const { id } = useParams();
+  const { user, setUser } = useUser();
   const [calendarData, setCalendarData] = useState([]);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [startDate, setStartDate] = useState(Date.now());
@@ -46,6 +49,7 @@ const PetById = ({
   const [meetingsSuccessMessage, setMeetingsSuccessMessage] = useState(null);
   const [retryMeetings, setRetryMeetings] = useState(false);
   const [adoptionData, setAdoptionData] = useState({});
+  const [loading, setLoading] = useState(false);
 
   Modal.setAppElement('#root');
 
@@ -113,15 +117,15 @@ const PetById = ({
 
       const petDataById = await fetchDataForPet(param);
       setPetData(petDataById);
-      console.log(petDataById);
+      // console.log(petDataById);
 
       if (petDataById && petDataById.ShelterId) {
         const shelterDataById = await fetchDataForShelter(
           petDataById.ShelterId
         );
         setShelterData(shelterDataById);
-        console.log(shelterDataById);
-        console.log(shelterDataById.Name);
+        //console.log(shelterDataById);
+        //console.log(shelterDataById.Name);
 
         if (shelterDataById) {
           setShelterAddress({
@@ -137,7 +141,7 @@ const PetById = ({
       console.log('shelter fetch error: ' + error);
     }
   };
-
+  //console.log(petData);
   const updateEndDate = (e) => {
     const date = new Date(e);
     const iso = date.toISOString();
@@ -204,6 +208,7 @@ const PetById = ({
     }
   };
   const handleMeetForAdoption = async () => {
+    setLoading(true);
     try {
       const response = await axios.post(
         `${address_url}/Shelters/${petData.ShelterId}/pets/${petAdoptionId}/calendar/activities/${selectedActivity.id}/users/${userAdoptionId}/adoptions/${adoptionById}/meetings-adoption`
@@ -218,7 +223,11 @@ const PetById = ({
       setActivityAddedToAdoption(false);
       setMeetingsSuccessMessage('Failed to add meeting. Please try again.');
       setRetryMeetings(true);
+      setLoading(false);
     }
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   };
 
   return (
@@ -228,15 +237,24 @@ const PetById = ({
           <div className="pet-by-id-container">
             <div className="img-and-info">
               <div className="botton-pet-by-id">
+                {id && user.id && petData.AvaibleForAdoption ? (
+                  <Link
+                    to={`/Shelters/adoptions/pets/${id}/users/${user.id}/preadoption-poll`}
+                    className="find-pet"
+                  >
+                    Adopt Me
+                  </Link>
+                ) : petId && petData.AvaibleForAdoption ? (
+                  <Link
+                    to={`/Shelters/adoptions/pets/${id}`}
+                    className="find-pet"
+                  >
+                    Adopt Me
+                  </Link>
+                ) : null}
+
                 {petData.AvaibleForAdoption && (
                   <>
-                    <Link
-                      to={`/Shelters/adoptions/pets/${id}`}
-                      className="find-pet"
-                    >
-                      {' '}
-                      Adopt Me{' '}
-                    </Link>
                     <Link to="/Shelters/temporaryHouses">
                       <button className="pet-button">
                         Give me a temporary house
@@ -380,7 +398,11 @@ const PetById = ({
       !adoptionData.IsMeetings ? (
         <div className="meetings-button-pet-adoption">
           <h2>Small Palls Pet's Calendar</h2>
-          {petAdoptionId  && <h2>Click on the meeting.</h2>}
+          {petAdoptionId && (
+            <h2 className="important">
+              Click on the meeting ("KNOW ME") to add it.
+            </h2>
+          )}
           <Modal
             isOpen={visible}
             onRequestClose={() => setVisible(false)}
@@ -411,13 +433,19 @@ const PetById = ({
                   </>
                 )}
                 {petAdoptionId && !activityAddedToAdoption && (
-                  <button onClick={handleMeetForAdoption}>
-                    Meet for adoption
-                  </button>
-                )} 
+                  <div className="spinner-container">
+                    <button onClick={handleMeetForAdoption}>
+                      {loading ? (
+                        <FaSpinner className="spinner" />
+                      ) : (
+                        'Meet for adoption'
+                      )}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
-           {activityAddedToAdoption && (
+            {activityAddedToAdoption && (
               <div className="adoption-success-message">
                 <p>{meetingsSuccessMessage}</p>
                 {retryMeetings ? (
@@ -431,7 +459,7 @@ const PetById = ({
                   </Link>
                 )}
               </div>
-            )} 
+            )}
           </Modal>
           <MyCalendar events={calendarData} onEventClick={handleEventClick} />
         </div>
@@ -441,7 +469,7 @@ const PetById = ({
         adoptionById &&
         adoptionData.Activity &&
         console.log(adoptionData.Activity.Activities)}
-    {/*   {petAdoptionId &&
+      {/*   {petAdoptionId &&
         adoptionById &&
         adoptionData.Activity &&
         adoptionData.Activity.Activities &&
@@ -460,7 +488,7 @@ const PetById = ({
           </>
         )} */}
 
-     {/*  {adoptionData.IsMeetings && !adoptionData.IsContractAdoption && (
+      {/*  {adoptionData.IsMeetings && !adoptionData.IsContractAdoption && (
         <Link
           className="button-link-for-adoption"
           to={`/Shelters/adoptions/${adoptionById}/pets/${petAdoptionId}/users/${userAdoptionId}/contract-adoption`}
@@ -500,7 +528,7 @@ const PetById = ({
                     <button onClick={() => RemoveActivity}>Delete</button>
                   </>
                 )}
-              {/*   {petAdoptionId && !activityAddedToAdoption && (
+                {/*   {petAdoptionId && !activityAddedToAdoption && (
                   <button onClick={handleMeetForAdoption}>
                     Meet for adoption
                   </button>

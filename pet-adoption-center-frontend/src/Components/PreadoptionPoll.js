@@ -4,11 +4,12 @@ import { address_url } from '../Service/url';
 import { Link, useParams } from 'react-router-dom';
 import { fetchDataForPet } from '../Service/fetchDataForPet';
 import './PreadoptionPoll.css';
+import { FaSpinner } from 'react-icons/fa';
 
 const PreadoptionPoll = () => {
   const { id, userId } = useParams();
-  //console.log(id);
- // console.log(userId);
+   //console.log(id);
+  // console.log(userId);
 
   const [formData, setFormData] = useState({
     over18: '',
@@ -32,13 +33,15 @@ const PreadoptionPoll = () => {
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const [petSelectedData, setPetSelectedData] = useState({});
   const [preadoptionPollVisible, setPreadoptionPollVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formReady, setFormReady] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const responseData = await fetchDataForPet(id);
         setPetSelectedData(responseData);
-       // console.log(responseData.ShelterId);
+        // console.log(responseData.ShelterId);
         setSubmissionSuccess(false);
         setPreadoptionPollVisible(true);
       } catch (err) {
@@ -47,9 +50,21 @@ const PreadoptionPoll = () => {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const errorsExist = Object.values(formErrors).some((error) => error !== '');
+    console.log('formErrors:', formErrors);
+    console.log('formReady:', !errorsExist);
+    setFormReady(!errorsExist);
+  }, [formErrors]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "numAdults" || name === "timePetLeftAlone" || name === "petIndoorsTime") {
+    if (
+      name === 'numAdults' ||
+      name === 'timePetLeftAlone' ||
+      name === 'petIndoorsTime'
+    ) {
       if (isNaN(value) || Number(value) < 0) {
         setFormErrors({
           ...formErrors,
@@ -76,8 +91,9 @@ const PreadoptionPoll = () => {
       });
     }
   };
-  
+
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const errors = {};
     if (formData.over18 !== 'Yes') {
@@ -88,6 +104,14 @@ const PreadoptionPoll = () => {
         errors[key] = 'This field is required.';
       }
     }
+    if (!formReady) {
+      setLoading(false);
+      return;
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 8000);
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
     } else {
@@ -113,7 +137,11 @@ const PreadoptionPoll = () => {
         //console.log(response);
         setSubmissionSuccess(true);
         setPreadoptionPollVisible(false);
-      } catch (error) {}
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -121,13 +149,22 @@ const PreadoptionPoll = () => {
     <div className="preadoption-form">
       {submissionSuccess ? (
         <>
-        <div className='preadoption-poll-form-info'>
-          <h2 className='preadoption-poll-h2'>The pre-adoption poll has been successfully sent. </h2>
-          <h2 className='preadoption-poll-h2'> Return to the main
-            page to schedule a meeting with the pet.</h2>
-            </div>
-            <div className='preadoption-poll-find-pet-container'>
-          <Link to={`/Shelters/adoptions`} className='preadoption-poll-find-pet'>GO BACK</Link>
+          <div className="preadoption-poll-form-info">
+            <h2 className="preadoption-poll-h2">
+              The pre-adoption poll has been successfully sent.{' '}
+            </h2>
+            <h2 className="preadoption-poll-h2">
+              {' '}
+              Return to the main page to schedule a meeting with the pet.
+            </h2>
+          </div>
+          <div className="preadoption-poll-find-pet-container">
+            <Link
+              to={`/Shelters/adoptions`}
+              className="preadoption-poll-find-pet"
+            >
+              GO BACK
+            </Link>
           </div>
         </>
       ) : (
@@ -339,7 +376,20 @@ const PreadoptionPoll = () => {
                     {formErrors.vacationArrangements}
                   </p>
                 )}
-                <button type="submit">Submit</button>
+                <div className="spinner-container">
+                  <button type="submit" disabled={loading || !formReady}>
+                    {loading && formReady ? (
+                      <FaSpinner className="spinner" />
+                    ) : (
+                      'Submit'
+                    )}
+                  </button>
+                  {!formReady && (
+                    <p className="error-message">
+                      Check if all fields are filled.
+                    </p>
+                  )}
+                </div>
               </form>
             </>
           )}

@@ -6,7 +6,8 @@ import GenderPetLabel from '../Components/Enum/GenderPetLabel';
 import TypePetLabel from '../Components/Enum/TypePetLabel';
 import SizePetLabel from './Enum/SizePetLabel';
 import { Link, useParams } from 'react-router-dom';
-import './ContractAdoption.css'
+import './ContractAdoption.css';
+import { FaSpinner } from 'react-icons/fa';
 
 const ContractAdoption = () => {
   const { adoptionId, petId, userId } = useParams();
@@ -21,6 +22,7 @@ const ContractAdoption = () => {
     cityName: '',
     streetName: '',
     houseNumber: '',
+    flatNumber: '',
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -31,6 +33,8 @@ const ContractAdoption = () => {
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const [contractAdoptionVisible, setContractAdoptionVisible] = useState(false);
   const [userData, setUserData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [formReady, setFormReady] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,7 +75,6 @@ const ContractAdoption = () => {
         setContractAdoptionVisible(true);
         console.log(response.data.BasicInformation.Name);
         console.log(response.data.BasicInformation.Surname);
-
       } catch (err) {
         console.log(err);
       }
@@ -79,6 +82,13 @@ const ContractAdoption = () => {
 
     fetchProfileData();
   }, [userId, userId.token]);
+
+  useEffect(() => {
+    const errorsExist = Object.values(formErrors).some((error) => error !== '');
+    console.log('formErrors:', formErrors);
+    console.log('formReady:', !errorsExist);
+    setFormReady(!errorsExist);
+  }, [formErrors]);
 
   const fetchDataForShelter = async (shelterId) => {
     try {
@@ -165,19 +175,52 @@ const ContractAdoption = () => {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const errors = {};
-    if (formData.adopterName !== userData.BasicInformation.Name) {
+    if (formData.adopterName.trim() !== userData.BasicInformation.Name.trim()) {
       errors.adopterName = 'Wrong name to submit this form.';
     }
-    if (formData.adopterSurname !== userData.BasicInformation.Surname) {
+    if (
+      formData.adopterSurname.trim() !==
+      userData.BasicInformation.Surname.trim()
+    ) {
       errors.adopterSurname = 'Wrong surname to submit this form.';
     }
+    if (
+      formData.cityName.trim() !== userData.BasicInformation.Address.City.trim()
+    ) {
+      errors.cityName = 'Wrong city name to submit this form.';
+    }
+    if (
+      formData.streetName.trim() !==
+      userData.BasicInformation.Address.Street.trim()
+    ) {
+      errors.streetName = 'Wrong street name to submit this form.';
+    }
+
     for (const key in formData) {
-      if (!formData[key]) {
+      if (key !== 'flatNumber' && !formData[key].trim()) {
         errors[key] = 'This field is required.';
       }
     }
+
+    if (
+      'flatNumber' in formData &&
+      formData.flatNumber &&
+      !formData.flatNumber.trim()
+    ) {
+      errors.flatNumber = 'Flat number must be a number.';
+    }
+
+    if (!formReady) {
+      setLoading(false);
+      return;
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 7000);
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
     } else {
@@ -190,10 +233,12 @@ const ContractAdoption = () => {
       represented by ${ownerName.name} ${ownerName.surname}, acting as an
       authorized person based on the relevant register data, and Mr./Mrs. (name): ${
         formData.adopterName
-      } (surname): ${formData.adopterSurname}, PESEL ${formData.pesel}, residing in 
+      } (surname): ${formData.adopterSurname}, PESEL ${
+        formData.pesel
+      }, residing in 
       ${formData.cityName} at ${formData.streetName} no ${
         formData.houseNumber
-      }, hereinafter referred
+      }, flat number: ${formData.flatNumber}, hereinafter referred
       to as the Adopter, hereinafter collectively referred to as the
       Parties. 
       § 1
@@ -275,7 +320,11 @@ This agreement has been drawn up in two identical copies, one
         setContractAdoptionData(response.data);
         setSubmissionSuccess(true);
         setContractAdoptionVisible(false);
-      } catch (error) {}
+      } catch (error) {
+        console.error('Error submitting contract:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
   const currentDate = new Date();
@@ -311,7 +360,7 @@ This agreement has been drawn up in two identical copies, one
       ) : (
         <>
           {contractAdoptionVisible && (
-            <form className='contract-adopion-form' onSubmit={handleSubmit}>
+            <form className="contract-adopion-form" onSubmit={handleSubmit}>
               <label>ADOPTION AGREEMENT FOR A PET No. {adoptionId}</label>
               <label>
                 {' '}
@@ -320,9 +369,9 @@ This agreement has been drawn up in two identical copies, one
               {shelterAdoptionData && ownerName && (
                 <label>
                   {' '}
-                  Shelter {shelterAdoptionData.Name}{' '} 
-                  represented by {ownerName.name} {ownerName.surname}, acting as
-                  an authorized person based on the relevant register data,{' '}
+                  Shelter {shelterAdoptionData.Name} represented by{' '}
+                  {ownerName.name} {ownerName.surname}, acting as an authorized
+                  person based on the relevant register data,{' '}
                 </label>
               )}
 
@@ -394,6 +443,18 @@ This agreement has been drawn up in two identical copies, one
               {formErrors.houseNumber && (
                 <p className="error-message">{formErrors.houseNumber}</p>
               )}
+              <label>flat number</label>
+              <input
+                type="text"
+                name="flatNumber"
+                value={formData.flatNumber}
+                onChange={handleChange}
+                className="form-contract-adoption"
+              />
+              {formErrors.flatNumber && (
+                <p className="error-message">{formErrors.flatNumber}</p>
+              )}
+
               <label>
                 hereinafter referred to as the Adopter, hereinafter collectively
                 referred to as the Parties.
@@ -583,7 +644,20 @@ This agreement has been drawn up in two identical copies, one
                 .......................... (Seal and signature of Shelter
                 employee)
               </label>
-              <button className='contract-adoption-to-sign-button' type="submit">Submit</button>
+              <div className="spinner-container">
+                  <button type="submit" disabled={loading || !formReady} className='contract-adoption-to-sign-button'>
+                    {loading && formReady ? (
+                      <FaSpinner className="spinner" />
+                    ) : (
+                      'Submit'
+                    )}
+                  </button>
+                  {!formReady && (
+                    <p className="error-message">
+                      Check if all fields are filled.
+                    </p>
+                  )}
+                </div>
             </form>
           )}
         </>

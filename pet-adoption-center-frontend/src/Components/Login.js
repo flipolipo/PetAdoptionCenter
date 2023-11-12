@@ -20,7 +20,7 @@ const customStyles = {
   },
 };
 
-const Login = ({userAdoption, setUserAdoption}) => {
+const Login = () => {
   const navigate = useNavigate();
   const { user, setUser } = useUser();
   const [visible, setVisible] = useState(false);

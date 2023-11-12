@@ -38,7 +38,7 @@ function App() {
               <Route path="/Shelters" element={<Shelters />} />
               <Route
                 path="/Shelters/adoptions"
-                element={<Adoption petData={petData} setPetData={setPetData} />}
+                element={<Adoption />}
               />
               <Route
                 path="/Shelters/adoptions/preadoption-poll"
@@ -57,7 +57,7 @@ function App() {
                 element={<Adoption />}
               />
               <Route
-                path="/Shelters/adoptions/pets/:id/users/:userId"
+                path="/Shelters/adoptions/pets/:id/users/:userId/preadoption-poll"
                 element={<PreadoptionPoll />}
               />
               <Route
@@ -83,7 +83,7 @@ function App() {
               <Route path="/Users/pets" element={<Pets />} />
               <Route
                 path="/Users/pets/:id"
-                element={<PetById petData={petData} setPetData={setPetData} />}
+                element={<PetById />}
               />
               <Route path="/profile" element={<Profile />} />
               <Route
