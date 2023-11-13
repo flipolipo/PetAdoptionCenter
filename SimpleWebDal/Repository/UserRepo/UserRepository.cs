@@ -4,6 +4,7 @@ using SimpleWebDal.Exceptions.UserRepository;
 using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
+using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 using System.Data;
 using System.Reflection;
@@ -382,6 +383,19 @@ public class UserRepository : IUserRepository
     {
         var pets = await GetAllPets();
         return pets.Where(pet => pet.AvaibleForAdoption == true);
+    }
+
+    public async Task<TempHouse> GetUserTempHouse(Guid userId)
+    {
+        return await _dbContext.TempHouses.FirstOrDefaultAsync(a => a.UserId == userId);
+    }
+
+    public async Task<IEnumerable<Pet>> GetAllPetsInTempHouse(Guid userId)
+    {
+        return await _dbContext.TempHouses
+            .Where(a => a.UserId == userId)
+            .SelectMany(tempHouse => tempHouse.PetsInTemporaryHouse)
+            .ToListAsync();
     }
 
 

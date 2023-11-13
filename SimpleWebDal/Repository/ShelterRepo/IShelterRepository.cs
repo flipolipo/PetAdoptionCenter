@@ -22,6 +22,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Pet> GetShelterPetById(Guid shelterId, Guid petId);
         public Task<IEnumerable<Pet>> GetAllAdoptedPets(Guid shelterId);
         public Task<TempHouse> GetTempHouseById(Guid shelterId, Guid tempHouseId);
+        public Task<TempHouse> GetTempHouse(Guid tempHouseId);
         public Task<IEnumerable<TempHouse>> GetAllTempHouses(Guid shelterId);
         public Task<IEnumerable<Pet>> GetAllShelterTempHousesPets(Guid shelterId);
         public Task<Pet> GetTempHousePetById(Guid shelterId, Guid petId, Guid tempHouseId);
@@ -45,7 +46,9 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         #region //POST
         // public Task<Shelter> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city);
         public Task<Shelter> CreateShelter(Shelter shelter);
-        public Task<TempHouse> AddTempHouse(Guid shelterId, Guid userId, Guid petId, TempHouse tempHouse);
+        public Task<TempHouse> InitializeTempHouseForPet(Guid shelterId, Guid userId, Guid petId, TempHouse tempHouse);
+        public Task<TempHouse> ChooseMeetingDatesForTempHouseProcess(Guid petId, Guid tempHouseId, Guid activityId);
+        public Task<TempHouse> PetMeetingsForTempHouseDone(Guid tempHouseId);
         public Task<Pet> AddPet(Guid shelterId, Pet pet);
         public Task<Activity> AddActivityToCalendar(Guid shelterId, Activity activity);
         public Task<Activity> AddPetActivityToCalendar(Guid shelterId, Guid petId, Activity activity);
@@ -65,6 +68,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<bool> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size, bool isNeutred);
         public Task<bool> UpdatePetActivity(Guid shelterId, Guid petId, Activity activity);
         public Task<bool> UpdateAdoption(Guid shelterId, Guid userId, Adoption adoption);
+        public Task<bool> UpdateTempHouse(TempHouse tempHouse);
         #endregion
 
         #region //DELETE

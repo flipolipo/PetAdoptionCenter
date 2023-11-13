@@ -244,7 +244,7 @@ const PetById = ({
                   >
                     Adopt Me
                   </Link>
-                ) : petId && petData.AvaibleForAdoption ? (
+                ) : petData.AvaibleForAdoption ? (
                   <Link
                     to={`/Shelters/adoptions/pets/${id}`}
                     className="find-pet"
@@ -252,7 +252,6 @@ const PetById = ({
                     Adopt Me
                   </Link>
                 ) : null}
-
                 {petData.AvaibleForAdoption && (
                   <>
                     <Link to="/Shelters/temporaryHouses">
