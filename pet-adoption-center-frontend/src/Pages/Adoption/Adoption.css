@@ -36,7 +36,7 @@
   width: 250px;
 }
 .button-adoption-1:hover {
-  background-color: rgba(246, 158, 123, 0.8); 
+  background-color: rgba(246, 158, 123, 0.5); 
 } 
 .find-pet {
   cursor: pointer;
@@ -60,10 +60,10 @@
   width: 280px;
 }
 .find-pet:hover {
-  background-color: rgba(246, 158, 123, 0.8); 
+  background-color: rgba(246, 158, 123, 0.5); 
 } 
 .button-adoption:hover {
-  background-color: rgba(246, 158, 123, 0.8); 
+  background-color: rgba(246, 158, 123, 0.5); 
 } 
 
 .title-pet{
@@ -96,4 +96,8 @@
     font-family: var(--font-outfit);
     color: var(--color-black);
   }
+}
+.adoption-process{
+  font-size: 1.5rem;
+  text-align: left;
 }

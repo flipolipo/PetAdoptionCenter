@@ -1,0 +1,51 @@
+.adoption-main-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .adoption-card-meetings {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .adoption-main-page {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .adoption-main-page-link {
+    cursor: pointer;
+    position: sticky;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: var(--font-outfit);
+    color: var(--color-black);
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(246, 158, 123, 1);
+    margin-top: 10px;
+    border-radius: 10px;
+    width: 180px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border: 2px solid black;
+  }
+  .adoption-main-page-link:hover {
+    background-color: rgba(246, 158, 123, 0.5);
+  }
+
+  .basic-information-for-adoption {
+    text-align: center; 
+    margin: 20px; 
+  }
+  .important{
+    margin-bottom: 20px;
+  }

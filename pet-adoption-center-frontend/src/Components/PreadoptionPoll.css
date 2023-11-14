@@ -57,26 +57,46 @@
   }
 
   .preadoption-poll-find-pet {
-    cursor: pointer;
-    position: sticky;
-    font-size: 0.8rem;
-    font-weight: 700;
-    font-family: var(--font-outfit);
-    color: var(--color-black);
-    text-align: center;
-    padding: 10px; 
-    background-color: rgba(246, 158, 123, 1);
-    margin-top: 10px;
-    border-radius: 10px;
-    width: 180px; 
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s;
-    border: 2px solid black;
-    word-wrap: break-word;
-    align-content: center;
+  cursor: pointer;
+  position: sticky;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+  text-align: center;
+  padding: 10px; 
+  background-color: rgba(246, 158, 123, 1);
+  margin-top: 10px;
+  border-radius: 10px;
+  width: 180px; 
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  border: 2px solid black;
+  word-wrap: break-word;
+  align-content: center;
+}
+
+.preadoption-poll-find-pet:hover {
+  background-color: rgba(246, 158, 123, 0.8);
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh; 
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
-  
-  .preadoption-poll-find-pet:hover {
-    background-color: rgba(246, 158, 123, 0.8);
+  to {
+    transform: rotate(360deg);
   }
+}

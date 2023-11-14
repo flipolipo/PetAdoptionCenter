@@ -1,0 +1,46 @@
+.confirm-adoption-for-pet {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .confirm-adoption-for-pet-button {
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-black);
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(246, 158, 123, 1);
+    margin-top: 10px;
+    border-radius: 10px;
+    width: 180px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border: 2px solid black;
+    padding: 10px;
+  }
+  
+  .confirm-adoption-for-pet-button:hover {
+    background-color: rgba(246, 158, 123, 0.5);
+  }
+  
+  .confirm-adoption-for-pet-info {
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 20px;
+  }
+  
+  .confirm-adoption-for-pet-h2 {
+    font-size: 1.4rem;
+    margin: 10px 0;
+  }
+  
+  .confirm-adoption-for-pet-link {
+    text-align: center;
+  }
+  
+
+  

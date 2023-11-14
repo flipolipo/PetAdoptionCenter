@@ -5,6 +5,7 @@ using SimpleWebDal.DTOs.AddressDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
 using SimpleWebDal.DTOs.CalendarDTOs;
 using SimpleWebDal.DTOs.CalendarDTOs.ActivityDTOs;
+using SimpleWebDal.DTOs.TemporaryHouseDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.BasicInformationDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.RoleDTOs;
@@ -348,6 +349,18 @@ public class UsersController : ControllerBase
             return StatusCode(500);
         }
     }
+    [HttpGet("{id}/tempHouses")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<TempHouseReadDTO>> GetUserTempHouse(Guid id) 
+    {
+        var userTempHouse = await _userRepository.GetUserTempHouse(id);
+        if (userTempHouse != null)
+        {
+            return Ok(_mapper.Map<TempHouseReadDTO>(userTempHouse));
+        }
+        return NotFound();
+    }
     #endregion
     #region //Endpoints for pets
     [HttpGet("pets")]
@@ -503,7 +516,23 @@ public class UsersController : ControllerBase
         }).ToList();
         return Ok(updatedPetsDto);
     }
-
+    [HttpGet("{id}/pets/tempHouse")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllPetsFromUserTempHouse(Guid id)
+    {
+        var pets = await _userRepository.GetAllPetsInTempHouse(id);
+        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+        var updatedPetsDto = petsDto.Select(petDto =>
+        {
+            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+            if (matchingPet != null)
+            {
+                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
+            }
+            return petDto;
+        }).ToList();
+        return Ok(updatedPetsDto);
+    }
 
     #endregion
 }

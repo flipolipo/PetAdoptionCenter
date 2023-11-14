@@ -5,8 +5,8 @@ import { address_url } from '../../Service/url';
 import UserRoleName from '../../Components/Enum/UserRoleName';
 import MyCalendar from '../../Components/BigCalendarActivity/CalendarActivity';
 import './Profile.css';
-import ShelterOwner from './ShelterOwner';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import PetById from '../Pets/PetsById/PetById';
 
 const Profile = () => {
 
@@ -169,11 +169,11 @@ const Profile = () => {
                 {openSection === 'Adoptions' && (
                     <div className="adoptionsProfiles">
                         <h2>Your Adoptions</h2>
+                        <Link className='go-to-user-adoption' to={`/Shelters/adoptions/pets/users/${user.id}`}>Show more</Link>
                         {profileData.Adoptions?.map(adoption => (
                             <div key={adoption.Id} className="adoption-card">
-                                <p>Pet ID: {adoption.PetId}</p>
-                                <p>Status: {adoption.IsContractAdoption ? 'Contracted' : 'Not Contracted'}</p>
-                                <p>Date of Adoption: {adoption.DateOfAdoption}</p>
+                                <PetById petAdoptionId={adoption.PetId} userAdoptionId={adoption.UserId} adoptionById={adoption.Id}/>
+                                {adoption.IsContractAdoption && <p>Date of Adoption: {new Date(adoption.DateOfAdoption).toLocaleDateString()}</p>}
                             </div>
                         ))}
                     </div>
@@ -188,15 +188,7 @@ const Profile = () => {
                         <h2>Your Pets</h2>
                         {profileData.Pets?.map(pet => (
                             <div key={pet.Id} className="pet-cardProfiles">
-                                <p>Pet ID: {pet.Id}</p>
-                                <p>Status: {pet.AvailbleForAdoption ? 'Availble for adoption' : 'Not availble for adoption'}</p>
-                                <p>Discription: {pet.Description}</p>
-                                <p><img
-                                    src={`data:image/jpeg;base64, ${pet.Image}`}
-                                    alt=""
-                                    width="250px"
-                                    height="100%"
-                                /></p>
+                                <PetById petProfileId={pet.Id} />
                             </div>
                         ))}
                     </div>

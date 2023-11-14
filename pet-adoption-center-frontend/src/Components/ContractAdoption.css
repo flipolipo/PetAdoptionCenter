@@ -1,0 +1,66 @@
+
+  .contract-adoption-to-sign {
+    font-family: var(--font-roboto, Arial, sans-serif);
+    padding: 20px;
+  }
+  
+  .contract-adopion-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: var(--font-roboto, Arial, sans-serif);
+  }
+  
+  .contract-adoption-to-sign-button {
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-black);
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(246, 158, 123, 1);
+    margin-top: 10px;
+    border-radius: 10px;
+    width: 180px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border: 2px solid black;
+    padding: 10px;
+  }
+  
+  .contract-adoption-to-sign-button:hover {
+    background-color: rgba(246, 158, 123, 0.5);
+  }
+  
+  .form-contract-adoption {
+    width: 100%;
+    padding: 5px;
+    margin: 5px 0;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 5px;
+  }
+  
+  .contract-adoption-to-sign-info {
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 20px;
+  }
+  
+  .contract-adoption-to-sign-h2 {
+    font-size: 1.4rem;
+    margin: 10px 0;
+  }
+  
+  .contract-adoption-to-sign-link {
+    text-align: center;
+  }
+
+  .contract-adopion-form label {
+    display: block;
+    margin-top: 10px;
+  }
