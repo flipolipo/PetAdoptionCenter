@@ -21,7 +21,7 @@
   font-size: 1.5rem;
   margin: 0 10px;
 }
-.user-auth-div{
+.user-auth-div {
   grid-column: 6;
 }
 .nav-menu {
@@ -302,5 +302,9 @@ nav ul {
   color: #007bff;
 }
 .logoutText {
+  cursor: pointer;
+}
+
+.shelterOwnerText {
   cursor: pointer;
 }
