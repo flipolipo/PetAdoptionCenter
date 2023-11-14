@@ -318,21 +318,40 @@ public class SheltersController : ControllerBase
     [HttpPost("pets/{petId}/calendar/activities/{activityId}/users/temporary-houses/{tempHouseId}/meetings-temporary-house")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<TempHouseReadDTO>> ChooseMeetingDatesForAdoption(Guid petId, Guid tempHouseId, Guid activityId)
+    public async Task<ActionResult<TempHouseReadDTO>> ChooseMeetingDatesForTempHouse(Guid petId, Guid tempHouseId, Guid activityId)
     {
         var tempHouse = await _shelterRepository.ChooseMeetingDatesForTempHouseProcess(petId, tempHouseId, activityId);
         var tempHouseReadDTO = _mapper.Map<TempHouseReadDTO>(tempHouse);
         return Ok(tempHouseReadDTO);
     }
 
-    [HttpPost("temporary-houses/{tempHouseId}/meetings-temporary-house-done")]
+    [HttpPost("temporary-houses/{tempHouseId}/confirm")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<TempHouseReadDTO>> PetMeetingsForTempHouseDone(Guid tempHouseId)
+    public async Task<ActionResult<TempHouseReadDTO>> ConfirmYourChooseForTempHouse(Guid tempHouseId, Guid petId)
     {
-        var tempHouse = await _shelterRepository.PetMeetingsForTempHouseDone(tempHouseId);
+        var tempHouse = await _shelterRepository.ConfirmYourChooseForTempHouse(tempHouseId, petId);
         var tempHouseReadDTO = _mapper.Map<TempHouseReadDTO>(tempHouse);
         return Ok(tempHouseReadDTO);
+    }
+
+    [HttpPost("{shelterId}/pets/{petId}/calendar/activities/{activityId}/users/{userId}/temporary-houses/{tempHouseId}/meetings-another-pet-temporary-house")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<TempHouseReadDTO>> ChooseMeetingDatesForKnowAnotherYourPet(Guid shelterId, Guid petId, Guid userId, Guid tempHouseId, Guid activityId)
+    {
+        var tempHouse = await _shelterRepository.ChooseMeetingDatesForKnowAnotherPet(shelterId, petId, userId, tempHouseId, activityId);
+        var tempHouseReadDTO = _mapper.Map<TempHouseReadDTO>(tempHouse);
+        return Ok(tempHouseReadDTO);
+    }
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpPost("pets/{petId}/calendar/activities/users/temporary-houses/{tempHouseId}/add-pet")]
+    public async Task<ActionResult<TempHouseReadDTO>> ConfirmToAddAnotherPetToTempHouse(Guid petId, Guid tempHouseId)
+    {
+        var addPetToTempHouse = await _shelterRepository.ConfirmToAddAnotherPetToTempHouse(tempHouseId, petId); 
+        var tempHouseReadDto = _mapper.Map<TempHouseReadDTO>(addPetToTempHouse);
+        return Ok(tempHouseReadDto);
     }
 
     [HttpPut("temporary-houses/{tempHouseId}")]

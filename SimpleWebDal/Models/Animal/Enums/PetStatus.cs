@@ -6,5 +6,6 @@ public enum PetStatus
     AtShelter,
     OnAWalk,
     Adopted,
-    OnAdoptionProccess
+    OnAdoptionProccess,
+    OnTemporaryHouseProcess
 }

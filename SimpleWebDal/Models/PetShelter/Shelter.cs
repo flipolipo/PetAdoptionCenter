@@ -16,6 +16,7 @@ public class Shelter
     public string PhoneNumber { get; set; }
     public Address ShelterAddress { get; set; }
     public string ShelterDescription { get; set; }
+    public string BankNumber { get; set; }
     public ICollection<User>? ShelterUsers { get; set; }
     public ICollection<Pet>? ShelterPets { get; set; }
     public ICollection<Adoption>? Adoptions { get; set; }

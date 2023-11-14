@@ -373,6 +373,10 @@ namespace SimpleWebDal.Migrations
                     b.Property<Guid>("AddressId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("BankNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("CalendarId")
                         .HasColumnType("uuid");
 

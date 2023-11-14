@@ -48,7 +48,9 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Shelter> CreateShelter(Shelter shelter);
         public Task<TempHouse> InitializeTempHouseForPet(Guid shelterId, Guid userId, Guid petId, TempHouse tempHouse);
         public Task<TempHouse> ChooseMeetingDatesForTempHouseProcess(Guid petId, Guid tempHouseId, Guid activityId);
-        public Task<TempHouse> PetMeetingsForTempHouseDone(Guid tempHouseId);
+        public Task<TempHouse> ConfirmYourChooseForTempHouse(Guid tempHouseId, Guid petId);
+        public Task<TempHouse> ConfirmToAddAnotherPetToTempHouse(Guid tempHouseId, Guid petId);
+        public Task<TempHouse> ChooseMeetingDatesForKnowAnotherPet(Guid shelterId, Guid petId, Guid userId, Guid tempHouseId, Guid activityId);
         public Task<Pet> AddPet(Guid shelterId, Pet pet);
         public Task<Activity> AddActivityToCalendar(Guid shelterId, Activity activity);
         public Task<Activity> AddPetActivityToCalendar(Guid shelterId, Guid petId, Activity activity);
