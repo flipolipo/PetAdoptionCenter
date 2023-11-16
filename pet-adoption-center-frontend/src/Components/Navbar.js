@@ -26,7 +26,7 @@ const Navbar = () => {
           <div className="user-auth-div">
             <Login className="LoginComponent" user={user} setUser={setUser} />
             {!user.isLogged && (
-                <Link to={`/user/register`}>Sign Up</Link>
+                <Link className='find-pet-link-2' to={`/user/register`}>Sign Up</Link>
             )}
           </div>
         </div>

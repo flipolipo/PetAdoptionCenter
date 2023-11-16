@@ -30,7 +30,8 @@
 .profile-details-card {
   background-color: #ffffff;
   padding: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  margin-top: 30px;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -100,4 +101,10 @@
 .section-header:hover {
   background-color: #fad0c4;
 }
-
+.find-pet-link{
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.profile-h2{
+  margin-bottom: 30px;
+}

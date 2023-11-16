@@ -10,7 +10,7 @@
 .back-to-home {
     cursor: pointer;
     position: sticky;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 700;
     font-family: var(--font-outfit);
     color: var(--color-black);
@@ -19,7 +19,7 @@
     background-color: rgba(246, 158, 123, 1);
     margin-top: 10px;
     border-radius: 10px;
-    width: 180px;
+    width: 80px;
     cursor: pointer;
     text-decoration: none;
     transition: background-color 0.3s;

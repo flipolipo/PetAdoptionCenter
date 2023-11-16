@@ -1,4 +1,3 @@
-import React from 'react';
 import { address_url } from './url.js';
 import axios from 'axios';
 

@@ -36,7 +36,6 @@ const Meetings = () => {
     <div className="adoption-main-page-container">
       {userId && userData.Adoptions?.length >= 1 && (
         <>
-          {console.log(userData.Adoptions)}
           <h2 className="adoption-main-page">Your Adoptions</h2>
           {userData.Adoptions?.map((adoption) => (
             <div key={adoption.Id} className="adoption-card-meetings">

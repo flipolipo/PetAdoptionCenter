@@ -99,7 +99,7 @@ public class UserRepository : IUserRepository
             foundUser.BasicInformation.Name = user.BasicInformation.Name;
             foundUser.BasicInformation.Surname = user.BasicInformation.Surname;
             foundUser.BasicInformation.Phone = user.BasicInformation.Phone;
-           
+
             await _dbContext.SaveChangesAsync();
             return true;
         }
@@ -166,11 +166,12 @@ public class UserRepository : IUserRepository
             {
                 foundUser.UserCalendar.Activities.Add(activity);
                 await _dbContext.SaveChangesAsync();
-            } else
+            }
+            else
             {
                 throw new Exception("Activity is already exist");
             }
-          
+
         }
         return activity;
     }
@@ -387,7 +388,18 @@ public class UserRepository : IUserRepository
 
     public async Task<TempHouse> GetUserTempHouse(Guid userId)
     {
-        return await _dbContext.TempHouses.FirstOrDefaultAsync(a => a.UserId == userId);
+        return await _dbContext.TempHouses
+            .Include(t => t.TemporaryOwner).ThenInclude(u => u.BasicInformation).ThenInclude(a => a.Address)
+                .Include(t => t.TemporaryOwner).ThenInclude(u => u.UserCalendar).ThenInclude(a => a.Activities)
+                .Include(t => t.TemporaryOwner).ThenInclude(u => u.Roles)
+                .Include(t => t.TemporaryOwner).ThenInclude(u => u.Adoptions)
+                .Include(t => t.PetsInTemporaryHouse).ThenInclude(p => p.BasicHealthInfo).ThenInclude(v => v.Vaccinations)
+                .Include(t => t.PetsInTemporaryHouse).ThenInclude(p => p.BasicHealthInfo).ThenInclude(d => d.MedicalHistory)
+                .Include(t => t.PetsInTemporaryHouse).ThenInclude(c => c.Calendar).ThenInclude(a => a.Activities)
+                .Include(t => t.PetsInTemporaryHouse).ThenInclude(u => u.Users).ThenInclude(b => b.BasicInformation).ThenInclude(a => a.Address)
+                .Include(t => t.Activity).ThenInclude(a => a.Activities)
+                .Include(t => t.TemporaryHouseAddress)
+            .FirstOrDefaultAsync(a => a.UserId == userId);
     }
 
     public async Task<IEnumerable<Pet>> GetAllPetsInTempHouse(Guid userId)

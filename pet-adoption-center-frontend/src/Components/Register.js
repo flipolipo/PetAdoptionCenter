@@ -84,7 +84,7 @@ const Register = () => {
           <h2 className="register-success">
             You have been successfully registered
           </h2>
-          <Link to={`/`} className="back-to-home">
+          <Link className='find-pet-link' to={`/`} >
             Back
           </Link>
         </div>
