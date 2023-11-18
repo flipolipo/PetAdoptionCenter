@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 import { address_url } from '../Service/url';
 import { useUser } from './UserContext';
 import { Link, useNavigate } from 'react-router-dom';
 import Avatar from 'react-avatar';
+import UserRoleName from './Enum/UserRoleName';
 
 Modal.setAppElement('#root');
 
@@ -27,6 +28,27 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const userNameToUpperCase = user.username.charAt(0).toUpperCase() + user.username.slice(1);
+  const [profileData, setProfileData] = useState(null);
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const response = await axios.get(`${address_url}/Users/${user.id}`, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        });
+        console.log(response)
+        setProfileData(response.data);
+
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchProfileData();
+  }, [user.id, user.token]);
+
+
 
   async function loginUser() {
     try {
@@ -70,6 +92,8 @@ const Login = () => {
     setEmail('');
     setPassword('');
     navigate('/');
+    setProfileData(null)
+
   }
 
   return (
@@ -96,15 +120,43 @@ const Login = () => {
               />
               <button className="buttonLogin" onClick={loginUser}>Login</button>
               <button className="buttonLogin" onClick={() => setVisible(false)}>Back</button>
+              <h5>Need an account?</h5>
+              <Link to={`/user/register`} onClick={() => setVisible(false)}>Sign Up</Link>
             </div>
           </Modal>
         </>
       ) : (
         <div className='welcome-section-container'>
           <div className="welcome-section">
-            <div className="icon-container"><Link to="/profile" className="usernameProfiles">
-              <Avatar className="user-avatar" size="50" round={true} name={user.username} />
-              <p>{userNameToUpperCase}</p></Link>
+            <div className='icon-container'>
+              {profileData.Roles?.map(role => {
+                if (UserRoleName(role.Title) === 'Shelter Owner') {
+                  return (
+                    <div key={role.Id} className="role-shelter-owner" onClick={() => navigate(`/ShelterOwner/${profileData.ShelterId}`)}>
+
+
+
+                      <span className="material-symbols-outlined" >
+                        home
+                      </span>
+                      <p className="shelterOwnerText" >Your Shelter</p>
+
+                    </div>
+                  );
+                } else {
+
+                  return (
+                    <></>
+                  );
+                }
+              })}
+            </div>
+
+            <div className="icon-container">
+
+              <Link to="/profile" className="usernameProfiles">
+                <Avatar className="user-avatar" size="50" round={true} name={user.username} />
+                <p>{userNameToUpperCase}</p></Link>
             </div>
 
             <div className="icon-container" onClick={logout}>

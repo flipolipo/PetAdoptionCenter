@@ -11,6 +11,8 @@ const StatusPetLabel = (status) => {
         return 'Adopted';
       } else if (status === 4) {
         return 'On Adoption Proccess';
+      } else if (status === 5){
+        return 'On Temporary House Proccess'
       }
       return 'Unknown';
 }

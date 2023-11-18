@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import './Navbar.css';
 import Login from './Login';
-import Register from './Register';
 import { useUser } from './UserContext';
 
 const Navbar = () => {
-
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, setUser } = useUser();
 
@@ -25,11 +23,12 @@ const Navbar = () => {
           <span></span>
           <span></span>
           <span></span>
-          <div className='user-auth-div'>
-            <Login className='LoginComponent' user={user} setUser={setUser} />
-            {!user.isLogged && <Register className='RegisterComponent' />}
+          <div className="user-auth-div">
+            <Login className="LoginComponent" user={user} setUser={setUser} />
+            {!user.isLogged && (
+                <Link className='find-pet-link-2' to={`/user/register`}>Sign Up</Link>
+            )}
           </div>
-
         </div>
         <div className="menu" onClick={handleClick}>
           <span></span>

@@ -14,6 +14,7 @@ public class ShelterCreateDTO
     public AddressCreateDTO ShelterAddress { get; set; }
     public string ShelterDescription { get; set; }
     public string PhoneNumber { get; set; }
+    public string BankNumber { get; set; }
     public IFormFile ImageFile { get; set; }
     
 }

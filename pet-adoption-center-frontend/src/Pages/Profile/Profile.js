@@ -5,7 +5,9 @@ import { address_url } from '../../Service/url';
 import UserRoleName from '../../Components/Enum/UserRoleName';
 import MyCalendar from '../../Components/BigCalendarActivity/CalendarActivity';
 import './Profile.css';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import PetById from '../Pets/PetsById/PetById';
+import { FetchTempHouseDataForUser } from '../../Service/FetchTempHouseDataForUser';
 
 const Profile = () => {
 
@@ -16,7 +18,9 @@ const Profile = () => {
     const [openSection, setOpenSection] = useState(null);
     const [isEditingBasicInfo, setIsEditingBasicInfo] = useState(false);
     const [editedBasicInfo, setEditedBasicInfo] = useState(null);
+    const [tempHouseData, setTempHouseData] = useState({});
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
@@ -37,6 +41,27 @@ const Profile = () => {
 
         fetchProfileData();
     }, [user.id, user.token]);
+
+    useEffect(() => {
+        if (user.id) {
+          fetchDataTempHouse();
+        }
+      }, [user.id]);
+    
+      const fetchDataTempHouse = async () => {
+        if (user.id) {
+          try {
+            const tempHouseResponseData = await FetchTempHouseDataForUser(user.id);
+            setTempHouseData(tempHouseResponseData);
+            console.log(tempHouseResponseData);
+            console.log(tempHouseResponseData.PetsInTemporaryHouse);
+            console.log(tempHouseResponseData.IsPreTempHousePoll);
+            console.log(tempHouseResponseData.IsMeetings);
+          } catch (error) {
+            console.error('Temporary house download error:', error);
+          }
+        }
+      };
 
     const updateUserProfile = async (id, updatedUserData) => {
         try {
@@ -167,12 +192,12 @@ const Profile = () => {
                 </div>
                 {openSection === 'Adoptions' && (
                     <div className="adoptionsProfiles">
-                        <h2>Your Adoptions</h2>
+                        <h2 className='profile-h2'>Your Adoptions</h2>
+                        <Link className='find-pet-link' to={`/Shelters/adoptions/pets/users/${user.id}`}>Adoption process</Link>
                         {profileData.Adoptions?.map(adoption => (
                             <div key={adoption.Id} className="adoption-card">
-                                <p>Pet ID: {adoption.PetId}</p>
-                                <p>Status: {adoption.IsContractAdoption ? 'Contracted' : 'Not Contracted'}</p>
-                                <p>Date of Adoption: {adoption.DateOfAdoption}</p>
+                                <PetById petProfileId={adoption.PetId}/>
+                                {adoption.IsContractAdoption && <p>Date of Adoption: {new Date(adoption.DateOfAdoption).toLocaleDateString()}</p>}
                             </div>
                         ))}
                     </div>
@@ -187,20 +212,28 @@ const Profile = () => {
                         <h2>Your Pets</h2>
                         {profileData.Pets?.map(pet => (
                             <div key={pet.Id} className="pet-cardProfiles">
-                                <p>Pet ID: {pet.Id}</p>
-                                <p>Status: {pet.AvailbleForAdoption ? 'Availble for adoption' : 'Not availble for adoption'}</p>
-                                <p>Discription: {pet.Description}</p>
-                                <p><img
-                                    src={`data:image/jpeg;base64, ${pet.Image}`}
-                                    alt=""
-                                    width="250px"
-                                    height="100%"
-                                /></p>
+                                <PetById petProfileId={pet.Id} />
                             </div>
                         ))}
                     </div>
                 )}
             </div>
+            {tempHouseData && <div className="section">
+                <div className="section-header" onClick={() => setOpenSection(openSection === 'Pets in temporary housing' ? null : 'Pets in temporary housing')}>
+                    Pets in temporary housing <span className={openSection === 'Pets in temporary housing' ? 'arrow-down' : 'arrow-right'}>➤</span>
+                </div>
+                {openSection === 'Pets in temporary housing' && (
+                    <div className="petsProfiles">
+                        <h2 className='profile-h2'>Your Pets In Your Temporary House</h2>
+                        <Link className='find-pet-link' to={`/Shelters/temporaryHouses/${tempHouseData.Id}/pets/users/${user.id}`}>Temporary Housing process</Link>
+                        {tempHouseData.PetsInTemporaryHouse?.map(pet => (
+                            <div key={pet.Id} className="pet-cardProfiles">
+                                <PetById petProfileId={pet.Id} />
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>}
             <div className="section">
                 <div className="section-header" onClick={() => setOpenSection(openSection === 'Roles' ? null : 'Roles')}>
                     Roles <span className={openSection === 'Roles' ? 'arrow-down' : 'arrow-right'}>➤</span>

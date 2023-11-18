@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { address_url } from '../Service/url';
+import React, { useState, useEffect } from 'react';
+import './PreTemporaryHousePoll.css';
 import { Link, useParams } from 'react-router-dom';
-import { fetchDataForPet } from '../Service/fetchDataForPet';
-import './PreadoptionPoll.css';
 import { FaSpinner } from 'react-icons/fa';
+import { fetchDataForPet } from '../../Service/fetchDataForPet';
+import axios from 'axios';
+import { address_url } from '../../Service/url';
 
-const PreadoptionPoll = () => {
-  const { id, userId } = useParams();
-   //console.log(id);
-  // console.log(userId);
+const PreTemporaryHousePoll = () => {
+  const { shelterId, petId, userId } = useParams();
+ /*  console.log(shelterId);
+  console.log(petId);
+  console.log(userId); */
 
   const [formData, setFormData] = useState({
+    tempOwnerName: '',
+    tempOwnerSurame: '',
+    tempOwnerCity: '',
+    tempOwnerStreet: '',
+    tempOwnerHouseNumber: '',
+    tempOwnerFlatNumber: '',
+    tempOwnerPostalCode: '',
     over18: '',
     willingToInvest: '',
     residenceType: '',
@@ -29,21 +37,22 @@ const PreadoptionPoll = () => {
   });
 
   const [formErrors, setFormErrors] = useState({});
-  const [preadoptionPollData, setPreadoptionPollData] = useState('');
+  const [preTempHousePollData, setPreTempHousePollData] = useState('');
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
   const [petSelectedData, setPetSelectedData] = useState({});
-  const [preadoptionPollVisible, setPreadoptionPollVisible] = useState(false);
+  const [preTempHousePollVisible, setPreTempHousePollVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formReady, setFormReady] = useState(false);
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseData = await fetchDataForPet(id);
+        const responseData = await fetchDataForPet(petId);
         setPetSelectedData(responseData);
         // console.log(responseData.ShelterId);
         setSubmissionSuccess(false);
-        setPreadoptionPollVisible(true);
+        setPreTempHousePollVisible(true);
       } catch (err) {
         console.log('shelter fetch error: ' + err);
       }
@@ -52,9 +61,30 @@ const PreadoptionPoll = () => {
   }, []);
 
   useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const response = await axios.get(`${address_url}/Users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${userId.token}`,
+          },
+        });
+        setUserData(response.data);
+        setSubmissionSuccess(false);
+        setPreTempHousePollVisible(true);
+        //console.log(response.data.BasicInformation.Name);
+        //console.log(response.data.BasicInformation.Surname);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchProfileData();
+  }, [userId, userId.token]);
+
+  useEffect(() => {
     const errorsExist = Object.values(formErrors).some((error) => error !== '');
-    console.log('formErrors:', formErrors);
-    console.log('formReady:', !errorsExist);
+    //console.log('formErrors:', formErrors);
+    //console.log('formReady:', !errorsExist);
     setFormReady(!errorsExist);
   }, [formErrors]);
 
@@ -96,26 +126,68 @@ const PreadoptionPoll = () => {
     setLoading(true);
     e.preventDefault();
     const errors = {};
-    if (formData.over18 !== 'Yes') {
-      errors.over18 = 'You must be 18 years or older to submit this form.';
+    if (
+      formData.tempOwnerName.trim() !== userData.BasicInformation.Name.trim()
+    ) {
+      errors.tempOwnerName = 'Wrong name to submit this form.';
+    }
+    if (
+      formData.tempOwnerSurame.trim() !==
+      userData.BasicInformation.Surname.trim()
+    ) {
+      errors.tempOwnerSurame = 'Wrong surname to submit this form.';
+    }
+    if (
+      formData.tempOwnerCity.trim() !==
+      userData.BasicInformation.Address.City.trim()
+    ) {
+      errors.tempOwnerCity = 'Wrong city name to submit this form.';
+    }
+    if (
+      formData.tempOwnerStreet.trim() !==
+      userData.BasicInformation.Address.Street.trim()
+    ) {
+      errors.tempOwnerStreet = 'Wrong street name to submit this form.';
+    }
+    if (
+      formData.tempOwnerPostalCode.trim() !==
+      userData.BasicInformation.Address.PostalCode.trim()
+    ) {
+      errors.tempOwnerPostalCode = 'Wrong street name to submit this form.';
     }
     for (const key in formData) {
-      if (!formData[key]) {
+      if (key !== 'tempOwnerFlatNumber' && !formData[key].trim()) {
         errors[key] = 'This field is required.';
       }
     }
+
+    if (
+      'tempOwnerFlatNumber' in formData &&
+      formData.tempOwnerFlatNumber &&
+      !formData.tempOwnerFlatNumber.trim()
+    ) {
+      errors.tempOwnerFlatNumber = 'Flat number must be a number.';
+    }
+
+    if (formData.over18 !== 'Yes') {
+      errors.over18 = 'You must be 18 years or older to submit this form.';
+    }
+
     if (!formReady) {
       setLoading(false);
       return;
     }
     setTimeout(() => {
       setLoading(false);
-    }, 8000);
+    }, 5000);
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
     } else {
-      const formDataString = `Over 18: ${formData.over18}, Willing to Invest: ${formData.willingToInvest}, Resitenze type: ${formData.residenceType}, 
+      const formDataString = `Temporary house owner: name: ${formData.tempOwnerName}, surname: ${formData.tempOwnerSurame},
+      Address: street name: ${formData.tempOwnerCity}, house number: ${formData.tempOwnerHouseNumber}, 
+      flat number: ${formData.tempOwnerFlatNumber}, city name: ${formData.tempOwnerCity}, postal code:
+      ${formData.tempOwnerPostalCode}. Over 18: ${formData.over18}, Willing to Invest: ${formData.willingToInvest}, Resitenze type: ${formData.residenceType}, 
       Fenced back yard : ${formData.fencedBackyard}, Number of Adults: ${formData.numAdults}, Household members want pet: ${formData.householdMembersWantPet},
       Relinquished pets before: ${formData.relinquishedPetsBefore}, Current pets list: ${formData.currentPetsList},
       Time pet left alone: ${formData.timePetLeftAlone}, Pet location when home: ${formData.petLocationWhenHome},
@@ -123,20 +195,20 @@ const PreadoptionPoll = () => {
       Has veterinarian: ${formData.hasVeterinarian}, Vacation arrangements: ${formData.vacationArrangements}`;
       console.log(formDataString);
       const requestData = {
-        isPreAdoptionPoll: true,
-        preadoptionPoll: formDataString,
+        isPreTempHousePoll: true,
+        tempHousePoll: formDataString,
         activity: {},
       };
       console.log(requestData);
       try {
         const response = await axios.post(
-          `${address_url}/Shelters/${petSelectedData.ShelterId}/pets/${id}/users/${userId}/adoptions/inizialize-adoption`,
+          `${address_url}/Shelters/${shelterId}/temporary-houses/pets/${petId}/users/${userId}`,
           requestData
         );
-        setPreadoptionPollData(formDataString);
-        //console.log(response);
+        setPreTempHousePollData(formDataString);
+        console.log(response);
         setSubmissionSuccess(true);
-        setPreadoptionPollVisible(false);
+        setPreTempHousePollVisible(false);
       } catch (error) {
         console.error('Error submitting form:', error);
       } finally {
@@ -151,7 +223,7 @@ const PreadoptionPoll = () => {
         <>
           <div className="preadoption-poll-form-info">
             <h2 className="preadoption-poll-h2">
-              The pre-adoption poll has been successfully sent.{' '}
+              The pre-temporary-housing poll has been successfully sent.{' '}
             </h2>
             <h2 className="preadoption-poll-h2">
               {' '}
@@ -160,7 +232,7 @@ const PreadoptionPoll = () => {
           </div>
           <div className="preadoption-poll-find-pet-container">
             <Link
-              to={`/Shelters/adoptions`}
+              to={`/Shelters/${shelterId}/temporaryHouses/pets/${petId}`}
               className="preadoption-poll-find-pet"
             >
               GO BACK
@@ -169,10 +241,104 @@ const PreadoptionPoll = () => {
         </>
       ) : (
         <>
-          {preadoptionPollVisible && (
+          {preTempHousePollVisible && (
             <>
-              {' '}
+              <div className="temporary-house-basic-info">
+                <h2 className="important">
+                  Have you filled in your personal details (name, surname,
+                  address)? This is necessary to complete the pre temporary
+                  house poll. If not click on the botton:
+                </h2>
+                {userId && (
+                  <Link to={`/profile`} className="find-pet-link">
+                    Basic information
+                  </Link>
+                )}
+              </div>{' '}
               <form onSubmit={handleSubmit}>
+                <label>Name: *</label>
+                <input
+                  type="text"
+                  name="tempOwnerName"
+                  value={formData.tempOwnerName}
+                  onChange={handleChange}
+                  className="form-preadoptionPoll"
+                />
+                {formErrors.tempOwnerName && (
+                  <p className="error-message">{formErrors.tempOwnerName}</p>
+                )}
+                <label>Surname: *</label>
+                <input
+                  type="text"
+                  name="tempOwnerSurame"
+                  value={formData.tempOwnerSurame}
+                  onChange={handleChange}
+                  className="form-preadoptionPoll"
+                />
+                {formErrors.tempOwnerSurame && (
+                  <p className="error-message">{formErrors.tempOwnerSurame}</p>
+                )}
+                <label>Address : Street name: *</label>
+                <input
+                  type="text"
+                  name="tempOwnerStreet"
+                  value={formData.tempOwnerStreet}
+                  onChange={handleChange}
+                  className="form-preadoptionPoll"
+                />
+                {formErrors.tempOwnerStreet && (
+                  <p className="error-message">{formErrors.tempOwnerStreet}</p>
+                )}
+                <label>House number: *</label>
+                <input
+                  type="text"
+                  name="tempOwnerHouseNumber"
+                  value={formData.tempOwnerHouseNumber}
+                  onChange={handleChange}
+                  className="form-preadoptionPoll"
+                />
+                {formErrors.tempOwnerHouseNumber && (
+                  <p className="error-message">
+                    {formErrors.tempOwnerHouseNumber}
+                  </p>
+                )}
+                <label>Flat number: *</label>
+                <input
+                  type="text"
+                  name="tempOwnerFlatNumber"
+                  value={formData.tempOwnerFlatNumber}
+                  onChange={handleChange}
+                  className="form-preadoptionPoll"
+                />
+                {formErrors.tempOwnerFlatNumber && (
+                  <p className="error-message">
+                    {formErrors.tempOwnerFlatNumber}
+                  </p>
+                )}
+                <label>City: *</label>
+                <input
+                  type="text"
+                  name="tempOwnerCity"
+                  value={formData.tempOwnerCity}
+                  onChange={handleChange}
+                  className="form-preadoptionPoll"
+                />
+                {formErrors.tempOwnerCity && (
+                  <p className="error-message">{formErrors.tempOwnerCity}</p>
+                )}
+                <label>Postal code: *</label>
+                <input
+                  type="text"
+                  name="tempOwnerPostalCode"
+                  value={formData.tempOwnerPostalCode}
+                  onChange={handleChange}
+                  className="form-preadoptionPoll"
+                />
+                {formErrors.tempOwnerPostalCode && (
+                  <p className="error-message">
+                    {formErrors.tempOwnerPostalCode}
+                  </p>
+                )}
                 <label>Are you 18 years or over?*</label>
                 <select
                   name="over18"
@@ -399,4 +565,4 @@ const PreadoptionPoll = () => {
   );
 };
 
-export default PreadoptionPoll;
+export default PreTemporaryHousePoll;
