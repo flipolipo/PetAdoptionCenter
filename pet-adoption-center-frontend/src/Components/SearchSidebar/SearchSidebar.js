@@ -18,8 +18,9 @@ function SearchSidebar() {
   const [selectedType, setSelectedType] = useState('');
   const [selectedStatus, setSelectedStatus] = useState(-1);
   const [petsFiltered, setPetsFiltered] = useState([]);
-  const [currentPage] = useState(1);
-  const [petsPerPage] = useState(4);
+  const [showNoMatchingPets, setShowNoMatchingPets] = useState(false);
+  const [showPetsList, setShowPetsList] = useState(true);
+
 
 
   useEffect(() => {
@@ -104,11 +105,15 @@ function SearchSidebar() {
     });
   
     setPetsFiltered(filteredPets);
+    setShowNoMatchingPets(filteredPets.length === 0);
+    setShowPetsList(filteredPets.length > 0);
   };
 
-  const indexOfLastPet = currentPage * petsPerPage;
-  const indexOfFirstPet = indexOfLastPet - petsPerPage;
-  const currentPets = petsFiltered.slice(indexOfFirstPet, indexOfLastPet);
+  const handleBack = () => {
+    setShowNoMatchingPets(false);
+    setPetsFiltered([]);
+  };
+
 
     return (
       <div className="filtered-pets">
@@ -121,14 +126,26 @@ function SearchSidebar() {
           <button className="filter-button" onClick={handleFilter}>Apply Filters</button>
         </div>
         <div className="card-container">
-          {currentPets.map((pet, index) => (
+        {showNoMatchingPets && (
+          <div className="no-matching">
+            <div className="no-matching-pets">
+              <p>No pets match the selected filters.</p>
+            </div>
+            <div className="back">
+            <button className="back-button" onClick={handleBack}>back</button>
+            </div>
+          </div>
+        )}
+        {!showNoMatchingPets && petsFiltered.length > 0 && (
+          petsFiltered.map((pet, index) => (
             <GenericCard key={index} pet={pet} />
-          ))}
-          {currentPets.length === 0 && (
-            <div className="petsAvailableForAdoption">
-              <div className="pet-inscription">
-                <h2>Pets available for adoption</h2>
-              </div>
+          ))
+        )}
+        {!showNoMatchingPets && petsFiltered.length === 0 && (
+          <div className="petsAvailableForAdoption">
+            <div className="pet-inscription">
+              <h2>Pets available for adoption</h2>
+            </div>
               <div className="pet-card">
                 <FlipCardAvailable />
               </div>

@@ -133,7 +133,7 @@
 
 .filter {
   cursor: pointer;
-  position: sticky;
+  position: relative;
   font-size: 1.5rem;
   font-weight: 700;
   font-family: var(--font-outfit);
@@ -147,6 +147,43 @@
   height: fit-content;
   margin-right: 20px;
   margin-left: 20px;
+}
+
+.no-matching-pets p {
+  position: relative;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(246, 158, 123, 1);
+  margin-top: 10px;
+  border-radius: 10px;
+  width: 1000px;
+  height: fit-content;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.back-button {
+  margin-left: 45px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: none;
+  cursor: pointer;
+  position: sticky;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(246, 158, 123, 1);
+  margin-top: 10px;
+  border-radius: 10px;
+  width: 200px;
+  height: fit-content;
 }
 
 .filter-button {
@@ -175,4 +212,60 @@
   float: left;
   width: 250px;
   margin-right: 20px;
+  position: relative;
+}
+
+.select-shelter  {
+  position: relative;
+  overflow: visible;
+  font-size: 15px;
+  font-family: Arial;
+  color: black;
+  font-weight: 500;
+  border: 1px;
+  border-color: black;
+}
+
+.select-gender {
+  position: relative;
+  overflow: visible;
+  font-size: 15px;
+  font-family: Arial;
+  color: black;
+  font-weight: 500;
+  border: 1px;
+  border-color: black;
+}
+
+.select-size {
+  position: relative;
+  overflow: visible;
+  font-size: 15px;
+  font-family: Arial;
+  color: black;
+  font-weight: 500;
+  border: 1px;
+  border-color: black;
+}
+
+.select-status {
+  position: relative;
+  overflow: visible;
+  font-size: 15px;
+  font-family: Arial;
+  color: black;
+  font-weight: 500;
+  border: 1px;
+  border-color: black;
+}
+
+.select-type {
+  position: relative;
+  overflow: visible;
+  font-size: 15px;
+  font-family: Arial;
+  color: black;
+  font-weight: 500;
+  border: 1px;
+  border-color: black;
 }
