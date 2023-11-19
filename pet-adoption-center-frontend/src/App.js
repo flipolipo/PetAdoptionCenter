@@ -22,6 +22,7 @@ import Register from './Components/Register.js';
 import PreadoptionPollInfo from './Components/PreadoptionPollInfo.js';
 import MeetingsInfo from './Components/MeetingsInfo.js';
 import ContractAdoptionInfo from './Components/ContractAdoptionInfo.js';
+import ShelterById from './Pages/Shelters/ShelterById.js';
 
 function App() {
   const [petData, setPetData] = useState([]);
@@ -90,6 +91,7 @@ function App() {
                 path="/ShelterOwner/:shelterId"
                 element={<ShelterOwner />}
               />
+              <Route path="/Shelters/:shelterId" element={<ShelterById />} />
             </Routes>
           </div>
 

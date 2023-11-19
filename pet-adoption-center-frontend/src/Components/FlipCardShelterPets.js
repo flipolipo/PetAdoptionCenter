@@ -5,10 +5,10 @@ import './FlipCard.css';
 import GenericCard from './GenericCard';
 import { address_url } from '../Service/url';
 
-const FlipCardShelterPets = (id) => {
+const FlipCardShelterPets = ({ id }) => {
   const [petsAvailable, setPetsAvailable] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [petsPerPage] = useState(4);
+  const [petsPerPage] = useState(3);
 
   useEffect(() => {
     GetAvailablePetsForAdoption();
@@ -16,10 +16,10 @@ const FlipCardShelterPets = (id) => {
 
   async function GetAvailablePetsForAdoption() {
     try {
-        const response = await axios.get(
-            `${address_url}/Shelters/${id}/pets/avaible`
-          );
-      console.log(response.data);
+      const response = await axios.get(
+        `${address_url}/Shelters/${id}/pets/avaible`
+      );
+      console.log(`pet response: ${response.data}`);
       setPetsAvailable(response.data);
     } catch (error) {
       console.error(error);

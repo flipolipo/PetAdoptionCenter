@@ -12,9 +12,9 @@
   transition: transform 0.5s;
 }
 
-.flip-card:hover .flip-card-inner {
+/* .flip-card:hover .flip-card-inner {
   transform: rotateY(180deg);
-}
+} */
 .flip-card-front >.image-container > img:first-child{
 object-fit: cover;
 width: 100%;
@@ -27,20 +27,28 @@ width: 100%;
   backface-visibility: hidden;
 }
 
-.flip-card-back {
+/* .flip-card-back {
   transform: rotateY(180deg);
-}
+} */
 .image-container {
   position: relative;
   height: 100%;
 }
-
-.paw-icon {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 40px;
+.paw-button{
+  border: 0;
+  z-index: -1;
 }
+.paw-icon {
+   position: absolute; 
+   top: 10px;
+  right: 10px;
+  width: 40px; 
+  
+  padding: 10px;
+  background-color: rgba(246, 158, 123, 0.748);
+  border-radius: 50px;
+}
+
 .card-container {
   display: flex;
   flex-wrap: wrap;
