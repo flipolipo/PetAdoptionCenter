@@ -32,6 +32,26 @@ const ShelterOwner = () => {
     const [petsAvailable, setPetsAvailable] = useState([]);
     const [imageFile, setImageFile] = useState(null);
     const [visible, setVisible] = useState(false);
+    const [vacinationVisible, setVacinationVisible] = useState(false)
+    const [diseaseVisible, setDiseaseVisible] = useState(false)
+    const [activityAddVisible, setActivityAddVisible] = useState(false)
+    const [activityFormData, setActivityFormData] = useState({
+        name: "",
+        startActivityDate: new Date().toISOString(),
+        endActivityDate: new Date().toISOString()
+    })
+
+    const [vaccinationForm, setVaccinationForm] = useState({
+        vaccinationName: '',
+        date: new Date().toISOString()
+    });
+
+    const [diseaseForm, setDiseaseForm] = useState({
+        nameOfdisease: '',
+        illnessStart: new Date().toISOString(),
+        illnessEnd: new Date().toISOString()
+    });
+
     const [formData, setFormData] = useState({
         Type: '',
         Gender: '',
@@ -47,6 +67,26 @@ const ShelterOwner = () => {
         ImageFile: null,
     });
 
+
+    const handleVacinationInputChange = (e) => {
+        const { name, value } = e.target;
+
+        setVaccinationForm(prev => ({ ...prev, [name]: value }));
+        console.log(vaccinationForm)
+    };
+
+    const handleDiseaseInputChange = (e) => {
+        const { name, value } = e.target;
+
+        setDiseaseForm(prev => ({ ...prev, [name]: value }));
+        console.log(diseaseForm)
+    };
+
+    const handleActivityInputChange = (e) => {
+        const { name, value } = e.target;
+
+        setActivityFormData(prev => ({ ...prev, [name]: value }));
+    };
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -66,10 +106,47 @@ const ShelterOwner = () => {
                 [name]: type === 'checkbox' ? checked : value,
             });
         }
-        console.log(formData)
+
     };
 
+    const handleAddActivitySubmit = async (e) => {
+        e.preventDefault();
 
+        try {
+            const response = await axios.post(`${address_url}/Shelters/${shelterId}/calendar/activities`,
+                {
+                    name: activityFormData.name,
+                    startActivityDate: activityFormData.startActivityDate,
+                    endActivityDate: activityFormData.endActivityDate
+                }, {
+                params: {
+                    shelterId: shelterId
+                }
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
+            if (response.status === 200) {
+
+                console.log('Activity added successfully');
+                console.log(response)
+                setActivityFormData({
+                    name: '',
+                    startActivityDate: new Date().toISOString(),
+                    endActivityDate: new Date().toISOString()
+                })
+
+            } else {
+                console.error('Failed to add activity. Status:', response.status);
+            }
+        } catch (error) {
+            console.error('Failed to add activity:', error);
+        }
+    }
 
 
 
@@ -102,6 +179,77 @@ const ShelterOwner = () => {
             console.error('Failed to add pet:', error);
         }
 
+    };
+
+    const handleAddVacination = async (shelterId, petId) => {
+        console.log(shelterId)
+        console.log(petId)
+        console.log(vaccinationForm)
+        try {
+            const response = await axios.post(
+                `${address_url}/Shelters/${shelterId}/pets/${petId}/vaccinations`,
+                {
+                    vaccinationName: vaccinationForm.vaccinationName,
+                    date: vaccinationForm.date
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                        'Content-Type': 'application/json-patch+json',
+                    }
+                }
+            );
+
+            if (response.status === 201) {
+                console.log('Vaccination added successfully');
+                setVaccinationForm({ vaccinationName: '', date: new Date().toISOString() });
+            } else {
+                console.error(`Failed to add vaccination. Status: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                console.error('Error adding vaccination:', error.response.data.message);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Error:', error.message);
+            }
+        }
+    };
+
+    const handleAddDisease = async (shelterId, petId) => {
+        try {
+            const response = await axios.post(
+                `${address_url}/Shelters/${shelterId}/pets/${petId}/diseases`,
+                {
+
+                    nameOfdisease: diseaseForm.nameOfdisease,
+                    illnessStart: diseaseForm.illnessStart,
+                    illnessEnd: diseaseForm.illnessEnd
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                        'Content-Type': 'application/json-patch+json',
+                    }
+                }
+            );
+
+            if (response.status === 201) {
+                console.log('Disease added successfully');
+                setDiseaseForm({ nameOfdisease: '', illnessStart: new Date().toISOString(), illnessEnd: new Date().toISOString() });
+            } else {
+                console.error(`Failed to add disease. Status: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                console.error('Error adding disease:', error.response.data.message);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Error:', error.message);
+            }
+        }
     };
 
     function deletePetHandler(shelterId, petId) {
@@ -285,7 +433,7 @@ const ShelterOwner = () => {
             })
             .catch((error) => console.error(error));
     }, [shelterId]);
-    console.log(shelterPets);
+
     return (
         <div className="shelter-owner-container">
             <h1 className="shelter-title">{shelterDetails.Name}</h1>
@@ -647,6 +795,71 @@ const ShelterOwner = () => {
                                     >
                                         Delete
                                     </button>
+
+                                    <button className="buttonAddMedicalHistory" onClick={() => { setDiseaseVisible(true); }}>Add medical history</button>
+                                    <Modal isOpen={diseaseVisible} onRequestClose={() => setDiseaseVisible(false)} >
+                                        <div className="modal-shelter-pets-add-vacination">
+                                            <form>
+                                                <label>
+                                                    Name:
+                                                    <input
+                                                        type="text"
+                                                        name="nameOfdisease"
+                                                        value={diseaseForm.nameOfdiseaseameOfdisease}
+                                                        onChange={handleDiseaseInputChange}
+                                                    />
+                                                </label>
+                                                <label>
+                                                    Start Date:
+                                                    <input
+                                                        type="datetime-local"
+                                                        name="illnessStart"
+                                                        value={diseaseForm.illnessStart.slice(0, -5)}
+                                                        onChange={(e) => setDiseaseForm({ ...diseaseForm, illnessStart: e.target.value + ":00.000Z" })}
+                                                    />
+                                                </label>
+                                                <label>
+                                                    End Date:
+                                                    <input
+                                                        type="datetime-local"
+                                                        name="illnessEnd"
+                                                        value={diseaseForm.illnessEnd.slice(0, -5)}
+                                                        onChange={(e) => setDiseaseForm({ ...diseaseForm, illnessEnd: e.target.value + ":00.000Z" })}
+                                                    />
+                                                </label>
+                                            </form>
+                                            <button onClick={() => handleAddDisease(shelterId, pet.Id)} className='addDisease'>Add Disease</button>
+                                            <button className="buttonDiseaseBack" onClick={() => setDiseaseVisible(false)}>Back</button>
+                                        </div>
+                                    </Modal>
+                                    <button className="buttonAddVacination" onClick={() => { setVacinationVisible(true); }}>Add vacination</button>
+                                    <Modal isOpen={vacinationVisible} onRequestClose={() => setVacinationVisible(false)} >
+                                        <div className="modal-shelter-pets-add-vacination">
+                                            <form>
+                                                <label>
+                                                    Name:
+                                                    <input
+                                                        type="text"
+                                                        name="vaccinationName"
+                                                        value={vaccinationForm.vaccinationName}
+                                                        onChange={handleVacinationInputChange}
+                                                    />
+                                                </label>
+                                                <label>
+                                                    Date:
+                                                    <input
+                                                        type="datetime-local"
+                                                        name="date"
+                                                        value={vaccinationForm.date.slice(0, -5)}
+                                                        onChange={(e) => setVaccinationForm({ ...vaccinationForm, date: e.target.value + ":00.000Z" })}
+                                                    />
+                                                </label>
+
+                                            </form>
+                                            <button onClick={() => handleAddVacination(shelterId, pet.Id)} className='addVaccination'>Add Vaccination</button>
+                                            <button className="buttonVacinationBack" onClick={() => setVacinationVisible(false)}>Back</button>
+                                        </div>
+                                    </Modal>
                                 </p>
                             ))}
                         </ul>
@@ -728,9 +941,47 @@ const ShelterOwner = () => {
                     </div>
                 )}
             </div>
+            <div className='shelter-calendar-activites-shelter-owner'>
 
-            <MyCalendar events={shelterActivities} />
-        </div>
+                <MyCalendar events={shelterActivities} />
+                <button className="buttonAddActivity" onClick={() => { setActivityAddVisible(true); }}>Add Activity</button>
+                <Modal isOpen={activityAddVisible} onRequestClose={() => setActivityAddVisible(false)} >
+                    <form onSubmit={handleAddActivitySubmit}>
+                        <label>
+                            Name:
+                            <input
+                                type="text"
+                                name="name"
+                                value={activityFormData.name}
+                                onChange={handleActivityInputChange}
+                            />
+                        </label>
+                        <label>
+                            Start Date:
+                            <input
+                                type="datetime-local"
+                                name="startActivityDate"
+                                value={activityFormData.startActivityDate.slice(0, -5)}
+                                onChange={(e) => setActivityFormData({ ...activityFormData, startActivityDate: e.target.value + ":00.000Z" })}
+                            />
+                        </label>
+                        <label>
+                            End Date:
+                            <input
+                                type="datetime-local"
+                                name="endActivityDate"
+                                value={activityFormData.endActivityDate.slice(0, -5)}
+                                onChange={(e) => setActivityFormData({ ...activityFormData, endActivityDate: e.target.value + ":00.000Z" })}
+                            />
+                        </label>
+                    </form>
+                    <button className='button-add-activity-shelterowner' onClick={handleAddActivitySubmit}>Add Activity</button>
+                    <button className="buttonShelterActivityBack" onClick={() => setActivityAddVisible(false)}>Back</button>
+                </Modal>
+
+            </div>
+
+        </div >
     );
 };
 

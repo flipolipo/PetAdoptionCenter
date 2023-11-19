@@ -22,7 +22,12 @@ import Register from './Components/Register.js';
 import PreadoptionPollInfo from './Components/PreadoptionPollInfo.js';
 import MeetingsInfo from './Components/MeetingsInfo.js';
 import ContractAdoptionInfo from './Components/ContractAdoptionInfo.js';
-import ShelterById from './Pages/Shelters/ShelterById.js';
+import PreTempHouseInfo from './Components/TempHouseProccess/PreTempHouseInfo.js';
+import PreTemporaryHousePoll from './Components/TempHouseProccess/PreTemporaryHousePoll.js';
+import MeetingsTempHouseInfo from './Components/TempHouseProccess/MeetingsTempHouseInfo.js';
+import TempHouseById from './Components/TempHouseProccess/TempHouseById.js';
+import TempHouseUserPet from './Components/TempHouseProccess/TempHouseUserPet.js';
+import ConfirmDeleteTempHouse from './Components/TempHouseProccess/ConfirmDeleteTempHouse.js';
 
 function App() {
   const [petData, setPetData] = useState([]);
@@ -39,7 +44,7 @@ function App() {
               <Route path="/Shelters" element={<Shelters />} />
               <Route
                 path="/Shelters/adoptions"
-                element={<Adoption petData={petData} setPetData={setPetData} />}
+                element={<Adoption />}
               />
               <Route
                 path="/Shelters/adoptions/preadoption-poll"
@@ -58,7 +63,7 @@ function App() {
                 element={<Adoption />}
               />
               <Route
-                path="/Shelters/adoptions/pets/:id/users/:userId"
+                path="/Shelters/adoptions/pets/:id/users/:userId/preadoption-poll"
                 element={<PreadoptionPoll />}
               />
               <Route
@@ -81,10 +86,38 @@ function App() {
                 path="/Shelters/temporaryHouses"
                 element={<TemporaryHouse />}
               />
+                <Route
+                path="/Shelters/:shelterId/temporaryHouses/pets/:petId"
+                element={<TemporaryHouse />}
+              /> 
+                 <Route
+                path="/Shelters/temporaryHouses/pets/users/pre-temporary-house-poll-info"
+                element={<PreTempHouseInfo />}
+              /> 
+                 <Route
+                path="/Shelters/:shelterId/temporaryHouses/pets/:petId/users/:userId/pre-temporary-house-poll"
+                element={<PreTemporaryHousePoll />}
+              /> 
+                 <Route
+                path="/Shelters/temporaryHouses/pets/users/meetings-temporary-house-poll-info"
+                element={<MeetingsTempHouseInfo />}
+              /> 
+                 <Route
+                path="/Shelters/temporaryHouses/:tempHouseId/pets/users/:userId"
+                element={<TempHouseById />}
+              /> 
+                 <Route
+                path="/Shelters/temporaryHouses/:tempHouseId/pets/:petId/users/:userId"
+                element={<TempHouseUserPet />}
+              />
+                <Route
+                path="/Shelters/temporaryHouses/:tempHouseId/pets/:petId/confirm-delete"
+                element={<ConfirmDeleteTempHouse />}
+              />
               <Route path="/Users/pets" element={<Pets />} />
               <Route
                 path="/Users/pets/:id"
-                element={<PetById petData={petData} setPetData={setPetData} />}
+                element={<PetById />}
               />
               <Route path="/profile" element={<Profile />} />
               <Route

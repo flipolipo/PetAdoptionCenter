@@ -5,7 +5,7 @@ const MeetingsInfo = () => {
   return (
     <div className="meetingsInfo-container">
       <div className='go-to-home-adoption'>
-      <h2 className="meetingsInfo-h2">
+      <h2 className="important">
         First SIGN the pre-adoption QUESTIONNAIRE
       </h2>
       </div>

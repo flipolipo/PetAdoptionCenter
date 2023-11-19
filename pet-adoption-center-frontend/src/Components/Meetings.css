@@ -41,3 +41,11 @@
   .adoption-main-page-link:hover {
     background-color: rgba(246, 158, 123, 0.5);
   }
+
+  .basic-information-for-adoption {
+    text-align: center; 
+    margin: 20px; 
+  }
+  .important{
+    margin-bottom: 20px;
+  }

@@ -185,3 +185,45 @@
 .button-link-go-back:hover {
   background-color: rgba(246, 158, 123, 0.5);
 }
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  }
+  50% {
+    text-shadow: 0 8px 8px rgba(0, 0, 0, 0.5);
+  }
+  100% {
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  }
+}
+.important{
+  color: red;
+  font-family: var(--font-roboto);
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  -webkit-text-stroke: 1px #000;
+  font-size: 1.5rem;
+  animation: glow 2s infinite;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh; 
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

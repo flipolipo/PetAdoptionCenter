@@ -21,6 +21,9 @@ const Meetings = () => {
         });
         setUserData(response.data);
         console.log(response.data.Adoptions);
+        console.log(
+          response.data.Adoptions.map((adoption) => adoption.Activity)
+        );
       } catch (err) {
         console.log(err);
       }
@@ -33,28 +36,29 @@ const Meetings = () => {
     <div className="adoption-main-page-container">
       {userId && userData.Adoptions?.length >= 1 && (
         <>
-          {console.log(userData.Adoptions)}
           <h2 className="adoption-main-page">Your Adoptions</h2>
           {userData.Adoptions?.map((adoption) => (
             <div key={adoption.Id} className="adoption-card-meetings">
-              <PetById
-                petId={adoption.PetId}
-              />
+              <PetById petId={adoption.PetId} />
               <h3 className="adoption-main-page">
                 Status:{' '}
                 {adoption.IsContractAdoption ? 'Contracted' : 'Not Contracted'}
               </h3>
-              {adoption.IsPreAdoptionPoll && !adoption.IsMeetings && (<Link
-                to={`/Shelters/adoptions/${adoption.Id}/pets/${adoption.PetId}/users/${adoption.UserId}`}
-                className="adoption-main-page-link"
-              >
-                Choose meeting
-              </Link>) /* : ((<Link
+              {
+                adoption.IsPreAdoptionPoll && !adoption.IsMeetings && (
+                  <Link
+                    to={`/Shelters/adoptions/${adoption.Id}/pets/${adoption.PetId}/users/${adoption.UserId}`}
+                    className="adoption-main-page-link"
+                  >
+                    Choose meeting
+                  </Link>
+                ) /* : ((<Link
                 to={`/Shelters/adoptions/${adoption.Id}/pets/${adoption.PetId}/users/${adoption.UserId}`}
                 className="adoption-main-page-link"
               >
                 Show more
-              </Link>)) */}
+              </Link>)) */
+              }
               {adoption.Activity.Activities?.length >= 1 &&
                 adoption.Activity.Activities.every(
                   (a) => new Date(a.EndActivityDate) < new Date()
@@ -65,9 +69,23 @@ const Meetings = () => {
                     to={`/Shelters/adoptions/${adoption.Id}/pets/${adoption.PetId}/users/${adoption.UserId}/confirm-adoption`}
                     className="adoption-main-page-link"
                   >
-                    Confirm your adoption
+                    Confirm / delete your adoption
                   </Link>
                 )}
+              {adoption.IsMeetings && !adoption.IsContractAdoption && (
+                <div className="basic-information-for-adoption">
+                  <h2 className="important">
+                    If you haven't filled in the basic information (first name,
+                    last name, address), please proceed to your profile to
+                    complete the details.
+                  </h2>
+                  {userId && (
+                    <Link to={`/profile`} className="adoption-main-page-link">
+                      Basic information
+                    </Link>
+                  )}{' '}
+                </div>
+              )}
               {adoption.IsMeetings && !adoption.IsContractAdoption && (
                 <Link
                   to={`/Shelters/adoptions/${adoption.Id}/pets/${adoption.PetId}/users/${adoption.UserId}/contract-adoption`}
@@ -76,15 +94,23 @@ const Meetings = () => {
                   Contract adoption
                 </Link>
               )}
-              {!adoption.IsMeetings && (
-                <>
-                  <h2>Adoption Meeting Calendar</h2>
-                  <MyCalendar
-                    events={adoption.Activity.Activities}
-                    className="adoption-main-page-calendar"
-                  />
-                </>
-              )}
+              {userData.Adoptions?.map((adoption) => {
+                if (
+                  !adoption.IsMeetings &&
+                  adoption.Activity.Activities?.length >= 1
+                ) {
+                  return (
+                    <div key={adoption.Id}>
+                      <h2>Adoption Meeting Calendar</h2>
+                      <MyCalendar
+                        events={adoption.Activity.Activities}
+                        className="adoption-main-page-calendar"
+                      />
+                    </div>
+                  );
+                }
+                return null;
+              })}
             </div>
           ))}
         </>

@@ -7,6 +7,7 @@ import MyCalendar from '../../Components/BigCalendarActivity/CalendarActivity';
 import './Profile.css';
 import { Link, useNavigate } from 'react-router-dom';
 import PetById from '../Pets/PetsById/PetById';
+import { FetchTempHouseDataForUser } from '../../Service/FetchTempHouseDataForUser';
 
 const Profile = () => {
 
@@ -17,7 +18,9 @@ const Profile = () => {
     const [openSection, setOpenSection] = useState(null);
     const [isEditingBasicInfo, setIsEditingBasicInfo] = useState(false);
     const [editedBasicInfo, setEditedBasicInfo] = useState(null);
+    const [tempHouseData, setTempHouseData] = useState({});
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
@@ -38,6 +41,27 @@ const Profile = () => {
 
         fetchProfileData();
     }, [user.id, user.token]);
+
+    useEffect(() => {
+        if (user.id) {
+          fetchDataTempHouse();
+        }
+      }, [user.id]);
+    
+      const fetchDataTempHouse = async () => {
+        if (user.id) {
+          try {
+            const tempHouseResponseData = await FetchTempHouseDataForUser(user.id);
+            setTempHouseData(tempHouseResponseData);
+            console.log(tempHouseResponseData);
+            console.log(tempHouseResponseData.PetsInTemporaryHouse);
+            console.log(tempHouseResponseData.IsPreTempHousePoll);
+            console.log(tempHouseResponseData.IsMeetings);
+          } catch (error) {
+            console.error('Temporary house download error:', error);
+          }
+        }
+      };
 
     const updateUserProfile = async (id, updatedUserData) => {
         try {
@@ -168,11 +192,11 @@ const Profile = () => {
                 </div>
                 {openSection === 'Adoptions' && (
                     <div className="adoptionsProfiles">
-                        <h2>Your Adoptions</h2>
-                        <Link className='go-to-user-adoption' to={`/Shelters/adoptions/pets/users/${user.id}`}>Show more</Link>
+                        <h2 className='profile-h2'>Your Adoptions</h2>
+                        <Link className='find-pet-link' to={`/Shelters/adoptions/pets/users/${user.id}`}>Adoption process</Link>
                         {profileData.Adoptions?.map(adoption => (
                             <div key={adoption.Id} className="adoption-card">
-                                <PetById petAdoptionId={adoption.PetId} userAdoptionId={adoption.UserId} adoptionById={adoption.Id}/>
+                                <PetById petProfileId={adoption.PetId}/>
                                 {adoption.IsContractAdoption && <p>Date of Adoption: {new Date(adoption.DateOfAdoption).toLocaleDateString()}</p>}
                             </div>
                         ))}
@@ -194,6 +218,22 @@ const Profile = () => {
                     </div>
                 )}
             </div>
+            {tempHouseData && <div className="section">
+                <div className="section-header" onClick={() => setOpenSection(openSection === 'Pets in temporary housing' ? null : 'Pets in temporary housing')}>
+                    Pets in temporary housing <span className={openSection === 'Pets in temporary housing' ? 'arrow-down' : 'arrow-right'}>➤</span>
+                </div>
+                {openSection === 'Pets in temporary housing' && (
+                    <div className="petsProfiles">
+                        <h2 className='profile-h2'>Your Pets In Your Temporary House</h2>
+                        <Link className='find-pet-link' to={`/Shelters/temporaryHouses/${tempHouseData.Id}/pets/users/${user.id}`}>Temporary Housing process</Link>
+                        {tempHouseData.PetsInTemporaryHouse?.map(pet => (
+                            <div key={pet.Id} className="pet-cardProfiles">
+                                <PetById petProfileId={pet.Id} />
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>}
             <div className="section">
                 <div className="section-header" onClick={() => setOpenSection(openSection === 'Roles' ? null : 'Roles')}>
                     Roles <span className={openSection === 'Roles' ? 'arrow-down' : 'arrow-right'}>➤</span>

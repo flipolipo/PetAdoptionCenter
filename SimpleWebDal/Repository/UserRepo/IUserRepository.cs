@@ -1,6 +1,7 @@
 ﻿using SimpleWebDal.Models.Animal;
 using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
+using SimpleWebDal.Models.TemporaryHouse;
 using SimpleWebDal.Models.WebUser;
 
 namespace SimpleWebDal.Repository.UserRepo;
@@ -21,6 +22,8 @@ public interface IUserRepository
     public Task<IEnumerable<Pet>> GetAllAdoptedPet();
     public Task<IEnumerable<Pet>> GetAllPetsAvailableForAdoption();
     public Task<Pet> GetAdoptedPetById(Guid id);
+    public Task<TempHouse> GetUserTempHouse(Guid userId);
+    public Task<IEnumerable<Pet>> GetAllPetsInTempHouse(Guid userId);
 
     #endregion
 

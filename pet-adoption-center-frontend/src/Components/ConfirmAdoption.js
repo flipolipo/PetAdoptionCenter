@@ -9,9 +9,9 @@ import { fetchDataForShelter } from '../Service/fetchDataForShelter';
 
 const ConfirmAdoption = () => {
   const { adoptionId, petId, userId } = useParams();
-  console.log(petId);
+ /*  console.log(petId);
   console.log(userId);
-  console.log(adoptionId);
+  console.log(adoptionId); */
   const [adoptionData, setAdoptionData] = useState({});
   const [confirmAdoption, setConfirmAdoption] = useState({});
   const [confirmAdoptionVisible, setConfirmAdoptionVisible] = useState(false);
@@ -43,11 +43,11 @@ const ConfirmAdoption = () => {
       try {
         const adoptionResponseData = await FetchDataForAdoption(adoptionId);
         setAdoptionData(adoptionResponseData);
-        console.log(adoptionResponseData.IsPreAdoptionPoll);
+       /*  console.log(adoptionResponseData.IsPreAdoptionPoll);
         console.log(adoptionResponseData.PreadoptionPoll);
         console.log(adoptionResponseData.IsMeetings);
         console.log(adoptionResponseData.IsContractAdoption);
-        console.log(adoptionResponseData.ContractAdoption);
+        console.log(adoptionResponseData.ContractAdoption); */
       } catch (error) {
         console.error('Adoption download error:', error);
       }
@@ -58,15 +58,15 @@ const ConfirmAdoption = () => {
     try {
       const petDataById = await fetchDataForPet(petId);
       setPetData(petDataById);
-      console.log(petDataById);
+      //console.log(petDataById);
 
       if (petDataById && petDataById.ShelterId) {
         const shelterDataById = await fetchDataForShelter(
           petDataById.ShelterId
         );
         setShelterData(shelterDataById);
-        console.log(shelterDataById);
-        console.log(shelterDataById.Name);
+       /*  console.log(shelterDataById);
+        console.log(shelterDataById.Name); */
       }
     } catch (error) {
       console.log('shelter fetch error: ' + error);
@@ -84,6 +84,7 @@ const ConfirmAdoption = () => {
       setConfirmAdoption(resp);
       setSubmissionSuccess(true);
       setConfirmAdoptionVisible(false);
+      setDeleteAdoptionVisible(false);
     } catch (err) {
       console.log(err);
     }
@@ -98,6 +99,7 @@ const ConfirmAdoption = () => {
       setDeleteAdoption(resp);
       setDeleteSuccess(true);
       setDeleteAdoptionVisible(false);
+      setConfirmAdoptionVisible(false);
     } catch (err) {
       console.log(err);
     }

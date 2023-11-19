@@ -1,10 +1,10 @@
 import React from 'react';
-import './PreadoptionPollInfo.css';
-import { useUser } from './UserContext';
-import Login from './Login';
+import './PreTempHouseInfo.css';
+import { useUser } from '../UserContext';
+import Login from '../Login';
 import { Link } from 'react-router-dom';
 
-const PreadoptionPollInfo = () => {
+const PreTempHouseInfo = () => {
   const { user } = useUser();
   return (
     <div className="preadoption-poll-info">
@@ -18,10 +18,20 @@ const PreadoptionPollInfo = () => {
             <h2 className="preadoption-poll-info-h">and </h2>
           </>
         )}
-        <Link className='find-pet-link' to={`/Users/pets`}>FIND your new best friend</Link> <h2 className="preadoption-poll-info-h">first</h2>
+        <Link className="find-pet-link" to={`/Users/pets`}>
+          FIND your new best friend
+        </Link>{' '}
+        <h2 className="preadoption-poll-info-h">first</h2>
       </div>
       <h2 className="preadoption-poll-info-h">PREADOPTION POLL</h2>
       <ul className="preadoption-poll-info-ul">
+        <li>Name: *</li>
+        <li>Surname: *</li>
+        <li>City: *</li>
+        <li>Street: *</li>
+        <li>House number: *</li>
+        <li>Flat number: *</li>
+        <li>Postal code: *</li>
         <li>Are you 18 years or over?*</li>
         <li>
           Are you willing to make the investment in both time and finances to
@@ -53,4 +63,4 @@ const PreadoptionPollInfo = () => {
   );
 };
 
-export default PreadoptionPollInfo;
+export default PreTempHouseInfo;

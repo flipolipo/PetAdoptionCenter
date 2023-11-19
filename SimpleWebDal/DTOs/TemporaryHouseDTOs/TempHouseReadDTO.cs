@@ -16,6 +16,6 @@ public class TempHouseReadDTO
     public Guid? CalendarId { get; set; }
     public CalendarActivity? Activity { get; set; }
     public bool IsMeetings { get; set; }
-    public DateTimeOffset StartOfTemporaryHouseDate { get; set; }
+    //public DateTimeOffset StartOfTemporaryHouseDate { get; set; }
 }
 

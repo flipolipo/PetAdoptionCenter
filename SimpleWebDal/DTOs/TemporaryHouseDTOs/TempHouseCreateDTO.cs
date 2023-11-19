@@ -1,7 +1,7 @@
 ﻿using SimpleWebDal.DTOs.AddressDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
+using SimpleWebDal.DTOs.CalendarDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs;
-using SimpleWebDal.Models.CalendarModel;
 
 namespace SimpleWebDal.DTOs.TemporaryHouseDTOs;
 
@@ -12,8 +12,8 @@ public class TempHouseCreateDTO
     // public ICollection<PetCreateDTO>? PetsInTemporaryHouse { get; set; }
     public bool IsPreTempHousePoll { get; set; }
     public string TempHousePoll { get; set; }
-    public Guid? CalendarId { get; set; }
-    public CalendarActivity? Activity { get; set; }
+    //public Guid? CalendarId { get; set; }
+    public CalendarActivityCreateDTO? Activity { get; set; }
     //public bool IsMeetings { get; set; }
     //public DateTimeOffset StartOfTemporaryHouseDate { get; set; }
 }
