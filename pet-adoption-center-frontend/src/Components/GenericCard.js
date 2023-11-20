@@ -6,9 +6,23 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useUser } from './UserContext';
 import { address_url } from '../Service/url';
+import Modal from 'react-modal';
 //import './FlipCard.css';
-
+Modal.setAppElement('#root');
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 4
+  },
+};
 const GenericCard = ({ pet }) => {
+
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const { user, setUser } = useUser();
   const [favoured, setFavoured] = useState(false);
@@ -17,17 +31,20 @@ const GenericCard = ({ pet }) => {
     setIsHovered(true);
     console.log('entered');
   };
-  const GetUser = async () => {
-    try {
-      const response = await axios.get(`${address_url}/Users/${user.id}`);
-      console.log(response.data);
-      setUserData(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+  const openLoginModal = () => {
+    setLoginModalOpen(true);
+  };
+
+  const closeLoginModal = () => {
+    setLoginModalOpen(false);
+  };
+  const handleLoginClick = () => {
+    // You can handle the login action here or navigate to the login page.
+    // For now, let's just close the modal.
+    closeLoginModal();
   };
   useEffect(() => {
-    const getUser = async () => {
+    const GetUser = async () => {
       try {
         const response = await axios.get(`${address_url}/Users/${user.id}`);
         setUserData(response.data);
@@ -36,7 +53,7 @@ const GenericCard = ({ pet }) => {
       }
     };
 
-    getUser();
+    GetUser();
   }, [user]);
   const CheckForFavourite = () => {
     return (
@@ -87,7 +104,7 @@ const GenericCard = ({ pet }) => {
         console.log(error);
       }
     } else {
-      console.log('You have to log in!');
+      openLoginModal();
     }
   };
   return (
@@ -138,6 +155,17 @@ const GenericCard = ({ pet }) => {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isLoginModalOpen}
+        onRequestClose={closeLoginModal}
+        style={customStyles}
+        contentLabel="Login Modal"
+      >
+        <div>
+          <h2>You need to log in first!</h2>
+          <button className='fav-go-back' onClick={handleLoginClick}>Go back</button>
+        </div>
+      </Modal>
     </div>
   );
 };
