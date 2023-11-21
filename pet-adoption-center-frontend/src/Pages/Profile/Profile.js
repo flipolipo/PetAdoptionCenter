@@ -50,18 +50,22 @@ const Profile = () => {
     
       const fetchDataTempHouse = async () => {
         if (user.id) {
-          try {
-            const tempHouseResponseData = await FetchTempHouseDataForUser(user.id);
-            setTempHouseData(tempHouseResponseData);
-            console.log(tempHouseResponseData);
-            console.log(tempHouseResponseData.PetsInTemporaryHouse);
-            console.log(tempHouseResponseData.IsPreTempHousePoll);
-            console.log(tempHouseResponseData.IsMeetings);
-          } catch (error) {
-            console.error('Temporary house download error:', error);
-          }
+            try {
+                const tempHouseResponseData = await FetchTempHouseDataForUser(user.id);
+                if (tempHouseResponseData && tempHouseResponseData.data) {
+                    setTempHouseData(tempHouseResponseData.data);
+                }
+                /*
+                console.log(tempHouseResponseData);
+                console.log(tempHouseResponseData.PetsInTemporaryHouse);
+                console.log(tempHouseResponseData.IsPreTempHousePoll);
+                console.log(tempHouseResponseData.IsMeetings);
+                */
+            } catch (error) {
+                console.error('Temporary house download error:', error);
+            }
         }
-      };
+    };
 
     const updateUserProfile = async (id, updatedUserData) => {
         try {
@@ -218,7 +222,7 @@ const Profile = () => {
                     </div>
                 )}
             </div>
-            {tempHouseData && <div className="section">
+            {tempHouseData && tempHouseData.data && <div className="section">
                 <div className="section-header" onClick={() => setOpenSection(openSection === 'Pets in temporary housing' ? null : 'Pets in temporary housing')}>
                     Pets in temporary housing <span className={openSection === 'Pets in temporary housing' ? 'arrow-down' : 'arrow-right'}>➤</span>
                 </div>

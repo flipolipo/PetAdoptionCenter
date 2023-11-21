@@ -76,7 +76,7 @@ const Register = () => {
           <button className="buttonRegister" onClick={registerUser}>
             Register
           </button>
-          <Link to={`/`}>Home</Link>
+          <Link className='back-to-home' to={`/`}>Home</Link>
         </div>
       </Modal>
       {successRegister && (
@@ -84,7 +84,7 @@ const Register = () => {
           <h2 className="register-success">
             You have been successfully registered
           </h2>
-          <Link className='find-pet-link' to={`/`} >
+          <Link className='back-to-home' to={`/`} >
             Back
           </Link>
         </div>

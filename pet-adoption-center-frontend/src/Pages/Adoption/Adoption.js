@@ -133,7 +133,7 @@ const Adoption = () => {
                 pick up your new friend.
               </li>
             </ul>
-            <h3>Feel free to click on the bottom to have more information</h3>
+            <h3 className='important'>Feel free to click on the bottom to have more information</h3>
           </div>
         </div>
       </div>

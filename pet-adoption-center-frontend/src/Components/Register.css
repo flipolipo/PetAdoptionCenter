@@ -18,7 +18,7 @@
     padding: 10px;
     background-color: rgba(246, 158, 123, 1);
     margin-top: 10px;
-    border-radius: 10px;
+    border-radius: 5px;
     width: 80px;
     cursor: pointer;
     text-decoration: none;
@@ -28,4 +28,6 @@
   .back-to-home:hover {
     background-color: rgba(246, 158, 123, 0.5);
   }
-
+.find-pet-link{
+  
+}
