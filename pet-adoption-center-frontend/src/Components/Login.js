@@ -37,7 +37,7 @@ const Login = () => {
             'Authorization': `Bearer ${user.token}`
           }
         });
-        console.log(response)
+        //console.log(response)
         setProfileData(response.data);
 
       } catch (err) {
