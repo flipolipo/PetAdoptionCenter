@@ -65,7 +65,7 @@ const Adoption = () => {
           {!userData.Adoptions?.some((adoption) => adoption.IsMeetings) ? (
             <>
               {' '}
-              {user.id && id ? (
+              {(user.id && id) || user.id ? (
                 <Link
                   to={`/Shelters/adoptions/pets/users/${user.id}`}
                   className="find-pet"
@@ -89,7 +89,7 @@ const Adoption = () => {
           ) ? (
             <>
               {' '}
-              {user.id && id ? (
+              {(user.id && id) || user.id ? (
                 <Link
                   to={`/Shelters/adoptions/pets/users/${user.id}`}
                   className="find-pet"

@@ -1,4 +1,4 @@
-.register-container{
+.register-container-info{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6,7 +6,9 @@
     margin-top: 50px;
     justify-content: center;
 }
-
+.register-success{
+  margin-bottom: 30px;
+}
 .back-to-home {
     cursor: pointer;
     position: sticky;
@@ -16,8 +18,9 @@
     color: var(--color-black);
     text-align: center;
     padding: 10px;
-    background-color: rgba(246, 158, 123, 1);
-    margin-top: 10px;
+    background-color: rgba(246, 158, 123, 0.4);
+    margin-top: 30px;
+    margin-left: 20px;
     border-radius: 5px;
     width: 80px;
     cursor: pointer;
@@ -26,8 +29,6 @@
     border: 2px solid black;
   }
   .back-to-home:hover {
-    background-color: rgba(246, 158, 123, 0.5);
+    background-color: rgba(246, 158, 123, 1);
   }
-.find-pet-link{
-  
-}
+
