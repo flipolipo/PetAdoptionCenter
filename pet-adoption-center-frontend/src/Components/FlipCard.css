@@ -12,12 +12,12 @@
   transition: transform 0.5s;
 }
 
-.flip-card:hover .flip-card-inner {
+/* .flip-card:hover .flip-card-inner {
   transform: rotateY(180deg);
-}
-.flip-card-front >.image-container > img:first-child{
-object-fit: cover;
-width: 100%;
+} */
+.flip-card-front > .image-container > img:first-child {
+  object-fit: cover;
+  width: 100%;
 }
 .flip-card-front,
 .flip-card-back {
@@ -27,20 +27,28 @@ width: 100%;
   backface-visibility: hidden;
 }
 
-.flip-card-back {
+/* .flip-card-back {
   transform: rotateY(180deg);
-}
+} */
 .image-container {
   position: relative;
   height: 100%;
 }
-
+.paw-button {
+  border: 0;
+  z-index: -1;
+}
 .paw-icon {
   position: absolute;
   top: 10px;
   right: 10px;
   width: 40px;
+
+  padding: 10px;
+  background-color: rgba(246, 158, 123, 0.748);
+  border-radius: 10px;
 }
+
 .card-container {
   display: flex;
   flex-wrap: wrap;
@@ -48,11 +56,22 @@ width: 100%;
   gap: 50px;
   margin: auto;
 }
-
+.fav-go-back {
+  cursor: pointer;
+  position: sticky;
+  padding: 5px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+  text-align: center;
+ border: 0;
+  background-color: rgba(246, 158, 123, 1);
+}
 .card {
   width: 280px;
   height: 280px;
- /* margin: 10px; */
+  /* margin: 10px; */
 }
 .more-inf {
   display: flex;
@@ -80,12 +99,12 @@ width: 100%;
   font-family: var(--font-outfit);
   color: var(--color-black);
 }
-.pagination{
+.pagination {
   padding: 40px;
   display: flex;
   justify-content: center;
 }
-.button-pagination{
+.button-pagination {
   padding: 10px;
   width: 70px;
   text-align: center;
@@ -93,25 +112,22 @@ width: 100%;
   background-color: rgba(246, 158, 123, 0.4);
   margin-left: 10px;
   font-weight: bold;
-  align-items: center; 
+  align-items: center;
   width: 80px;
   transition: background-color 0.3s;
 }
-.button-pagination:hover{
+.button-pagination:hover {
   background-color: rgba(246, 158, 123, 1);
 }
 @media (max-width: 391px) {
   .card-container {
     display: flex;
-    flex-direction: column; 
-    align-items: center; 
+    flex-direction: column;
+    align-items: center;
   }
   .card {
-    width: 100%; 
+    width: 100%;
     margin: 30px 0;
-    margin-left: 30px; 
+    margin-left: 30px;
   }
 }
-
-
-

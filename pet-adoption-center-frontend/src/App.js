@@ -28,6 +28,7 @@ import MeetingsTempHouseInfo from './Components/TempHouseProccess/MeetingsTempHo
 import TempHouseById from './Components/TempHouseProccess/TempHouseById.js';
 import TempHouseUserPet from './Components/TempHouseProccess/TempHouseUserPet.js';
 import ConfirmDeleteTempHouse from './Components/TempHouseProccess/ConfirmDeleteTempHouse.js';
+import ShelterById from './Pages/Shelters/ShelterById.js';
 
 function App() {
   const [petData, setPetData] = useState([]);
@@ -124,6 +125,7 @@ function App() {
                 path="/ShelterOwner/:shelterId"
                 element={<ShelterOwner />}
               />
+              <Route path="/Shelters/:shelterId" element={<ShelterById />} />
             </Routes>
           </div>
 

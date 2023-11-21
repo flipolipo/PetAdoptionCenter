@@ -45,3 +45,9 @@ body {
   background-color: white;
   z-index: 1000;
 }
+.paw-icon{
+  transition: 1;
+}
+.paw-icon:hover{
+  
+}

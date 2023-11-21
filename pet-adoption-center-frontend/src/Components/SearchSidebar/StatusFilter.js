@@ -1,34 +1,32 @@
 import React, { useState } from "react";
+import Select from "react-select";
 
 function StatusFilter({ onChange }) {
+  const statusOptions = [
+    { value: "", label: "Select a status" },
+    { value: 0, label: "Temporary House" },
+    { value: 1, label: "At Shelter" },
+    { value: 3, label: "Adopted" },
+    { value: 4, label: "On Adoption Processs" },
+  ];
+
   const [selectedStatus, setSelectedStatus] = useState("");
 
-  const handlestatusChange = (event) => {
-    const status = event.target.value;
-    setSelectedStatus(status);
-
-    let statusValue = -1;
-
-    if (status === "TemporaryHouse") {
-      statusValue = 0;
-    } else if (status === "AtShelter") {
-      statusValue = 1;
-    } else if (status === "Adopted") {
-      statusValue = 3;
-    }
-
-    onChange(statusValue);
+  const handleStatusChange = (selectedOption) => {
+    setSelectedStatus(selectedOption);
+    onChange(selectedOption.value);
   };
 
   return (
     <div className="filter">
-      <h3>Filter by status</h3>
-      <select value={selectedStatus} onChange={handlestatusChange}>
-        <option value="">Select a status</option>
-        <option value="TemporaryHouse">Temporary House</option>
-        <option value="AtShelter">At Shelter</option>
-        <option value="Adopted">Adopted</option>
-      </select>
+      <h3>Filter by Status</h3>
+      <Select
+        value={selectedStatus}
+        onChange={handleStatusChange}
+        options={statusOptions}
+        className="select-status"
+        placeholder="select status"
+      />
     </div>
   );
 }

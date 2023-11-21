@@ -1,31 +1,30 @@
 import React, { useState } from "react";
+import Select from "react-select";
 
 function GenderFilter({ onChange }) {
+  const genderOptions = [
+    { value: "", label: "Select a gender" },
+    { value: 0, label: "Male" },
+    { value: 1, label: "Female" },
+  ];
+
   const [selectedGender, setSelectedGender] = useState("");
 
-  const handleGenderChange = (event) => {
-    const gender = event.target.value;
-    setSelectedGender(gender);
-
-    let genderValue = 3;
-
-    if (gender === "male") {
-      genderValue = 0;
-    } else if (gender === "female") {
-      genderValue = 1;
-    }
-
-    onChange(genderValue);
+  const handleGenderChange = (selectedOption) => {
+    setSelectedGender(selectedOption);
+    onChange(selectedOption.value);
   };
 
   return (
     <div className="filter">
       <h3>Filter by Gender</h3>
-      <select value={selectedGender} onChange={handleGenderChange}>
-        <option value="">Select a gender</option>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-      </select>
+      <Select
+        value={selectedGender}
+        onChange={handleGenderChange}
+        options={genderOptions}
+        className="select-gender"
+        placeholder="select gender"
+      />
     </div>
   );
 }
