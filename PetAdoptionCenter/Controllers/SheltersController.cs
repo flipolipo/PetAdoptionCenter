@@ -556,18 +556,6 @@ public class SheltersController : ControllerBase
             return BadRequest();
         }
 
-        var activityCreate = _mapper.Map(adoptionCreateDTO, foundAdoption);
-
-        bool updated = await _shelterRepository.UpdateAdoption(shelterId, userId, foundAdoption);
-        if (updated)
-        {
-            return NoContent();
-        }
-        else
-        {
-            return StatusCode(500);
-        }
-    }
 
     //[ProducesResponseType(StatusCodes.Status201Created)]
     //[ProducesResponseType(StatusCodes.Status400BadRequest)]
