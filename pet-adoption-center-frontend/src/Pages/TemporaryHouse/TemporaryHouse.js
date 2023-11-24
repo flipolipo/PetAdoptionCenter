@@ -61,7 +61,7 @@ const TemporaryHouse = () => {
               </Link>
             )
           )}
-          {user.id && tempHouseData ? (
+          {user.id && tempHouseData && !tempHouseData?.IsMeetings ? (
             <Link
               to={`/Shelters/temporaryHouses/${tempHouseData?.Id}/pets/users/${user.id}`}
               className="find-pet"
@@ -69,14 +69,14 @@ const TemporaryHouse = () => {
               Meetings to know your pet
             </Link>
           ) : (
-            !tempHouseData?.IsMeetings && (
+            !tempHouseData?.IsMeetings ? (
               <Link
                 to={`/Shelters/temporaryHouses/pets/users/meetings-temporary-house-poll-info`}
                 className="find-pet"
               >
                 Meetings to know your pet
               </Link>
-            )
+            ) : null
           )}
         </div>
         <div className="temporary-house-card-page">

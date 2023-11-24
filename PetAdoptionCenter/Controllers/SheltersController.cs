@@ -71,7 +71,7 @@ public class SheltersController : ControllerBase
     public async Task<ActionResult<ShelterReadDTO>> GetShelterById(Guid shelterId)
     {
         var shelter = await _shelterRepository.GetShelterById(shelterId);
-        
+
         if (shelter == null)
         {
             return NotFound();
@@ -349,7 +349,7 @@ public class SheltersController : ControllerBase
     [HttpPost("temporary-houses/{tempHouseId}/pets/{petId}/calendar/activities/users/add-pet")]
     public async Task<ActionResult<TempHouseReadDTO>> ConfirmToAddAnotherPetToTempHouse(Guid petId, Guid tempHouseId)
     {
-        var addPetToTempHouse = await _shelterRepository.ConfirmToAddAnotherPetToTempHouse(tempHouseId, petId); 
+        var addPetToTempHouse = await _shelterRepository.ConfirmToAddAnotherPetToTempHouse(tempHouseId, petId);
         var tempHouseReadDto = _mapper.Map<TempHouseReadDTO>(addPetToTempHouse);
         return Ok(tempHouseReadDto);
     }
@@ -535,388 +535,390 @@ public class SheltersController : ControllerBase
         }
     }
 
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [HttpPut("{shelterId}/adoptions/{adoptionId}")]
-    public async Task<IActionResult> UpdateAdoption(Guid shelterId, Guid adoptionId, Guid userId, AdoptionCreateDTO adoptionCreateDTO)
-    {
-        var foundShelter = await _shelterRepository.GetShelterById(shelterId);
-        var foundUser = await _shelterRepository.FindUserById(userId);
-        var foundAdoption = await _shelterRepository.GetShelterAdoptionById(shelterId, adoptionId);
-        if (foundShelter == null || foundUser == null || foundAdoption == null)
-        {
-            return NotFound();
-        }
-        var activityValidator = _validatorFactory.GetValidator<AdoptionCreateDTO>();
-        var validationResult = activityValidator.Validate(adoptionCreateDTO);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest();
-        }
-
-
-    //[ProducesResponseType(StatusCodes.Status201Created)]
+    //[ProducesResponseType(StatusCodes.Status204NoContent)]
+    //[ProducesResponseType(StatusCodes.Status404NotFound)]
     //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-    //[HttpPost("{shelterId}/adoptions")]
-    //public async Task<ActionResult<Adoption>> AddAdoption([FromBody] AdoptionCreateDTO adoptionCreateDto, Guid shelterId)
+    //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    //[HttpPut("{shelterId}/adoptions/{adoptionId}")]
+    //public async Task<IActionResult> UpdateAdoption(Guid shelterId, Guid userId, AdoptionCreateDTO adoptionCreateDTO)
     //{
-    //    var adoption = _mapper.Map<Adoption>(adoptionCreateDto);
-    //    var newAdoption = await _shelterRepository.AddAdoption(shelterId, adoption.PetId, adoption.UserId, adoption);
-    //    var adoptionReadDto = _mapper.Map<AdoptionReadDTO>(newAdoption);
-
-    //    return CreatedAtRoute(nameof(GetAdoptionById), new { shelterId, adoptionId = adoption.Id }, adoptionReadDto);
+    //    var foundShelter = await _shelterRepository.GetShelterById(shelterId);
+    //    var foundUser = await _shelterRepository.FindUserById(userId);
+    //    var foundAdoption = await _shelterRepository.GetShelterAdoptionById(shelterId, adoptionId);
+    //    if (foundShelter == null || foundUser == null || foundAdoption == null)
+    //    {
+    //        return NotFound();
+    //    }
+    //    var activityValidator = _validatorFactory.GetValidator<AdoptionCreateDTO>();
+    //    var validationResult = activityValidator.Validate(adoptionCreateDTO);
+    //    if (!validationResult.IsValid)
+    //    {
+    //        return BadRequest();
+    //    }
     //}
 
 
-   
-    #endregion
-
-
-    #region //PETS
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [HttpGet("{shelterId}/pets/type")]
-    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllShelterDogsOrCats(Guid shelterId, PetType type)
-    {
-        var pets = await _shelterRepository.GetAllShelterDogsOrCats(shelterId, type);
-        if (pets != null)
-        {
-            return Ok(pets);
-        }
-        return BadRequest();
-    }
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [HttpGet("{shelterId}/pets/avaible")]
-    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllAvaiblePets(Guid shelterId) 
-    {
-        var pets = await _shelterRepository.GetAllAvaiblePets(shelterId);
-        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
-        var updatedPetsDto = petsDto.Select(petDto =>
-        {
-            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
-            if (matchingPet != null)
-            {
-                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
-            }
-            return petDto;
-        }).ToList();
-        if (updatedPetsDto != null)
-        {
-            return Ok(updatedPetsDto);
-        }
-        return BadRequest();
-    }
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [HttpGet("{shelterId}/pets")]
-    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllShelterPets(Guid shelterId)
-    {
-        var pets = await _shelterRepository.GetAllShelterPets(shelterId);
-        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
-        var updatedPetsDto = petsDto.Select(petDto =>
-        {
-            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
-            if (matchingPet != null)
-            {
-                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
-            }
-            return petDto;
-        }).ToList();
-
-        if (updatedPetsDto != null)
-        {
-            return Ok(updatedPetsDto);
-        }
-        return BadRequest();
-    }
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{shelterId}/pets/{petId}", Name = "GetShelterPetById")]
-    public async Task<ActionResult<Pet>> GetShelterPetById(Guid shelterId, Guid petId)
-    {
-        var pet = await _shelterRepository.GetShelterPetById(shelterId, petId);
-        var petDto = _mapper.Map<PetReadDTO>(pet);
-        petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
-        if (petDto != null)
-        {
-            return Ok(petDto);
-        }
-        return NotFound();
-    }
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [HttpGet("{shelterId}/pets/adopted")]
-    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllAdoptedPets(Guid shelterId)
-    {
-        var pets = await _shelterRepository.GetAllAdoptedPets(shelterId);
-        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
-        var updatedPetsDto = petsDto.Select(petDto =>
-        {
-            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
-            if (matchingPet != null)
-            {
-                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
-            }
-            return petDto;
-        }).ToList();
-
-        if (updatedPetsDto != null)
-        {
-            return Ok(updatedPetsDto);
-        }
-        return BadRequest();
-    }
-
-  
-
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [HttpGet("{shelterId}/tempHouse/{tempHouseId}/pets")]
-    public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllShelterTempHousesPets(Guid shelterId)
-    {
-        var pets = await _shelterRepository.GetAllShelterTempHousesPets(shelterId);
-        var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
-        var updatedPetsDto = petsDto.Select(petDto =>
-        {
-            var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
-            if (matchingPet != null)
-            {
-                petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
-            }
-            return petDto;
-        }).ToList();
-
-        if (updatedPetsDto != null)
-        {
-            return Ok(updatedPetsDto);
-        }
-        return NotFound();
-    }
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{shelterId}/tempHouse/{tempHouseId}/pets/{petId}")]
-    public async Task<ActionResult<PetReadDTO>> GetTempHousePetById(Guid shelterId, Guid petId, Guid tempHouseId)
-    {
-        var pet = await _shelterRepository.GetTempHousePetById(shelterId, tempHouseId, petId);
-        var petDto = _mapper.Map<PetReadDTO>(pet);
-        petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
-        if (petDto != null)
-        {
-            return Ok(petDto);
-        }
-        return NotFound();
-    }
-
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [HttpPut("{shelterId}/pets/{petId}")]
-    public async Task<IActionResult> UpdateShelterPet(Guid shelterId, Guid petId, PetGender gender, PetType type, string description, PetStatus status, bool avaibleForAdoption)
-    {
-        bool updated = await _shelterRepository.UpdateShelterPet(shelterId, petId, gender, type, description, status, avaibleForAdoption);
-
-        if (updated)
-        {
-            var updatedPet = await _shelterRepository.GetShelterActivityById(shelterId, petId);
-            return Ok(updatedPet);
-        }
-
-        return NotFound();
-    }
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [HttpPut("{shelterId}/pets/basicHealthInfo/{basicHelthInfoId}")]
-    public async Task<IActionResult> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, SimpleWebDal.Models.Animal.Enums.Size size, bool isNeutred)
-    {
-        bool updated = await _shelterRepository.UpdatePetBasicHealthInfo(shelterId, petId, name, age, size, isNeutred);
-
-        if (updated)
-        {
-            var updatedPet = await _shelterRepository.GetShelterPetById(shelterId, petId);
-            return Ok(updatedPet);
-        }
-
-        return NotFound();
-    }
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpPost("{shelterId}/pets")]
-    public async Task<ActionResult<PetReadDTO>> AddPet([FromForm] PetCreateDTO petCreateDTO, Guid shelterId)
-    {
-        var pet = _mapper.Map<Pet>(petCreateDTO);
-
-        var petValidator = _validatorFactory.GetValidator<PetCreateDTO>();
-        var validationResult = petValidator.Validate(petCreateDTO);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
-
-        if (petCreateDTO.ImageFile != null && petCreateDTO.ImageFile.Length > 0)
-        {
-            using var memoryStream = new MemoryStream();
-            await petCreateDTO.ImageFile.CopyToAsync(memoryStream);
-            pet.Image = memoryStream.ToArray();
-        }
-        await _shelterRepository.AddPet(shelterId, pet);
-        var map = _mapper.Map<PetReadDTO>(pet);
-        return CreatedAtRoute(nameof(GetShelterPetById), new { shelterId = map.ShelterId, petId = map.Id }, map);
-    }
-
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{shelterId}/pets/{petId}/vaccinations/{vaccinationId}", Name = "GetPetVaccinationById")]
-    public async Task<ActionResult<VaccinationReadDTO>> GetPetVaccinationById(Guid shelterId, Guid petId, Guid vaccinationId)
-    {
-        var vaccination = await _shelterRepository.GetPetVaccinationById(shelterId, petId, vaccinationId);
-        var vaccinationDTO = _mapper.Map<VaccinationReadDTO>(vaccination);
-        if (vaccinationDTO != null)
-        {
-            return Ok(vaccinationDTO);
-        }
-        return BadRequest();
-    }
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpPost("{shelterId}/pets/{petId}/vaccinations")]
-    public async Task<ActionResult<VaccinationReadDTO>> AddVaccination(Guid shelterId, Guid petId, VaccinationCreateDTO vaccinationCreateDTO)
-    {
-        var vaccination = _mapper.Map<Vaccination>(vaccinationCreateDTO);
-        var addedVaccination = await _shelterRepository.AddPetVaccination(shelterId, petId, vaccination);
-        var vaccinationReadDto = _mapper.Map<VaccinationReadDTO>(vaccination);
-        return CreatedAtRoute(nameof(GetPetVaccinationById), new { shelterId, petId, vaccinationId = addedVaccination.Id }, vaccinationReadDto);
-
-    }
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [HttpGet("{shelterId}/pets/{petId}/diseases/{diseaseId}", Name = "GetPetDiseaseById")]
-    public async Task<ActionResult<DiseaseReadDTO>> GetPetDiseaseById(Guid shelterId, Guid petId, Guid diseaseId)
-    {
-        var disease = await _shelterRepository.GetPetDiseaseById(shelterId, petId, diseaseId);
-        var diseaseDTO = _mapper.Map<DiseaseReadDTO>(disease);
-        if (diseaseDTO != null)
-        {
-            return Ok(diseaseDTO);
-        }
-        return BadRequest();
-    }
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [HttpPost("{shelterId}/pets/{petId}/diseases")]
-    public async Task<ActionResult<DiseaseReadDTO>> AddDisease(Guid shelterId, Guid petId, DiseaseCreateDTO diseaseCreateDTO)
-    {
-        var disease = _mapper.Map<Disease>(diseaseCreateDTO);
-
-        var addedDisease = await _shelterRepository.AddPetDisease(shelterId, petId, disease);
-        var diseaseReadDto = _mapper.Map<DiseaseReadDTO>(disease);
-        return CreatedAtRoute(nameof(GetPetDiseaseById), new { shelterId, petId, diseaseId = addedDisease.Id }, diseaseReadDto);
-
-    }
-
-    [HttpGet("{shelterId}/pets/{petId}/calendar/activities")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-
-    public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetAllPetActivities(Guid shelterId, Guid petId)
-    {
-        var petCalendar = await _shelterRepository.GetAllPetActivities(shelterId, petId);
-        if (petCalendar != null)
-        {
-            return Ok(_mapper.Map<IEnumerable<ActivityReadDTO>>(petCalendar));
-        }
-        return NotFound();
-    }
-
-
-    [HttpGet("{shelterId}/pets/{petId}/calendar/activities/{activityId}", Name = "GetPetActivityById")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ActivityReadDTO>> GetPetActivityById(Guid shelterId, Guid petId, Guid activityId)
-    {
-        var petActivity = await _shelterRepository.GetPetActivityById(shelterId, activityId, petId);
-        if (petActivity != null)
-        {
-            return Ok(_mapper.Map<ActivityReadDTO>(petActivity));
-        }
-        return NotFound();
-    }
-
-
-    [HttpPost("{shelterId}/pets/{petId}/calendar/activities")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<ActivityReadDTO>> AddPetActivity(Guid shelterId, Guid petId, ActivityCreateDTO activityCreateDTO)
-    {
-        var foudShelter = await _shelterRepository.GetShelterById(shelterId);
-        var foundPet = await _shelterRepository.GetShelterPetById(shelterId, petId);
-        var activityModel = _mapper.Map<Activity>(activityCreateDTO);
-
-        //var activityValidator = _validatorFactory.GetValidator<ActivityCreateDTO>();
-        //var validationResult = activityValidator.Validate(activityCreateDTO);
-        //if (!validationResult.IsValid)
+        //[ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[HttpPost("{shelterId}/adoptions")]
+        //public async Task<ActionResult<Adoption>> AddAdoption([FromBody] AdoptionCreateDTO adoptionCreateDto, Guid shelterId)
         //{
-        //    return BadRequest();
+        //    var adoption = _mapper.Map<Adoption>(adoptionCreateDto);
+        //    var newAdoption = await _shelterRepository.AddAdoption(shelterId, adoption.PetId, adoption.UserId, adoption);
+        //    var adoptionReadDto = _mapper.Map<AdoptionReadDTO>(newAdoption);
+
+        //    return CreatedAtRoute(nameof(GetAdoptionById), new { shelterId, adoptionId = adoption.Id }, adoptionReadDto);
         //}
 
-       var addedActivity = await _shelterRepository.AddPetActivityToCalendar(shelterId, petId, activityModel);
-        var activityReadDTO = _mapper.Map<ActivityReadDTO>(activityModel);
-     
-        return CreatedAtRoute(nameof(GetPetActivityById), new { shelterId = foudShelter.Id, petId = foundPet.Id, activityId = addedActivity.Id }, activityReadDTO);
-    }
 
 
-    [HttpPut("{shelterId}/pets/{petId}/calendar/activities/{activityId}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> UpdateUserActivity(Guid shelterId, Guid petId, Guid activityId, ActivityCreateDTO activityCreateDTO)
-    {
-        var foundPet = await _shelterRepository.GetShelterPetById(shelterId, petId);
-        var foundActivity = await _shelterRepository.GetPetActivityById(shelterId, activityId, petId);
-        if (foundPet == null || foundActivity == null)
+        #endregion
+
+
+        #region //PETS
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpGet("{shelterId}/pets/type")]
+        public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllShelterDogsOrCats(Guid shelterId, PetType type)
         {
+            var pets = await _shelterRepository.GetAllShelterDogsOrCats(shelterId, type);
+            if (pets != null)
+            {
+                return Ok(pets);
+            }
+            return BadRequest();
+        }
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpGet("{shelterId}/pets/avaible")]
+        public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllAvaiblePets(Guid shelterId)
+        {
+            var pets = await _shelterRepository.GetAllAvaiblePets(shelterId);
+            var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+            var updatedPetsDto = petsDto.Select(petDto =>
+            {
+                var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+                if (matchingPet != null)
+                {
+                    petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
+                }
+                return petDto;
+            }).ToList();
+            if (updatedPetsDto != null)
+            {
+                return Ok(updatedPetsDto);
+            }
+            return BadRequest();
+        }
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpGet("{shelterId}/pets")]
+        public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllShelterPets(Guid shelterId)
+        {
+            var pets = await _shelterRepository.GetAllShelterPets(shelterId);
+            var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+            var updatedPetsDto = petsDto.Select(petDto =>
+            {
+                var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+                if (matchingPet != null)
+                {
+                    petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
+                }
+                return petDto;
+            }).ToList();
+
+            if (updatedPetsDto != null)
+            {
+                return Ok(updatedPetsDto);
+            }
+            return BadRequest();
+        }
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("{shelterId}/pets/{petId}", Name = "GetShelterPetById")]
+        public async Task<ActionResult<Pet>> GetShelterPetById(Guid shelterId, Guid petId)
+        {
+            var pet = await _shelterRepository.GetShelterPetById(shelterId, petId);
+            var petDto = _mapper.Map<PetReadDTO>(pet);
+            petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+            if (petDto != null)
+            {
+                return Ok(petDto);
+            }
             return NotFound();
         }
-        var activityValidator = _validatorFactory.GetValidator<ActivityCreateDTO>();
-        var validationResult = activityValidator.Validate(activityCreateDTO);
-        if (!validationResult.IsValid)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpGet("{shelterId}/pets/adopted")]
+        public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllAdoptedPets(Guid shelterId)
         {
+            var pets = await _shelterRepository.GetAllAdoptedPets(shelterId);
+            var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+            var updatedPetsDto = petsDto.Select(petDto =>
+            {
+                var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+                if (matchingPet != null)
+                {
+                    petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
+                }
+                return petDto;
+            }).ToList();
+
+            if (updatedPetsDto != null)
+            {
+                return Ok(updatedPetsDto);
+            }
             return BadRequest();
         }
 
-        var activityCreate = _mapper.Map(activityCreateDTO, foundActivity);
 
-        bool updated = await _shelterRepository.UpdatePetActivity(shelterId, petId, foundActivity);
-        if (updated)
-        {
-            return NoContent();
-        }
-        else
-        {
-            return StatusCode(500);
-        }
-    }
 
-    [HttpDelete("{shelterId}/pets/{petId}/calendar/activities/{activityId}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> DeletePetActivity(Guid shelterId, Guid petId, Guid activityId)
-    {
-        bool deleted = await _shelterRepository.DeletePetActivity(shelterId, petId, activityId);
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpGet("{shelterId}/tempHouse/{tempHouseId}/pets")]
+        public async Task<ActionResult<IEnumerable<PetReadDTO>>> GetAllShelterTempHousesPets(Guid shelterId)
+        {
+            var pets = await _shelterRepository.GetAllShelterTempHousesPets(shelterId);
+            var petsDto = _mapper.Map<IEnumerable<PetReadDTO>>(pets);
+            var updatedPetsDto = petsDto.Select(petDto =>
+            {
+                var matchingPet = pets.FirstOrDefault(pet => pet.Id == petDto.Id);
+                if (matchingPet != null)
+                {
+                    petDto.ImageBase64 = Convert.ToBase64String(matchingPet.Image);
+                }
+                return petDto;
+            }).ToList();
 
-        if (deleted)
-        {
-            return NoContent();
-        }
-        else
-        {
+            if (updatedPetsDto != null)
+            {
+                return Ok(updatedPetsDto);
+            }
             return NotFound();
         }
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("{shelterId}/tempHouse/{tempHouseId}/pets/{petId}")]
+        public async Task<ActionResult<PetReadDTO>> GetTempHousePetById(Guid shelterId, Guid petId, Guid tempHouseId)
+        {
+            var pet = await _shelterRepository.GetTempHousePetById(shelterId, tempHouseId, petId);
+            var petDto = _mapper.Map<PetReadDTO>(pet);
+            petDto.ImageBase64 = Convert.ToBase64String(pet.Image);
+            if (petDto != null)
+            {
+                return Ok(petDto);
+            }
+            return NotFound();
+        }
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpPut("{shelterId}/pets/{petId}")]
+        public async Task<IActionResult> UpdateShelterPet(Guid shelterId, Guid petId, PetGender gender, PetType type, string description, PetStatus status, bool avaibleForAdoption)
+        {
+            bool updated = await _shelterRepository.UpdateShelterPet(shelterId, petId, gender, type, description, status, avaibleForAdoption);
+
+            if (updated)
+            {
+                var updatedPet = await _shelterRepository.GetShelterActivityById(shelterId, petId);
+                return Ok(updatedPet);
+            }
+
+            return NotFound();
+        }
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [HttpPut("{shelterId}/pets/basicHealthInfo/{basicHelthInfoId}")]
+        public async Task<IActionResult> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, SimpleWebDal.Models.Animal.Enums.Size size, bool isNeutred)
+        {
+            bool updated = await _shelterRepository.UpdatePetBasicHealthInfo(shelterId, petId, name, age, size, isNeutred);
+
+            if (updated)
+            {
+                var updatedPet = await _shelterRepository.GetShelterPetById(shelterId, petId);
+                return Ok(updatedPet);
+            }
+
+            return NotFound();
+        }
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPost("{shelterId}/pets")]
+        public async Task<ActionResult<PetReadDTO>> AddPet([FromForm] PetCreateDTO petCreateDTO, Guid shelterId)
+        {
+            var pet = _mapper.Map<Pet>(petCreateDTO);
+
+            var petValidator = _validatorFactory.GetValidator<PetCreateDTO>();
+            var validationResult = petValidator.Validate(petCreateDTO);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            if (petCreateDTO.ImageFile != null && petCreateDTO.ImageFile.Length > 0)
+            {
+                using var memoryStream = new MemoryStream();
+                await petCreateDTO.ImageFile.CopyToAsync(memoryStream);
+                pet.Image = memoryStream.ToArray();
+            }
+            await _shelterRepository.AddPet(shelterId, pet);
+            var map = _mapper.Map<PetReadDTO>(pet);
+            return CreatedAtRoute(nameof(GetShelterPetById), new { shelterId = map.ShelterId, petId = map.Id }, map);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("{shelterId}/pets/{petId}/vaccinations/{vaccinationId}", Name = "GetPetVaccinationById")]
+        public async Task<ActionResult<VaccinationReadDTO>> GetPetVaccinationById(Guid shelterId, Guid petId, Guid vaccinationId)
+        {
+            var vaccination = await _shelterRepository.GetPetVaccinationById(shelterId, petId, vaccinationId);
+            var vaccinationDTO = _mapper.Map<VaccinationReadDTO>(vaccination);
+            if (vaccinationDTO != null)
+            {
+                return Ok(vaccinationDTO);
+            }
+            return BadRequest();
+        }
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPost("{shelterId}/pets/{petId}/vaccinations")]
+        public async Task<ActionResult<VaccinationReadDTO>> AddVaccination(Guid shelterId, Guid petId, VaccinationCreateDTO vaccinationCreateDTO)
+        {
+            var vaccination = _mapper.Map<Vaccination>(vaccinationCreateDTO);
+            var addedVaccination = await _shelterRepository.AddPetVaccination(shelterId, petId, vaccination);
+            var vaccinationReadDto = _mapper.Map<VaccinationReadDTO>(vaccination);
+            return CreatedAtRoute(nameof(GetPetVaccinationById), new { shelterId, petId, vaccinationId = addedVaccination.Id }, vaccinationReadDto);
+
+        }
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("{shelterId}/pets/{petId}/diseases/{diseaseId}", Name = "GetPetDiseaseById")]
+        public async Task<ActionResult<DiseaseReadDTO>> GetPetDiseaseById(Guid shelterId, Guid petId, Guid diseaseId)
+        {
+            var disease = await _shelterRepository.GetPetDiseaseById(shelterId, petId, diseaseId);
+            var diseaseDTO = _mapper.Map<DiseaseReadDTO>(disease);
+            if (diseaseDTO != null)
+            {
+                return Ok(diseaseDTO);
+            }
+            return BadRequest();
+        }
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPost("{shelterId}/pets/{petId}/diseases")]
+        public async Task<ActionResult<DiseaseReadDTO>> AddDisease(Guid shelterId, Guid petId, DiseaseCreateDTO diseaseCreateDTO)
+        {
+            var disease = _mapper.Map<Disease>(diseaseCreateDTO);
+
+            var addedDisease = await _shelterRepository.AddPetDisease(shelterId, petId, disease);
+            var diseaseReadDto = _mapper.Map<DiseaseReadDTO>(disease);
+            return CreatedAtRoute(nameof(GetPetDiseaseById), new { shelterId, petId, diseaseId = addedDisease.Id }, diseaseReadDto);
+
+        }
+
+        [HttpGet("{shelterId}/pets/{petId}/calendar/activities")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetAllPetActivities(Guid shelterId, Guid petId)
+        {
+            var petCalendar = await _shelterRepository.GetAllPetActivities(shelterId, petId);
+            if (petCalendar != null)
+            {
+                return Ok(_mapper.Map<IEnumerable<ActivityReadDTO>>(petCalendar));
+            }
+            return NotFound();
+        }
+
+
+        [HttpGet("{shelterId}/pets/{petId}/calendar/activities/{activityId}", Name = "GetPetActivityById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ActivityReadDTO>> GetPetActivityById(Guid shelterId, Guid petId, Guid activityId)
+        {
+            var petActivity = await _shelterRepository.GetPetActivityById(shelterId, activityId, petId);
+            if (petActivity != null)
+            {
+                return Ok(_mapper.Map<ActivityReadDTO>(petActivity));
+            }
+            return NotFound();
+        }
+
+
+        [HttpPost("{shelterId}/pets/{petId}/calendar/activities")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ActivityReadDTO>> AddPetActivity(Guid shelterId, Guid petId, ActivityCreateDTO activityCreateDTO)
+        {
+            var foudShelter = await _shelterRepository.GetShelterById(shelterId);
+            var foundPet = await _shelterRepository.GetShelterPetById(shelterId, petId);
+            var activityModel = _mapper.Map<Activity>(activityCreateDTO);
+
+            //var activityValidator = _validatorFactory.GetValidator<ActivityCreateDTO>();
+            //var validationResult = activityValidator.Validate(activityCreateDTO);
+            //if (!validationResult.IsValid)
+            //{
+            //    return BadRequest();
+            //}
+
+            var addedActivity = await _shelterRepository.AddPetActivityToCalendar(shelterId, petId, activityModel);
+            var activityReadDTO = _mapper.Map<ActivityReadDTO>(activityModel);
+
+            return CreatedAtRoute(nameof(GetPetActivityById), new { shelterId = foudShelter.Id, petId = foundPet.Id, activityId = addedActivity.Id }, activityReadDTO);
+        }
+
+
+        [HttpPut("{shelterId}/pets/{petId}/calendar/activities/{activityId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> UpdateUserActivity(Guid shelterId, Guid petId, Guid activityId, ActivityCreateDTO activityCreateDTO)
+        {
+            var foundPet = await _shelterRepository.GetShelterPetById(shelterId, petId);
+            var foundActivity = await _shelterRepository.GetPetActivityById(shelterId, activityId, petId);
+            if (foundPet == null || foundActivity == null)
+            {
+                return NotFound();
+            }
+            var activityValidator = _validatorFactory.GetValidator<ActivityCreateDTO>();
+            var validationResult = activityValidator.Validate(activityCreateDTO);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var activityCreate = _mapper.Map(activityCreateDTO, foundActivity);
+
+            bool updated = await _shelterRepository.UpdatePetActivity(shelterId, petId, foundActivity);
+            if (updated)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpDelete("{shelterId}/pets/{petId}/calendar/activities/{activityId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> DeletePetActivity(Guid shelterId, Guid petId, Guid activityId)
+        {
+            bool deleted = await _shelterRepository.DeletePetActivity(shelterId, petId, activityId);
+
+            if (deleted)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+        #endregion
     }
-    #endregion
-}
+
 
 
