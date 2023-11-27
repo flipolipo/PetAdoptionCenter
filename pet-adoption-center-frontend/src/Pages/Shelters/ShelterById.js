@@ -20,9 +20,7 @@ const ShelterById = () => {
       const response2 = await axios.get(
         `${address_url}/Shelters/${shelterId}/pets/avaible`
       );
-
       setPetsAvailable(response2.data);
-
       console.log(response2);
       console.log(response.data);
     };
@@ -46,7 +44,6 @@ const ShelterById = () => {
         shelterUser.Roles.some((role) => role.Title === 0)
       );
     }
-
     console.log(shelterBoss);
     return shelterBoss;
   };
