@@ -306,7 +306,10 @@ const PetById = ({
                   petData.Status !== 5 && (
                     <>
                       {' '}
-                      <button className="pet-button">Adopt me virtually</button>
+                      <Link
+                    to={`/Shelters/${shelterData.Id}/pets/${id}/users/adopt-me-virtually`}
+                    className="find-pet"
+                  >Adopt me virtually</Link>
                       <button className="pet-button" onClick={goToPetCalendar}>
                         Take me for a walk
                       </button>

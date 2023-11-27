@@ -65,7 +65,7 @@ const Adoption = () => {
           {!userData.Adoptions?.some((adoption) => adoption.IsMeetings) ? (
             <>
               {' '}
-              {user.id && id ? (
+              {(user.id && id) || user.id ? (
                 <Link
                   to={`/Shelters/adoptions/pets/users/${user.id}`}
                   className="find-pet"
@@ -89,7 +89,7 @@ const Adoption = () => {
           ) ? (
             <>
               {' '}
-              {user.id && id ? (
+              {(user.id && id) || user.id ? (
                 <Link
                   to={`/Shelters/adoptions/pets/users/${user.id}`}
                   className="find-pet"
@@ -133,7 +133,7 @@ const Adoption = () => {
                 pick up your new friend.
               </li>
             </ul>
-            <h3>Feel free to click on the bottom to have more information</h3>
+            <h3 className='important'>Feel free to click on the bottom to have more information</h3>
           </div>
         </div>
       </div>

@@ -332,3 +332,7 @@ background-color: rgba(246, 158, 123, 1);
 .shelterOwnerText {
   cursor: pointer;
 }
+
+.need-an-account{
+  margin-top: 20px;
+}

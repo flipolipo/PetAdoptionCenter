@@ -110,7 +110,7 @@ const PreadoptionPoll = () => {
     }
     setTimeout(() => {
       setLoading(false);
-    }, 8000);
+    }, 3000);
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);

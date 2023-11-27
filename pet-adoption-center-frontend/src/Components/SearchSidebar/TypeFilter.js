@@ -4,8 +4,8 @@ import Select from "react-select";
 function TypeFilter({ onChange }) {
   const typeOptions = [
     { value: "", label: "Select a type" },
-    { value: 0, label: "Cat" },
-    { value: 1, label: "Dog" },
+    { value: 0, label: "Dog" },
+    { value: 1, label: "Cat" },
   ];
 
   const [selectedType, setSelectedType] = useState("");

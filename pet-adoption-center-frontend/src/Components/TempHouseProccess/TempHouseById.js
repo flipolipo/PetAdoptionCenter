@@ -21,7 +21,7 @@ const TempHouseById = () => {
     if (userId) {
       try {
         const tempHouseResponseData = await FetchTempHouseDataForUser(userId);
-        setTempHouseData(tempHouseResponseData);
+        setTempHouseData(tempHouseResponseData.data);
        /*  console.log(tempHouseResponseData);
         console.log(tempHouseResponseData.PetsInTemporaryHouse);
         console.log(tempHouseResponseData.IsPreTempHousePoll);
@@ -41,24 +41,27 @@ const TempHouseById = () => {
           {tempHouseData.PetsInTemporaryHouse?.map((pet) => (
             <div key={pet.Id} className="pet-in-temp-house">
               <PetById petsTempHouseId={pet.Id} tempHousesId={tempHouseData.Id} />
-              {tempHouseData.IsPreTempHousePoll &&
-                !tempHouseData.IsMeetings && (
-                  <Link
-                    to={`/Shelters/temporaryHouses/${tempHouseData.Id}/pets/${pet.Id}/users/${userId}`}
-                    className="adoption-main-page-link"
-                  >
-                    Choose meeting
-                  </Link>
-                )}
-                  {tempHouseData.Activity.Activities?.length >=1 &&
+              <div className="button-container">
+                {tempHouseData.IsPreTempHousePoll &&
+                  !tempHouseData.IsMeetings && (
+                    <Link
+                      to={`/Shelters/temporaryHouses/${tempHouseData.Id}/pets/${pet.Id}/users/${userId}`}
+                      className="temp-main-page-link-2"
+                    >
+                      Choose meeting
+                    </Link>
+                  )}
+                {tempHouseData.Activity.Activities?.length >= 1 &&
                   tempHouseData.Activity.Activities.every((a) => new Date(a.EndActivityDate) < new Date() ) &&
-                  !tempHouseData.IsMeetings && (   <Link
-                    to={`/Shelters/temporaryHouses/${tempHouseData.Id}/pets/${pet.Id}/confirm-delete`}
-                    className="adoption-main-page-link"
-                  >
-                    Confirm / delete your adoption
-                  </Link>)
-               }
+                  !tempHouseData.IsMeetings && (
+                    <Link
+                      to={`/Shelters/temporaryHouses/${tempHouseData.Id}/pets/${pet.Id}/confirm-delete`}
+                      className="temp-main-page-link-2"
+                    >
+                      Confirm / delete your adoption
+                    </Link>
+                  )}
+              </div>
             </div>
           ))}
           {!tempHouseData.IsMeetings &&
@@ -75,6 +78,7 @@ const TempHouseById = () => {
       )}
     </div>
   );
+  
 };
 
 export default TempHouseById;

@@ -62,7 +62,7 @@ const ShelterById = () => {
           <h1>Contact Us!</h1>
           {shelterData &&
             shelterData.ShelterAddress &&
-            shelterData.Adoptions && shelterOwner.BasicInformation && shelterData.ShelterPets &&(
+            shelterData.Adoptions && shelterOwner?.BasicInformation && shelterData.ShelterPets &&(
               <>
                 <h3>{shelterData.ShelterAddress.City} </h3>
                 <h3>

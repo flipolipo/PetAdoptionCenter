@@ -23,7 +23,7 @@ const TemporaryHouse = () => {
     if (user.id) {
       try {
         const tempHouseResponseData = await FetchTempHouseDataForUser(user.id);
-        setTempHouseData(tempHouseResponseData);
+        setTempHouseData(tempHouseResponseData.data);
         /*   console.log(tempHouseResponseData);
         console.log(tempHouseResponseData.PetsInTemporaryHouse);
         console.log(tempHouseResponseData.IsPreTempHousePoll);
