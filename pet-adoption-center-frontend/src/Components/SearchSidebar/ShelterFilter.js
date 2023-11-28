@@ -6,7 +6,7 @@ import { address_url } from '../../Service/url';
 function ShelterFilter({ onChange }) {
   const [shelters, setShelters] = useState([]);
   const [filteredShelters, setFilteredShelters] = useState([]);
-  const [selectedShelter, setSelectedShelter] = useState(null);
+  const [selectedShelter, setSelectedShelter] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
@@ -14,23 +14,32 @@ function ShelterFilter({ onChange }) {
       try {
         const response = await axios.get(`${address_url}/Shelters`);
         setShelters(response.data);
-        setFilteredShelters(response.data);
+
+        updateFilteredShelters(response.data, searchTerm);
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
       }
     };
+
     fetchShelters();
-  }, []);
+  }, [searchTerm]);
+
+  const updateFilteredShelters = (sheltersData, term) => {
+    if (term) {
+      const filtered = sheltersData.filter((shelter) => {
+        const shelterName = `${shelter.Name} in ${shelter.ShelterAddress.City}`;
+        return shelterName.toLowerCase().includes(term.toLowerCase());
+      });
+
+      setFilteredShelters(filtered.length > 0 ? filtered : []);
+    } else {
+      setFilteredShelters([]);
+    }
+  };
 
   const handleInputChange = (term) => {
     setSearchTerm(term);
-
-    const filtered = shelters.filter((shelter) => {
-      const shelterName = `${shelter.Name} in ${shelter.ShelterAddress.City}`;
-      return shelterName.toLowerCase().includes(term.toLowerCase());
-    });
-
-    setFilteredShelters(filtered);
+    updateFilteredShelters(shelters, term);
   };
 
   const handleSelectChange = (selectedOption) => {
@@ -40,19 +49,20 @@ function ShelterFilter({ onChange }) {
 
   const shelterOptions = filteredShelters.map((shelter) => ({
     value: shelter.Id,
-    label: `${shelter.Name} in ${shelter.ShelterAddress.City}`
+    label: `${shelter.Name} in ${shelter.ShelterAddress.City}`,
   }));
 
   return (
     <div className="filter">
       <h3>Filter by Shelter</h3>
-      <div className='select-container'>
+      <div className="select-container">
         <Select
           value={selectedShelter}
           onChange={handleSelectChange}
           options={shelterOptions}
           placeholder="Type city / shelter name"
           isSearchable
+          isClearable
           onInputChange={handleInputChange}
           className="select-shelter"
         />

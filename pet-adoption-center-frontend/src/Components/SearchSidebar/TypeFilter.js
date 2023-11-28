@@ -4,15 +4,15 @@ import Select from "react-select";
 function TypeFilter({ onChange }) {
   const typeOptions = [
     { value: "", label: "Select a type" },
-    { value: 0, label: "Cat" },
-    { value: 1, label: "Dog" },
+    { value: 0, label: "Dog" },
+    { value: 1, label: "Cat" },
   ];
 
   const [selectedType, setSelectedType] = useState("");
 
   const handleTypeChange = (selectedOption) => {
     setSelectedType(selectedOption);
-    onChange(selectedOption.value);
+    onChange(selectedOption ? selectedOption.value : "");
   };
 
   return (
@@ -23,7 +23,8 @@ function TypeFilter({ onChange }) {
         onChange={handleTypeChange}
         options={typeOptions}
         className="select-type"
-        placeholder="select type"
+        placeholder="Select type"
+        isClearable
       />
     </div>
   );
