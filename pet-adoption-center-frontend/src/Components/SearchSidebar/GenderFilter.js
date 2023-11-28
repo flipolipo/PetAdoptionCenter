@@ -12,8 +12,9 @@ function GenderFilter({ onChange }) {
 
   const handleGenderChange = (selectedOption) => {
     setSelectedGender(selectedOption);
-    onChange(selectedOption.value);
+    onChange(selectedOption ? selectedOption.value : "");
   };
+  
 
   return (
     <div className="filter">
@@ -23,7 +24,8 @@ function GenderFilter({ onChange }) {
         onChange={handleGenderChange}
         options={genderOptions}
         className="select-gender"
-        placeholder="select gender"
+        placeholder="Select gender"
+        isClearable
       />
     </div>
   );
