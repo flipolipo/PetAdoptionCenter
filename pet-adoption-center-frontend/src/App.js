@@ -28,6 +28,8 @@ import MeetingsTempHouseInfo from './Components/TempHouseProccess/MeetingsTempHo
 import TempHouseById from './Components/TempHouseProccess/TempHouseById.js';
 import TempHouseUserPet from './Components/TempHouseProccess/TempHouseUserPet.js';
 import ConfirmDeleteTempHouse from './Components/TempHouseProccess/ConfirmDeleteTempHouse.js';
+import ShelterById from './Pages/Shelters/ShelterById.js';
+import AdoptMeVirtually from './Components/AdoptMeVirtually/AdoptMeVirtually.js';
 
 function App() {
   const [petData, setPetData] = useState([]);
@@ -119,11 +121,16 @@ function App() {
                 path="/Users/pets/:id"
                 element={<PetById />}
               />
+               <Route
+                path="/Shelters/:shelterId/pets/:petId/users/adopt-me-virtually"
+                element={<AdoptMeVirtually/>}
+              />
               <Route path="/profile" element={<Profile />} />
               <Route
                 path="/ShelterOwner/:shelterId"
                 element={<ShelterOwner />}
               />
+              <Route path="/Shelters/:shelterId" element={<ShelterById />} />
             </Routes>
           </div>
 

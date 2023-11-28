@@ -6,7 +6,7 @@ export const FetchTempHouseDataForUser = async (userId) => {
         const responseData = await axios.get(
           `${address_url}/Users/${userId}/tempHouses`
         );
-        return responseData.data;
+        return responseData;
       } catch (err) {
         console.log('shelter fetch error: ' + err);
       }

@@ -2,16 +2,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content:center;
+  justify-content: center;
   flex-wrap: wrap;
   align-self: center;
   justify-self: center;
 }
-.shelters{
-  display:flex;
+.shelters {
+  display: flex;
   flex-direction: row;
 }
-.searchBar{
+.searchBar {
   width: 100%;
   max-width: 700px;
   background: rgba(250, 205, 188, 0.604);
@@ -19,37 +19,36 @@
   align-items: center;
   border-radius: 60px;
   padding: 10px 20px;
-margin-top: 20px;
-margin-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
-.searchBar input{
+.searchBar input {
   background: transparent;
   flex: 1;
   border: 0;
   outline: none;
   padding: 24px 20px;
   font-size: 20px;
-  color: #1e1d1d
+  color: #1e1d1d;
 }
-.searchBar button img{
+.searchBar button img {
   width: 25px;
 }
-.searchBar button{
+.searchBar button {
   border: 0;
   border-radius: 50%;
   width: 60px;
   height: 60px;
-  background:#eda487;
+  background: #eda487;
   cursor: pointer;
-
 }
 .shelterCard {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
- margin-left: 60px;
- padding: 20px;
- background-color: #FACEBC;
- border-radius: 15px;
+  margin-left: 60px;
+  padding: 20px;
+  background-color: #facebc;
+  border-radius: 15px;
 }
 .shelterCard:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
@@ -58,55 +57,56 @@ margin-bottom: 20px;
 .textContainer {
   padding: 2px 16px;
 }
-.chosenShelterContainer{
+.chosenShelterContainer {
   display: flex;
   align-items: center;
   flex-direction: column;
 }
-.shelterPhotoAndContactInfo{
+.shelterPhotoAndContactInfo {
   display: flex;
   flex-direction: row;
 }
-.photoContainer{
+.photoContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: #FACEBC;
+  background-color: #facebc;
   border-radius: 15px;
   margin-right: 20px;
-  border-style:outset;
-  border-color: #d88a6d;;
+  border-style: outset;
+  border-color: #d88a6d;
   width: 19vw;
 }
-.contactInfoContainer
-{
+.contactInfoContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: #FACEBC;
+  background-color: #facebc;
   border-radius: 15px;
-  border-style:outset;
+  border-style: outset;
   border-color: #d88a6d;
-  max-width: 20vw;
-  width: 19vw;
-  max-height: 20vh;
-  height: 20vh;
+  text-align: left !important;
+  width: auto;
 
+  height: auto;
 }
-.shelterDescription{
+.shelterDescription {
   padding: 20px;
-  background-color: #FACEBC;
+  background-color: #facebc;
   border-radius: 15px;
   margin-top: 20px;
   width: 40vw;
   height: 25vh;
   margin-bottom: 25px;
-  border-style:outset;
-  border-color: #d88a6d;;
+  border-style: outset;
+  border-color: #d88a6d;
 }
-.photo{
+.photo {
   width: 15vw;
   height: 15vw;
+}
+.shelterInfo {
+  text-align: left;
 }

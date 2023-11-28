@@ -1,0 +1,27 @@
+.virtual-adoption-contener {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .pet-img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .virtual-adoption {
+    margin-bottom: 10px;
+  }
+  
+  .important {
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .pet-name{
+    margin-bottom: 30px;
+    margin-top: 30px;
+  }

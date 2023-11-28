@@ -11,6 +11,7 @@ const FlipCardAdopted = () => {
 
   useEffect(() => {
     GetAdoptedPets();
+    console.log(`Adopted Pet ${currentPets}`)
   }, []);
 
   async function GetAdoptedPets() {
@@ -26,6 +27,7 @@ const FlipCardAdopted = () => {
   const indexOfLastPet = currentPage * petsPerPage;
   const indexOfFirstPet = indexOfLastPet - petsPerPage;
   const currentPets = petsAdopted.slice(indexOfFirstPet, indexOfLastPet);
+  
   return (
     <div>
       <div className="card-container">

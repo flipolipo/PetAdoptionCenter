@@ -23,7 +23,7 @@ const PreTempHouseInfo = () => {
         </Link>{' '}
         <h2 className="preadoption-poll-info-h">first</h2>
       </div>
-      <h2 className="preadoption-poll-info-h">PREADOPTION POLL</h2>
+      <h2 className="preadoption-poll-info-h">PRE-TEMPORARY-HOUSE POLL</h2>
       <ul className="preadoption-poll-info-ul">
         <li>Name: *</li>
         <li>Surname: *</li>

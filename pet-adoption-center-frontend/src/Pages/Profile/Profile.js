@@ -43,25 +43,28 @@ const Profile = () => {
     }, [user.id, user.token]);
 
     useEffect(() => {
-        if (user.id) {
-          fetchDataTempHouse();
-        }
-      }, [user.id]);
+        const fetchDataTempHouse = async () => {
+            if (user.id) {
+                try {
+                    const tempHouseResponseData = await FetchTempHouseDataForUser(user.id);
+                    if (tempHouseResponseData && tempHouseResponseData.data) {
+                        setTempHouseData(tempHouseResponseData.data);
+                    }
     
-      const fetchDataTempHouse = async () => {
-        if (user.id) {
-          try {
-            const tempHouseResponseData = await FetchTempHouseDataForUser(user.id);
-            setTempHouseData(tempHouseResponseData);
-            console.log(tempHouseResponseData);
-            console.log(tempHouseResponseData.PetsInTemporaryHouse);
-            console.log(tempHouseResponseData.IsPreTempHousePoll);
-            console.log(tempHouseResponseData.IsMeetings);
-          } catch (error) {
-            console.error('Temporary house download error:', error);
-          }
-        }
-      };
+                    console.log(tempHouseResponseData.data);
+                    console.log(tempHouseResponseData.data.PetsInTemporaryHouse);
+                    console.log(tempHouseResponseData.data.IsPreTempHousePoll);
+                    console.log(tempHouseResponseData.data.IsMeetings);
+    
+                } catch (error) {
+                    console.error('Temporary house download error:', error);
+                }
+            }
+        };
+    
+        fetchDataTempHouse();
+    }, [user.id]);
+    
 
     const updateUserProfile = async (id, updatedUserData) => {
         try {
@@ -186,7 +189,7 @@ const Profile = () => {
                     </div>
                 )}
             </div>
-            <div className="section">
+            {profileData.Adoptions?.length >= 1 &&  <div className="section">
                 <div className="section-header" onClick={() => setOpenSection(openSection === 'Adoptions' ? null : 'Adoptions')}>
                     Adoptions <span className={openSection === 'Adoptions' ? 'arrow-down' : 'arrow-right'}>➤</span>
                 </div>
@@ -202,7 +205,8 @@ const Profile = () => {
                         ))}
                     </div>
                 )}
-            </div>
+            </div>}
+           
             <div className="section">
                 <div className="section-header" onClick={() => setOpenSection(openSection === 'Pets' ? null : 'Pets')}>
                     Pets <span className={openSection === 'Pets' ? 'arrow-down' : 'arrow-right'}>➤</span>
@@ -218,7 +222,7 @@ const Profile = () => {
                     </div>
                 )}
             </div>
-            {tempHouseData && <div className="section">
+            {tempHouseData && tempHouseData.PetsInTemporaryHouse?.length >= 1 && <div className="section">
                 <div className="section-header" onClick={() => setOpenSection(openSection === 'Pets in temporary housing' ? null : 'Pets in temporary housing')}>
                     Pets in temporary housing <span className={openSection === 'Pets in temporary housing' ? 'arrow-down' : 'arrow-right'}>➤</span>
                 </div>

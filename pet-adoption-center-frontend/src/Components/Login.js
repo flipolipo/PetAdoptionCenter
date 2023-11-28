@@ -37,7 +37,7 @@ const Login = () => {
             'Authorization': `Bearer ${user.token}`
           }
         });
-        console.log(response)
+        //console.log(response)
         setProfileData(response.data);
 
       } catch (err) {
@@ -120,7 +120,7 @@ const Login = () => {
               />
               <button className="buttonLogin" onClick={loginUser}>Login</button>
               <button className="buttonLogin" onClick={() => setVisible(false)}>Back</button>
-              <h5>Need an account?</h5>
+              <h5 className='need-an-account'>Need an account?</h5>
               <Link to={`/user/register`} onClick={() => setVisible(false)}>Sign Up</Link>
             </div>
           </Modal>

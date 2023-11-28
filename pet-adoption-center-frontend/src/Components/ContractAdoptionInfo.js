@@ -19,9 +19,10 @@ const ContractAdoptionInfo = () => {
         </li>
         <li className="contract-adoption-info-li">and sign the contract.</li>
       </ul>
+      <h3 className='important'>The personal signature will take place on the day you come to pick up
+        your new friend.</h3>
       <h3 className="contract-adoption-info-h3">
-        The personal signature will take place on the day you come to pick up
-        your new friend. This is what our contract looks like:
+        This is what our contract looks like:
       </h3>
       </div>
       <h4 className="contract-adoption-info-h4">

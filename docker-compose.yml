@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  db:
+    container_name: db
+    image: postgres:12
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: Baskakisc98
+      POSTGRES_USER: postgres
+      POSTGRES_DB: PAC
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+
+  petadoptioncenter:
+    image: ${DOCKER_REGISTRY-}petadoptioncenter
+    build:
+      context: .
+      dockerfile: PetAdoptionCenter/Dockerfile
+    ports:
+      - "5000:80"
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=PAC;Username=postgres;Password=Baskakisc98;"
+    depends_on:
+      - db
+
+volumes:
+  pgdata: {}
