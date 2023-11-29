@@ -12,7 +12,7 @@ function TypeFilter({ onChange }) {
 
   const handleTypeChange = (selectedOption) => {
     setSelectedType(selectedOption);
-    onChange(selectedOption.value);
+    onChange(selectedOption ? selectedOption.value : "");
   };
 
   return (
@@ -23,7 +23,8 @@ function TypeFilter({ onChange }) {
         onChange={handleTypeChange}
         options={typeOptions}
         className="select-type"
-        placeholder="select type"
+        placeholder="Select type"
+        isClearable
       />
     </div>
   );

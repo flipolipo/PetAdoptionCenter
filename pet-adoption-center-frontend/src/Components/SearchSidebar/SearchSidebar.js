@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { address_url } from '../../Service/url';
-import axios from 'axios';
+import axios from "axios";
 import ShelterFilter from "./ShelterFilter";
 import TypeFilter from "./TypeFilter";
 import GenderFilter from "./GenderFilter";
@@ -12,16 +12,14 @@ import FlipCardAvailable from "../FlipCardAvailable";
 function SearchSidebar() {
   const [shelters, setShelters] = useState([]);
   const [petsData, setPetsData] = useState(null);
-  const [selectedShelter, setSelectedShelter] = useState('');
-  const [selectedGender, setSelectedGender] = useState(-1);
-  const [selectedSize, setSelectedSize] = useState(-1);
-  const [selectedType, setSelectedType] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState(-1);
+  const [selectedShelter, setSelectedShelter] = useState("");
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [petsFiltered, setPetsFiltered] = useState([]);
   const [showNoMatchingPets, setShowNoMatchingPets] = useState(false);
-  const [showPetsList, setShowPetsList] = useState(true);
-
-
+  const [,setShowPetsList] = useState(true);
 
   useEffect(() => {
     const fetchShelters = async () => {
@@ -29,7 +27,7 @@ function SearchSidebar() {
         const response = await axios.get(`${address_url}/Shelters`);
         setShelters(response.data);
       } catch (error) {
-        console.log(error.message);
+        console.error("Error fetching shelters:", error.message);
       }
     };
     fetchShelters();
@@ -41,7 +39,7 @@ function SearchSidebar() {
         const response = await axios.get(`${address_url}/Users/pets`);
         setPetsData(response.data);
       } catch (error) {
-        console.log(error.message);
+        console.error("Error fetching pet data:", error.message);
       }
     };
     fetchPetData();
@@ -51,110 +49,75 @@ function SearchSidebar() {
     setSelectedShelter(shelterId);
   };
 
-  const handleFilter = () => {
-  
+  const applyFilters = () => {
     const filteredPets = petsData.filter((pet) => {
-      if (selectedShelter) {
-        if (selectedGender === 0) {
-          return (
-            pet.ShelterId === selectedShelter &&
-            pet.Gender === 0 &&
-            (selectedSize === -1 || pet.BasicHealthInfo.Size === selectedSize) &&
-            (selectedType === '' || pet.Type === selectedType) &&
-            (selectedStatus === -1 || pet.Status === selectedStatus)
-          );
-        } else if (selectedGender === 1) {
-          return (
-            pet.ShelterId === selectedShelter &&
-            pet.Gender === 1 &&
-            (selectedSize === -1 || pet.BasicHealthInfo.Size === selectedSize) &&
-            (selectedType === '' || pet.Type === selectedType) &&
-            (selectedStatus === -1 || pet.Status === selectedStatus)
-          );
-        } else {
-          return (
-            pet.ShelterId === selectedShelter &&
-            (selectedSize === -1 || pet.BasicHealthInfo.Size === selectedSize) &&
-            (selectedType === '' || pet.Type === selectedType) &&
-            (selectedStatus === -1 || pet.Status === selectedStatus)
-          );
-        }
-      } else {
-        if (selectedGender === 0) {
-          return (
-            pet.Gender === 0 &&
-            (selectedSize === -1 || pet.BasicHealthInfo.Size === selectedSize) &&
-            (selectedType === '' || pet.Type === selectedType) &&
-            (selectedStatus === -1 || pet.Status === selectedStatus)
-          );
-        } else if (selectedGender === 1) {
-          return (
-            pet.Gender === 1 &&
-            (selectedSize === -1 || pet.BasicHealthInfo.Size === selectedSize) &&
-            (selectedType === '' || pet.Type === selectedType) &&
-            (selectedStatus === -1 || pet.Status === selectedStatus)
-          );
-        } else {
-          return (
-            (selectedSize === -1 || pet.BasicHealthInfo.Size === selectedSize) &&
-            (selectedType === '' || pet.Type === selectedType) &&
-            (selectedStatus === -1 || pet.Status === selectedStatus)
-          );
-        }
-      }
+      const shelterFilter = !selectedShelter || pet.ShelterId === selectedShelter;
+      const genderFilter = selectedGender === "" || pet.Gender === selectedGender;
+      const sizeFilter = selectedSize === "" || (pet.BasicHealthInfo && pet.BasicHealthInfo.Size === selectedSize);
+      const typeFilter = selectedType === "" || pet.Type === selectedType;
+      const statusFilter = selectedStatus === "" || pet.Status === selectedStatus;
+
+      return shelterFilter && genderFilter && sizeFilter && typeFilter && statusFilter;
     });
-  
+
     setPetsFiltered(filteredPets);
     setShowNoMatchingPets(filteredPets.length === 0);
     setShowPetsList(filteredPets.length > 0);
   };
 
   const handleBack = () => {
+    console.log("Clearing filters and going back");
     setShowNoMatchingPets(false);
     setPetsFiltered([]);
+    setSelectedShelter("");
+    setSelectedGender("");
+    setSelectedSize("");
+    setSelectedType("");
+    setSelectedStatus("");
   };
 
-
-    return (
-      <div className="filtered-pets">
-        <div className="sidebar">
-          <ShelterFilter shelters={shelters} setShelters={setShelters} onChange={handleShelterChange} />
-          <GenderFilter onChange={setSelectedGender} />
-          <SizeFilter onChange={setSelectedSize} />
-          <TypeFilter onChange={setSelectedType} />
-          <StatusFilter onChange={setSelectedStatus} />
-          <button className="filter-button" onClick={handleFilter}>Apply Filters</button>
-        </div>
-        <div className="card-container">
+  return (
+    <div className="filtered-pets">
+      <div className="sidebar">
+        <ShelterFilter shelters={shelters} onChange={handleShelterChange} value={selectedShelter} />
+        <GenderFilter onChange={setSelectedGender} value={selectedGender} />
+        <SizeFilter onChange={setSelectedSize} value={selectedSize} />
+        <TypeFilter onChange={setSelectedType} value={selectedType} />
+        <StatusFilter onChange={setSelectedStatus} value={selectedStatus} />
+        <button className="filter-button" onClick={applyFilters}>
+          Apply Filters
+        </button>
+      </div>
+      <div className="card-container">
         {showNoMatchingPets && (
           <div className="no-matching">
             <div className="no-matching-pets">
               <p>No pets match the selected filters.</p>
             </div>
             <div className="back">
-            <button className="back-button" onClick={handleBack}>back</button>
+              <button className="back-button" onClick={handleBack}>
+                Back
+              </button>
             </div>
           </div>
         )}
         {!showNoMatchingPets && petsFiltered.length > 0 && (
-          petsFiltered.map((pet, index) => (
-            <GenericCard key={index} pet={pet} />
-          ))
+          petsFiltered.map((pet, index) => <GenericCard key={index} pet={pet} />)
         )}
         {!showNoMatchingPets && petsFiltered.length === 0 && (
           <div className="petsAvailableForAdoption">
             <div className="pet-inscription">
               <h2>Pets available for adoption</h2>
             </div>
-              <div className="pet-card">
-                <FlipCardAvailable />
-              </div>
+            <div className="pet-card">
+              <FlipCardAvailable />
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    );
-  
+    </div>
+  );
 }
 
 export default SearchSidebar;
+

@@ -13,7 +13,7 @@ function SizeFilter({ onChange }) {
 
   const handleSizeChange = (selectedOption) => {
     setSelectedSize(selectedOption);
-    onChange(selectedOption.value);
+    onChange(selectedOption ? selectedOption.value : "");
   };
 
   return (
@@ -24,7 +24,8 @@ function SizeFilter({ onChange }) {
         onChange={handleSizeChange}
         options={sizeOptions}
         className="select-size"
-        placeholder="select size"
+        placeholder="Select size"
+        isClearable
       />
     </div>
   );
