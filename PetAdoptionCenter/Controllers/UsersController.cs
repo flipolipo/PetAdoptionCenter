@@ -36,7 +36,6 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetAllUsers()
     {
         var users = await _userRepository.GetAllUsers();
-        Log.Information($"Metoda HTTP: {HttpContext.Request.Method}");
         return Ok(_mapper.Map<IEnumerable<UserReadDTO>>(users));
     }
 

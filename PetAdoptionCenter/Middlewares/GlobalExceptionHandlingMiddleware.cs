@@ -25,8 +25,8 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.BadRequest,
-                Type = "Bad request for user",
-                Title = "Bad request for user",
+                Type = "Bad request for the user",
+                Title = "Bad request for the user",
                 Detail = ex.Message
             };
             string json = JsonSerializer.Serialize(problem);
@@ -40,8 +40,8 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.BadRequest,
-                Type = "Bad request for shelter",
-                Title = "Bad request for shelter",
+                Type = "Bad request for the shelter",
+                Title = "Bad request for the shelter",
                 Detail = ex.Message
             };
             string json = JsonSerializer.Serialize(problem);
@@ -55,8 +55,8 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.BadRequest,
-                Type = "Bad request for pet",
-                Title = "Bad request for pet",
+                Type = "Bad request for the pet",
+                Title = "Bad request for the pet",
                 Detail = ex.Message
             };
             string json = JsonSerializer.Serialize(problem);
@@ -70,8 +70,8 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.BadRequest,
-                Type = "Bad request for role",
-                Title = "Bad request for role",
+                Type = "Bad request for the role",
+                Title = "Bad request for the role",
                 Detail = ex.Message
             };
             string json = JsonSerializer.Serialize(problem);
@@ -85,8 +85,8 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.BadRequest,
-                Type = "Bad request for disease",
-                Title = "Bad request for disease",
+                Type = "Bad request for the disease",
+                Title = "Bad request for the disease",
                 Detail = ex.Message
             };
             string json = JsonSerializer.Serialize(problem);
@@ -100,8 +100,8 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.BadRequest,
-                Type = "Bad request for vaccination",
-                Title = "Bad request for vaccination",
+                Type = "Bad request for the vaccination",
+                Title = "Bad request for the vaccination",
                 Detail = ex.Message
             };
             string json = JsonSerializer.Serialize(problem);
@@ -115,8 +115,8 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.BadRequest,
-                Type = "Bad request for activity",
-                Title = "Bad request for activity",
+                Type = "Bad request for the activity",
+                Title = "Bad request for the activity",
                 Detail = ex.Message
             };
             string json = JsonSerializer.Serialize(problem);
@@ -130,8 +130,8 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.BadRequest,
-                Type = "Bad request for calendar",
-                Title = "Bad request for calendar",
+                Type = "Bad request for the calendar",
+                Title = "Bad request for the calendar",
                 Detail = ex.Message
             };
             string json = JsonSerializer.Serialize(problem);
@@ -145,8 +145,8 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.BadRequest,
-                Type = "Bad request for temporary house",
-                Title = "Bad request for temporary house",
+                Type = "Bad request for the temporary house",
+                Title = "Bad request for the temporary house",
                 Detail = ex.Message
             };
             string json = JsonSerializer.Serialize(problem);
@@ -160,8 +160,23 @@ public class GlobalExceptionHandlingMiddleware : IMiddleware
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.BadRequest,
-                Type = "Bad request for adoption",
-                Title = "Bad request for adoption",
+                Type = "Bad request for the adoption",
+                Title = "Bad request for the adoption",
+                Detail = ex.Message
+            };
+            string json = JsonSerializer.Serialize(problem);
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(json);
+        }
+        catch (BasicHealthInfoValidationException ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            ProblemDetails problem = new()
+            {
+                Status = (int)HttpStatusCode.BadRequest,
+                Type = "Bad request for the basic health info for the pet",
+                Title = "Bad request for the basic health info for the pet",
                 Detail = ex.Message
             };
             string json = JsonSerializer.Serialize(problem);

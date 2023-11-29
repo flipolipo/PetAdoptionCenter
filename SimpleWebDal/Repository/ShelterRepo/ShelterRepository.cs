@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using SimpleWebDal.Data;
 using SimpleWebDal.Exceptions;
 using SimpleWebDal.Models.AdoptionProccess;
@@ -78,17 +79,37 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var foundShelter = await FindShelter(shelterId);
             return foundShelter;
         }
+        private async Task<Address> GetExistingAddressFromDataBase(Shelter shelter)
+        {
+            if (shelter == null)
+            {
+                throw new ShelterValidationException("Shelter not found.");
+            }
+            var existingAddress = await _dbContext.Addresses.FirstOrDefaultAsync(a => a.Street == shelter.ShelterAddress.Street &&
+                       a.HouseNumber == shelter.ShelterAddress.HouseNumber && a.FlatNumber == shelter.ShelterAddress.FlatNumber &&
+                       a.PostalCode == shelter.ShelterAddress.PostalCode && a.City == shelter.ShelterAddress.City);
+            return existingAddress;
+        }
 
         public async Task<Shelter> CreateShelter(Shelter shelter)
         {
             shelter.TempHouses = new List<TempHouse>();
             shelter.ShelterCalendar = new CalendarActivity();
+            var existingAddress = await GetExistingAddressFromDataBase(shelter);
+            if (existingAddress == null)
+            {
+                _dbContext.Addresses.Add(shelter.ShelterAddress);
+            }
+            else
+            {
+                shelter.ShelterAddress = existingAddress;
+            }
             _dbContext.Shelters.Add(shelter);
             _dbContext.SaveChanges();
             return shelter;
         }
 
-        public async Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city, string phone)
+        public async Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city, string phone, string bankNumber, IFormFile image)
         {
             if (shelterId.Equals(Guid.Empty))
             {
@@ -96,19 +117,22 @@ namespace SimpleWebDal.Repository.ShelterRepo
             }
             var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter object cannot be null");
 
-            if (foundShelter != null)
+            if (image != null)
             {
-                foundShelter.ShelterDescription = description;
-                foundShelter.Name = name;
-                foundShelter.PhoneNumber = phone;
-                foundShelter.ShelterAddress.Street = street;
-                foundShelter.ShelterAddress.PostalCode = postalCode;
-                foundShelter.ShelterAddress.HouseNumber = houseNumber;
-                foundShelter.ShelterAddress.City = city;
-                await _dbContext.SaveChangesAsync();
-                return true;
+                using var memoryStream = new MemoryStream();
+                await image.CopyToAsync(memoryStream);
+                foundShelter.Image = memoryStream.ToArray();
             }
-            return false;
+            foundShelter.ShelterDescription = description;
+            foundShelter.Name = name;
+            foundShelter.PhoneNumber = phone;
+            foundShelter.ShelterAddress.Street = street;
+            foundShelter.ShelterAddress.PostalCode = postalCode;
+            foundShelter.ShelterAddress.HouseNumber = houseNumber;
+            foundShelter.ShelterAddress.City = city;
+            foundShelter.BankNumber = bankNumber;
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> DeleteShelter(Guid shelterId)
@@ -321,7 +345,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             return pet;
         }
 
-        public async Task<bool> UpdateShelterPet(Guid shelterId, Guid petId, PetGender gender, PetType type, string description, PetStatus status, bool avaibleForAdoption)
+        public async Task<bool> UpdateShelterPet(Guid shelterId, Guid petId, PetGender gender, PetType type, string description, PetStatus status, bool avaibleForAdoption, IFormFile image)
         {
             if (shelterId.Equals(Guid.Empty))
             {
@@ -333,6 +357,12 @@ namespace SimpleWebDal.Repository.ShelterRepo
             }
             var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
             var foundPet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId) ?? throw new PetValidationException("Pet not found");
+            if (image != null)
+            {
+                using var memoryStream = new MemoryStream();
+                await image.CopyToAsync(memoryStream);
+                foundPet.Image = memoryStream.ToArray();
+            }
             foundPet.AvaibleForAdoption = avaibleForAdoption;
             foundPet.Gender = gender;
             foundPet.Description = description;
@@ -358,7 +388,50 @@ namespace SimpleWebDal.Repository.ShelterRepo
             _dbContext.SaveChanges();
             return true;
         }
-
+        public async Task<BasicHealthInfo> GetPetBasicHealthInfo(Guid shelterId, Guid petId)
+        {
+            if (shelterId.Equals(Guid.Empty))
+            {
+                throw new ShelterValidationException("Shelter ID cannot be empty.");
+            }
+            if (petId.Equals(Guid.Empty))
+            {
+                throw new PetValidationException("Pet ID cannot be empty.");
+            }
+            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
+            var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
+            var foundPet = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
+            if (foundPet.BasicHealthInfo != null)
+            {
+                return foundPet.BasicHealthInfo;
+            }
+            return null;
+        }
+        public async Task<BasicHealthInfo> GetPetBasicHealthInfoById(Guid shelterId, Guid petId, Guid basicHealtInfoId)
+        {
+            if (shelterId.Equals(Guid.Empty))
+            {
+                throw new ShelterValidationException("Shelter ID cannot be empty.");
+            }
+            if (petId.Equals(Guid.Empty))
+            {
+                throw new PetValidationException("Pet ID cannot be empty.");
+            }
+            if (basicHealtInfoId.Equals(Guid.Empty))
+            {
+                throw new BasicHealthInfoValidationException("Basic Healt Info ID cannot be empty.");
+            }
+            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
+            var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
+            var foundPet = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
+            var basicHealthInfo = foundPet.BasicHealthInfo ?? throw new BasicHealthInfoValidationException("Basic health info for the pet not found");
+            if (basicHealthInfo.Id == basicHealtInfoId)
+            {
+                return basicHealthInfo;
+            }
+            return null;
+        }
+      
         public async Task<bool> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size, bool isNeutred)
         {
             if (shelterId.Equals(Guid.Empty))
@@ -378,6 +451,26 @@ namespace SimpleWebDal.Repository.ShelterRepo
             petHealthInfo.IsNeutered = isNeutred;
             await _dbContext.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<IEnumerable<Vaccination>> GetAllPetVaccinations(Guid shelterId, Guid petId)
+        {
+            if (shelterId.Equals(Guid.Empty))
+            {
+                throw new ShelterValidationException("Shelter ID cannot be empty.");
+            }
+            if (petId.Equals(Guid.Empty))
+            {
+                throw new PetValidationException("Pet ID cannot be empty.");
+            }
+            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
+            var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
+            var foundPet = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
+            if (foundPet.BasicHealthInfo != null)
+            {
+                return foundPet.BasicHealthInfo.Vaccinations.ToList();
+            }
+            return Enumerable.Empty<Vaccination>();
         }
 
         public async Task<Vaccination> GetPetVaccinationById(Guid shelterId, Guid petId, Guid vaccinationId)
@@ -420,6 +513,68 @@ namespace SimpleWebDal.Repository.ShelterRepo
             _dbContext.SaveChanges();
             return vaccination;
         }
+        public async Task<bool> UpdatePetVaccination(Guid shelterId, Guid petId, Vaccination vaccination)
+        {
+            if (shelterId.Equals(Guid.Empty))
+            {
+                throw new ShelterValidationException("Shelter ID cannot be empty.");
+            }
+            if (petId.Equals(Guid.Empty))
+            {
+                throw new PetValidationException("Pet ID cannot be empty.");
+            }
+            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
+            var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
+            var foundPetInShelter = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
+            var foundVaccination = foundPetInShelter.BasicHealthInfo.Vaccinations.FirstOrDefault(e => e.Id == vaccination.Id) ?? throw new VaccinationValidationException("Vaccination not found");
+            foundVaccination.VaccinationName = vaccination.VaccinationName;
+            foundVaccination.Date = vaccination.Date;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> DeletePetVaccination(Guid shelterId, Guid petId, Guid vaccinationId)
+        {
+            if (shelterId.Equals(Guid.Empty))
+            {
+                throw new ShelterValidationException("Shelter ID cannot be empty.");
+            }
+            if (petId.Equals(Guid.Empty))
+            {
+                throw new PetValidationException("Pet ID cannot be empty.");
+            }
+            if (vaccinationId.Equals(Guid.Empty))
+            {
+                throw new VaccinationValidationException("Vaccination ID cannot be empty.");
+            }
+            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
+            var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
+            var foundVaccination = await GetPetVaccinationById(shelterId, pet.Id, vaccinationId) ?? throw new VaccinationValidationException("Vaccination not found");
+            pet.BasicHealthInfo.Vaccinations.Remove(foundVaccination);
+            _dbContext.SaveChanges();
+            return true;
+        }
+
+
+        public async Task<IEnumerable<Disease>> GetAllPetDiseases(Guid shelterId, Guid petId)
+        {
+            if (shelterId.Equals(Guid.Empty))
+            {
+                throw new ShelterValidationException("Shelter ID cannot be empty.");
+            }
+            if (petId.Equals(Guid.Empty))
+            {
+                throw new PetValidationException("Pet ID cannot be empty.");
+            }
+            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
+            var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
+            var foundPet = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
+            if (foundPet.BasicHealthInfo != null)
+            {
+                return foundPet.BasicHealthInfo.MedicalHistory.ToList();
+            }
+            return Enumerable.Empty<Disease>();
+        }
+
         public async Task<Disease> GetPetDiseaseById(Guid shelterId, Guid petId, Guid diseaseId)
         {
             if (shelterId.Equals(Guid.Empty))
@@ -460,7 +615,47 @@ namespace SimpleWebDal.Repository.ShelterRepo
             _dbContext.SaveChanges();
             return disease;
         }
-
+        public async Task<bool> UpdatePetDisease(Guid shelterId, Guid petId, Disease disease)
+        {
+            if (shelterId.Equals(Guid.Empty))
+            {
+                throw new ShelterValidationException("Shelter ID cannot be empty.");
+            }
+            if (petId.Equals(Guid.Empty))
+            {
+                throw new PetValidationException("Pet ID cannot be empty.");
+            }
+            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
+            var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
+            var foundPetInShelter = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
+            var foundDisease = foundPetInShelter.BasicHealthInfo.MedicalHistory.FirstOrDefault(e => e.Id == disease.Id) ?? throw new DiseaseValidationException("Disease not found");
+            foundDisease.NameOfdisease = disease.NameOfdisease;
+            foundDisease.IllnessStart = disease.IllnessStart;
+            foundDisease.IllnessEnd = disease.IllnessEnd;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> DeletePetDisease(Guid shelterId, Guid petId, Guid diseaseId)
+        {
+            if (shelterId.Equals(Guid.Empty))
+            {
+                throw new ShelterValidationException("Shelter ID cannot be empty.");
+            }
+            if (petId.Equals(Guid.Empty))
+            {
+                throw new PetValidationException("Pet ID cannot be empty.");
+            }
+            if (diseaseId.Equals(Guid.Empty))
+            {
+                throw new DiseaseValidationException("Disease ID cannot be empty.");
+            }
+            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
+            var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
+            var foundDisease = await GetPetDiseaseById(shelterId, pet.Id, diseaseId) ?? throw new DiseaseValidationException("Disease not found");
+            pet.BasicHealthInfo.MedicalHistory.Remove(foundDisease);
+            _dbContext.SaveChanges();
+            return true;
+        }
         public async Task<IEnumerable<Activity>> GetAllPetActivities(Guid shelterId, Guid petId)
         {
             if (shelterId.Equals(Guid.Empty))
@@ -570,7 +765,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             await _dbContext.SaveChangesAsync();
             return true;
         }
-   
+
 
         public async Task<IEnumerable<TempHouse>> GetAllTempHouses(Guid shelterId)
         {
@@ -1209,23 +1404,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             }
             return filteredUsers;
         }
-        public async Task<BasicHealthInfo> AddBasicHelathInfoToAPet(Guid shelterId, Guid petId, BasicHealthInfo basicHealthInfo)
-        {
-            if (shelterId.Equals(Guid.Empty))
-            {
-                throw new ShelterValidationException("Shelter ID cannot be empty.");
-            }
-            if (petId.Equals(Guid.Empty))
-            {
-                throw new ShelterValidationException("Pet ID cannot be empty.");
-            }
-            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter object cannot be null");
-            var foundPet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
-            var foundPetInShelter = await GetShelterPetById(shelterId, foundPet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
-            foundPetInShelter.BasicHealthInfo = basicHealthInfo;
-            await _dbContext.SaveChangesAsync();
-            return basicHealthInfo;
-        }
+
 
         //public async Task<IEnumerable<User>> GetShelterUsersByRole(Guid shelterId, RoleName role)
         //{
@@ -1237,31 +1416,9 @@ namespace SimpleWebDal.Repository.ShelterRepo
 
         //}
 
-        public async Task<IEnumerable<Disease>> GetAllPetDiseases(Guid shelterId, Guid petId)
-        {
-            if (petId.Equals(Guid.Empty))
-            {
-                throw new PetValidationException("Pet ID cannot be empty.");
-            }
-            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
-            var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
-            var foundPet = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
-            var diseases = foundPet.BasicHealthInfo.MedicalHistory;
-            return diseases;
-        }
 
 
-        public async Task<IEnumerable<Vaccination>> GetAllPetVaccinations(Guid shelterId, Guid petId)
-        {
-            if (petId.Equals(Guid.Empty))
-            {
-                throw new PetValidationException("Pet ID cannot be empty.");
-            }
-            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
-            var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
-            var foundPet = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
-            var vaccinations = foundPet.BasicHealthInfo.Vaccinations;
-            return vaccinations;
-        }
+
+
     }
 }
