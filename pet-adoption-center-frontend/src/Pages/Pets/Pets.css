@@ -206,6 +206,26 @@
   height: fit-content;
 }
 
+.clear-button {
+  margin-left: 45px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: none;
+  cursor: pointer;
+  position: sticky;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(246, 158, 123, 1);
+  margin-top: 10px;
+  border-radius: 10px;
+  width: 200px;
+  height: fit-content;
+}
+
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -268,4 +288,8 @@
   font-weight: 500;
   border: 1px;
   border-color: black;
+}
+
+.clear-placeholder {
+  color: black;
 }

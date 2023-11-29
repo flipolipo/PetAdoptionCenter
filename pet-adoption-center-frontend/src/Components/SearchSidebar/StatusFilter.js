@@ -7,14 +7,14 @@ function StatusFilter({ onChange }) {
     { value: 0, label: "Temporary House" },
     { value: 1, label: "At Shelter" },
     { value: 3, label: "Adopted" },
-    { value: 4, label: "On Adoption Processs" },
+    { value: 4, label: "On Adoption Process" },
   ];
 
   const [selectedStatus, setSelectedStatus] = useState("");
 
   const handleStatusChange = (selectedOption) => {
     setSelectedStatus(selectedOption);
-    onChange(selectedOption.value);
+    onChange(selectedOption ? selectedOption.value : "");
   };
 
   return (
@@ -25,7 +25,8 @@ function StatusFilter({ onChange }) {
         onChange={handleStatusChange}
         options={statusOptions}
         className="select-status"
-        placeholder="select status"
+        placeholder="Select status"
+        isClearable
       />
     </div>
   );
