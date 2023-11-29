@@ -13,10 +13,10 @@ namespace SImpleWebLogic.Repository.ShelterRepo
     {
         #region //GET
         public Task<IEnumerable<Shelter>> GetAllShelters();
-        public Task<IEnumerable<User>> GetShelterUsersByRole(Guid shelterId, RoleName role);
+        // public Task<IEnumerable<User>> GetShelterUsersByRole(Guid shelterId, RoleName role);
         public Task<User> GetShelterUserById(Guid shelterId, Guid userId);
         public Task<IEnumerable<User>> GetShelterUsers(Guid shelterId);
-        public Task<Shelter> GetShelterById(Guid shelterId); 
+        public Task<Shelter> GetShelterById(Guid shelterId);
         public Task<IEnumerable<Pet>> GetAllShelterDogsOrCats(Guid shelterId, PetType type);
         public Task<IEnumerable<Pet>> GetAllShelterPets(Guid shelterId);
         public Task<Pet> GetShelterPetById(Guid shelterId, Guid petId);
@@ -31,9 +31,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<IEnumerable<Disease>> GetAllPetDiseases(Guid shelterId, Guid petId);
         public Task<Disease> GetPetDiseaseById(Guid shelterId, Guid petId, Guid diseaseId);
         public Task<IEnumerable<Vaccination>> GetAllPetVaccinations(Guid shelterId, Guid petId);
-        public Task<Disease> GetPetVaccinationById(Guid shelterId, Guid petId, Guid vaccinationId);
-        public Task<IEnumerable<Activity>> GetAllActivities(Guid shelterId);
-        public Task<Activity> GetActivityById(Guid shelterId, Guid activityId);
+        public Task<Vaccination> GetPetVaccinationById(Guid shelterId, Guid petId, Guid vaccinationId);
         public Task<IEnumerable<Activity>> GetAllPetActivities(Guid shelterId, Guid petId);
         public Task<Activity> GetPetActivityById(Guid shelterId, Guid activityId, Guid petId);
         public Task<IEnumerable<Adoption>> GetAllShelterAdoptions(Guid shelterId);
@@ -44,7 +42,6 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         #endregion
 
         #region //POST
-        // public Task<Shelter> CreateShelter(string name, string description, string street, string houseNumber, string postalCode, string city);
         public Task<Shelter> CreateShelter(Shelter shelter);
         public Task<TempHouse> InitializeTempHouseForPet(Guid shelterId, Guid userId, Guid petId, TempHouse tempHouse);
         public Task<TempHouse> ChooseMeetingDatesForTempHouseProcess(Guid petId, Guid tempHouseId, Guid activityId);
@@ -60,13 +57,13 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<Adoption> ChooseMeetingDatesForAdoption(Guid shelterId, Guid petId, Guid userId, Guid adoptionId, Guid activityId);
         public Task<Adoption> PetAdoptionMeetingsDone(Guid adoptionId);
         public Task<Adoption> ContractForPetAdoption(Guid shelterId, Guid petId, Guid userId, Guid adoptionId, string contractAdoption);
+        public Task<bool> AddShelterUser(Guid shelterId, Guid userId, Role role);
         #endregion
 
         #region //PUT
         public Task<bool> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city, string phone);
         public Task<bool> UpdateShelterPet(Guid shelterId, Guid petId, PetGender gender, PetType type, string description, PetStatus status, bool avaibleForAdoption);
         public Task<bool> UpdateShelterActivity(Guid shelterId, Activity activity);
-        public Task<bool> AddShelterUser(Guid shelterId, Guid userId, Role role);
         public Task<bool> UpdatePetBasicHealthInfo(Guid shelterId, Guid petId, string name, int age, Size size, bool isNeutred);
         public Task<bool> UpdatePetActivity(Guid shelterId, Guid petId, Activity activity);
         public Task<bool> UpdateAdoption(Guid shelterId, Guid userId, Adoption adoption);

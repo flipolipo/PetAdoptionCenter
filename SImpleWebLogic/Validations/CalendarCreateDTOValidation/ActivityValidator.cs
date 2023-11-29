@@ -16,7 +16,7 @@ public class ActivityValidator : AbstractValidator<ActivityCreateDTO>
             .Must(date => date > DateTime.Now).WithMessage("ActivityDate must be in the future.");
 
         RuleFor(activity => activity.EndActivityDate)
-          .NotEmpty().WithMessage("ActivityDate cannot be empty.")
-          .Must(date => date > DateTime.Now).WithMessage("ActivityDate must be in the future.");
+            .NotEmpty().WithMessage("EndActivityDate cannot be empty.")
+            .Must((dto, endDate) => endDate > dto.StartActivityDate).WithMessage("EndActivityDate must be later than StartActivityDate.");
     }
 }
