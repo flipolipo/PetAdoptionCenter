@@ -107,6 +107,8 @@ public class SheltersController : ControllerBase
 
         var readDto = _mapper.Map<ShelterReadDTO>(shelter);
         return CreatedAtRoute(nameof(GetShelterById), new { shelterId = readDto.Id }, readDto);
+
+
     }
 
     [ProducesResponseType(StatusCodes.Status204NoContent)]
