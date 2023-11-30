@@ -58,7 +58,7 @@ const TempHouseById = () => {
                       to={`/Shelters/temporaryHouses/${tempHouseData.Id}/pets/${pet.Id}/confirm-delete`}
                       className="temp-main-page-link-2"
                     >
-                      Confirm / delete your adoption
+                      Confirm / delete your temporary house
                     </Link>
                   )}
               </div>

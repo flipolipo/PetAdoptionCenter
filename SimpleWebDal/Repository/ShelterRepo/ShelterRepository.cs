@@ -817,7 +817,15 @@ namespace SimpleWebDal.Repository.ShelterRepo
         }
         private async Task<bool> CheckIfUserHaveTempHouse(Guid userId)
         {
-            var foundTempHouseByUserId = await _dbContext.TempHouses.FirstOrDefaultAsync(u => u.UserId == userId) ?? throw new TempHouseValidationException("Temporary house not found");
+            if (userId.Equals(Guid.Empty))
+            {
+                throw new UserValidationException("User ID cannot be empty.");
+            }
+            var foundTempHouseByUserId = await _dbContext.TempHouses.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (foundTempHouseByUserId == null)
+            {
+                return false;
+            }
             return true;
         }
         public async Task<TempHouse> InitializeTempHouseForPet(Guid shelterId, Guid userId, Guid petId, TempHouse tempHouse)
@@ -828,7 +836,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             }
             if (userId.Equals(Guid.Empty))
             {
-                throw new UserValidationException("User ID cannot be empty");
+                throw new UserValidationException("User ID cannot be empty.");
             }
             if (petId.Equals(Guid.Empty))
             {
@@ -836,8 +844,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
             }
             var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
             var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
-            var foundPet = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
-            var foundUser = await FindUserById(userId) ?? throw new UserValidationException("User not found.");
+            var foundPet = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet in the shelter not found"); ;
+            var foundUser = await FindUserById(userId) ?? throw new UserValidationException("User not found"); ;
             var checkIfUserHaveTempHouse = await CheckIfUserHaveTempHouse(userId);
             if (!checkIfUserHaveTempHouse)
             {
@@ -849,7 +857,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
                     tempHouse.IsPreTempHousePoll = true;
                     tempHouse.Activity = new CalendarActivity();
                     tempHouse.StartOfTemporaryHouseDate = new DateTimeOffset().ToUniversalTime();
-                    foundPet.Status = PetStatus.OnTemporaryHouseProcess;
+                    foundPet.Status = PetStatus.TemporaryHouse;
                     foundUser.Pets.Add(foundPet);
                     foundShelter.TempHouses.Add(tempHouse);
                     await _dbContext.SaveChangesAsync();

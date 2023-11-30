@@ -8,7 +8,8 @@ public class BasicInformation
         Name = "";
         Surname = "";
         Phone = "";
-           }
+        Address = new Address();
+    }
 
     public Guid Id { get; set; }
     public string Name { get; set; }
