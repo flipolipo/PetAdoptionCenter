@@ -1,6 +1,6 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using SimpleWebDal.DTOs.AddressDTOs;
 using SimpleWebDal.DTOs.AnimalDTOs;
 using SimpleWebDal.DTOs.CalendarDTOs;
@@ -9,7 +9,6 @@ using SimpleWebDal.DTOs.TemporaryHouseDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.BasicInformationDTOs;
 using SimpleWebDal.DTOs.WebUserDTOs.RoleDTOs;
-using SimpleWebDal.Models.Animal.Enums;
 using SimpleWebDal.Models.CalendarModel;
 using SimpleWebDal.Models.WebUser;
 using SimpleWebDal.Repository.UserRepo;
@@ -24,14 +23,12 @@ public class UsersController : ControllerBase
     private IUserRepository _userRepository;
     private IMapper _mapper;
     private readonly ValidatorFactory _validatorFactory;
-    private readonly ILogger<UsersController> _logger;
 
-    public UsersController(IUserRepository userRepository, IMapper mapper, ValidatorFactory validatorFactory, ILogger<UsersController> logger)
+    public UsersController(IUserRepository userRepository, IMapper mapper, ValidatorFactory validatorFactory)
     {
         _userRepository = userRepository;
         _mapper = mapper;
         _validatorFactory = validatorFactory;
-        _logger = logger;
     }
     #region //Endpoints for users
     [HttpGet]
@@ -39,14 +36,8 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetAllUsers()
     {
         var users = await _userRepository.GetAllUsers();
-        _logger.LogInformation($"Metoda HTTP: {HttpContext.Request.Method}");
         return Ok(_mapper.Map<IEnumerable<UserReadDTO>>(users));
     }
-    //[HttpGet("test")]
-    //public IActionResult Test()
-    //{
-    //    throw new Exception("This is a simulated exception.");
-    //}
 
     [HttpGet("{id}", Name = "GetUserById")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -106,7 +97,7 @@ public class UsersController : ControllerBase
         {
             return BadRequest();
         }
-        var userCreateDto = _mapper.Map(userCreateDTO, foundUser);
+        _mapper.Map(userCreateDTO, foundUser);
 
         bool updated = await _userRepository.UpdateUser(foundUser);
         if (updated)
@@ -124,7 +115,7 @@ public class UsersController : ControllerBase
         var userBasicInformationValidator = _validatorFactory.GetValidator<BasicInformationCreateDTO>();
         var userAddressValidator = _validatorFactory.GetValidator<AddressCreateDTO>();
         var userCalendarValidator = _validatorFactory.GetValidator<CalendarActivityCreateDTO>();
-
+        
         var validationResultBasicInformation = userBasicInformationValidator.Validate(userCreateDTO.BasicInformation);
         var validationResultAddress = userAddressValidator.Validate(userCreateDTO.BasicInformation.Address);
         var validationResultCalendarActivity = userCalendarValidator.Validate(userCreateDTO.UserCalendar);
