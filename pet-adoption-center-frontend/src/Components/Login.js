@@ -121,7 +121,7 @@ const Login = (props) => {
               <button className="buttonLogin" onClick={loginUser}>Login</button>
               <button className="buttonLogin" onClick={() => setVisible(false)}>Back</button>
               <h5 className='need-an-account'>Need an account?</h5>
-              <input type='button' value="Sign Up!" onClick={() => {
+              <input className='buttonLogin' type='button' value="Sign Up!" onClick={() => {
                 setVisible(false);
                 props.setModalVis(true)
               }}></input>
