@@ -120,8 +120,8 @@ const Login = () => {
               />
               <button className="buttonLogin" onClick={loginUser}>Login</button>
               <button className="buttonLogin" onClick={() => setVisible(false)}>Back</button>
-              <h5 className='need-an-account'>Need an account?</h5>
-              <Link to={`/user/register`} onClick={() => setVisible(false)}>Sign Up</Link>
+              {/* <h5 className='need-an-account'>Need an account?</h5>
+              <Link to={`/user/register`} onClick={() => setVisible(false)}>Sign Up</Link> */}
             </div>
           </Modal>
         </>
