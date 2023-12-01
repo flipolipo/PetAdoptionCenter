@@ -78,7 +78,7 @@ const Navbar = () => {
           <span></span>
           <span></span>
           <div className="user-auth-div">
-            <Login className="LoginComponent" user={user} setUser={setUser} />
+            <Login setModalVis={setVisible} className="LoginComponent" user={user} setUser={setUser} />
             {!user.isLogged && (
               <div className="signUpButton">
                 <input
