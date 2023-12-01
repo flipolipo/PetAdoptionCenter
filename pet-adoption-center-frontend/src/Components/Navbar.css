@@ -3,7 +3,9 @@
   position: sticky;
   top: 0;
 }
-
+.error-msg {
+  color: red;
+}
 .navbar-container {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -221,7 +223,7 @@ nav ul {
   align-items: center;
   width: 80px;
   transition: background-color 0.3s;
-  border: 2px solid black; 
+  border: 2px solid black;
   font-size: 0.83rem;
   font-family: var(--font-roboto);
 }
@@ -318,7 +320,7 @@ nav ul {
   align-items: center;
   width: 80px;
   transition: background-color 0.3s;
-  border: 2px solid black; 
+  border: 2px solid black;
   text-decoration: none;
   color: black;
   font-size: 0.83rem;
@@ -326,13 +328,13 @@ nav ul {
 }
 
 .find-pet-link-2:hover {
-background-color: rgba(246, 158, 123, 1);
+  background-color: rgba(246, 158, 123, 1);
 }
 
 .shelterOwnerText {
   cursor: pointer;
 }
 
-.need-an-account{
+.need-an-account {
   margin-top: 20px;
 }
