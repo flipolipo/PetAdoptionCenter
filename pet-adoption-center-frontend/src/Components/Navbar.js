@@ -18,11 +18,12 @@ const Navbar = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userName, setUserName] = useState('');
-  
+  const [shortPassword, setShortPassword] = useState(false);
   const [successRegister, setSuccessRegister] = useState(false);
-  const [invalidUsername, setInvalidUsername] = useState(false)
-  const [invalidEmail, setInvalidEmail] = useState(false)
-  const [takenEmail, setTakenEmail] = useState(false)
+  const [invalidUsername, setInvalidUsername] = useState(false);
+  const [invalidEmail, setInvalidEmail] = useState(false);
+  const [takenEmail, setTakenEmail] = useState(false);
+
   const customStyles = {
     content: {
       top: '50%',
@@ -44,22 +45,24 @@ const Navbar = () => {
         console.log('User registered successfully!');
         console.log(response);
         setSuccessRegister(true);
-        setInvalidUsername(false)
-        setInvalidEmail(false)
-        setTakenEmail(false)
+        setInvalidUsername(false);
+        setInvalidEmail(false);
+        setTakenEmail(false);
+        setShortPassword(false);
       }
     } catch (error) {
-
       console.error(error.response.data);
-      if(error.response.data.DuplicateEmail)
-      {
-        setTakenEmail(true)
+      if (error.response.data.DuplicateEmail) {
+        setTakenEmail(true);
       }
-      if(error.response.data.DuplicateUserName){
-        setInvalidUsername(true)
+      if (error.response.data.DuplicateUserName) {
+        setInvalidUsername(true);
       }
-      if(error.response.data.InvalidEmail){
-        setInvalidEmail(true)
+      if (error.response.data.InvalidEmail) {
+        setInvalidEmail(true);
+      }
+      if(error.response.data.PasswordTooShort){
+        setShortPassword(true)
       }
     }
   }
@@ -78,7 +81,12 @@ const Navbar = () => {
           <span></span>
           <span></span>
           <div className="user-auth-div">
-            <Login setModalVis={setVisible} className="LoginComponent" user={user} setUser={setUser} />
+            <Login
+              setModalVis={setVisible}
+              className="LoginComponent"
+              user={user}
+              setUser={setUser}
+            />
             {!user.isLogged && (
               <div className="signUpButton">
                 <input
@@ -112,7 +120,9 @@ const Navbar = () => {
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
                       />
-                       {invalidUsername && <h5 className='error-msg'>Username already taken!</h5>}
+                      {invalidUsername && (
+                        <h5 className="error-msg">Username already taken!</h5>
+                      )}
                       <input
                         className="input-black"
                         type="text"
@@ -120,8 +130,14 @@ const Navbar = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
-                      {takenEmail && <h5 className='error-msg'>Mail already taken!</h5>}
-                      {invalidEmail && <h5 className='error-msg'>Provide correct email format!</h5>}
+                      {takenEmail && (
+                        <h5 className="error-msg">Mail already taken!</h5>
+                      )}
+                      {invalidEmail && (
+                        <h5 className="error-msg">
+                          Provide correct email format!
+                        </h5>
+                      )}
                       <input
                         className="input-black"
                         type="password"
@@ -129,7 +145,7 @@ const Navbar = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />
-                     
+                      {shortPassword && <h5 className="error-msg">Your password must be at least 6 characters!</h5>}
                       <button className="buttonRegister" onClick={registerUser}>
                         Register
                       </button>
