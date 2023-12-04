@@ -53,8 +53,8 @@ const PreadoptionPoll = () => {
 
   useEffect(() => {
     const errorsExist = Object.values(formErrors).some((error) => error !== '');
-    console.log('formErrors:', formErrors);
-    console.log('formReady:', !errorsExist);
+  /*   console.log('formErrors:', formErrors);
+    console.log('formReady:', !errorsExist); */
     setFormReady(!errorsExist);
   }, [formErrors]);
 

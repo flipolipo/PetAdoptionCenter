@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { address_url } from '../Service/url';
 import axios from 'axios';
 import MyCalendar from '../Components/BigCalendarActivity/CalendarActivity';
 import PetById from '../Pages/Pets/PetsById/PetById';
 import './Meetings.css';
+import { useUser } from './UserContext';
 
 const Meetings = () => {
   const { userId } = useParams();
+  const {user} = useUser();
   //console.log(userId);
   const [userData, setUserData] = useState({});
 
@@ -16,21 +18,19 @@ const Meetings = () => {
       try {
         const response = await axios.get(`${address_url}/Users/${userId}`, {
           headers: {
-            Authorization: `Bearer ${userId.token}`,
+            Authorization: `Bearer ${user.token}`,
           },
         });
         setUserData(response.data);
-        /* console.log(response.data.Adoptions);
-        console.log(
-          response.data.Adoptions.map((adoption) => adoption.Activity)
-        ); */
+        console.log(response.data.Adoptions);
+     
       } catch (err) {
         console.log(err);
       }
     };
 
     fetchProfileData();
-  }, [userId.id, userId.token]);
+  }, [user.id, user.token]);
 
   return (
     <div className="adoption-main-page-container">
@@ -94,12 +94,15 @@ const Meetings = () => {
                   Contract adoption
                 </Link>
               )}
-              {userData.Adoptions?.map((adoption) => {
-                if (
-                  !adoption.IsMeetings &&
-                  adoption.Activity.Activities?.length >= 1
-                ) {
-                  return (
+             
+            </div>
+          ))}
+           {userData.Adoptions?.map(
+                (adoption) => (
+                /*   console.log('IsMeetings:', adoption.IsMeetings),
+                  console.log('IsContractAdoption:', adoption.IsContractAdoption), */
+                  (!adoption.IsMeetings  && !adoption.IsContractAdoption && 
+                  adoption.Activity.Activities?.length >= 1) ? (
                     <div key={adoption.Id}>
                       <h2>Adoption Meeting Calendar</h2>
                       <MyCalendar
@@ -107,12 +110,9 @@ const Meetings = () => {
                         className="adoption-main-page-calendar"
                       />
                     </div>
-                  );
-                }
-                return null;
-              })}
-            </div>
-          ))}
+                  ) : null
+                )
+              )}
         </>
       )}
     </div>

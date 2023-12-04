@@ -65,8 +65,8 @@ const ConfirmAdoption = () => {
           petDataById.ShelterId
         );
         setShelterData(shelterDataById);
-       /*  console.log(shelterDataById);
-        console.log(shelterDataById.Name); */
+        console.log(shelterDataById);
+        console.log(shelterDataById.Id); 
       }
     } catch (error) {
       console.log('shelter fetch error: ' + error);

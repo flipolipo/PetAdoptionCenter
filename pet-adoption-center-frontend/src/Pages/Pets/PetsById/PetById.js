@@ -30,16 +30,16 @@ const PetById = ({
   userTempHouseId,
   tempHouseId,
 }) => {
-  console.log(tempHouseId);
+ /*  console.log(tempHouseId);
   console.log(petsTempHouseId);
   console.log(petTempHouseId);
-  console.log(userTempHouseId);
+  console.log(userTempHouseId); */
 
   const { id } = useParams();
   //console.log(id);
   const { user } = useUser();
   //console.log(user.id);
-  console.log(tempHouseId);
+  //console.log(tempHouseId);
   // console.log(petId);
 
   const [calendarData, setCalendarData] = useState([]);
@@ -129,11 +129,11 @@ const PetById = ({
             user.id
           );
           if (tempHouseResponseData && tempHouseResponseData.data) {
-            console.log(tempHouseResponseData.data);
+          /*   console.log(tempHouseResponseData.data);
             console.log(tempHouseResponseData.data.PetsInTemporaryHouse);
             console.log(tempHouseResponseData.data.IsPreTempHousePoll);
             console.log(tempHouseResponseData.data.IsMeetings);
-            console.log(tempHouseResponseData.data.Id);
+            console.log(tempHouseResponseData.data.Id); */
             setTempHouseData(tempHouseResponseData.data);
           }
         } catch (error) {
@@ -610,13 +610,15 @@ const PetById = ({
                     className="button-link-go-back"
                     to={`/Shelters/temporaryHouses/${tempHouseId}/pets/users/${userTempHouseId}`}
                   >
-                    Go back1
+                    Go back
                   </Link>
                 )}
               </div>
             ) : null}
             {tempHouseId &&
-            activityAdded ? (
+              petData.Status !== 5 &&
+              activityAdded &&
+           tempHouseData?.PetsInTemporaryHouse?.length > 1 ? (
               <div className="adoption-success-message">
                 <p>{meetingsSuccessMessage}</p>
                 {retryMeetings ? (
@@ -628,7 +630,7 @@ const PetById = ({
                     className="button-link-go-back"
                     to={`/Shelters/temporaryHouses/${tempHouseId}/pets/users/${userTempHouseId}`}
                   >
-                    Go back2
+                    Go back
                   </Link>
                 )}
               </div>
