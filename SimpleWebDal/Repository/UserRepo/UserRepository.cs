@@ -65,6 +65,12 @@ public class UserRepository : IUserRepository
         return user;
     }
     */
+
+    public async Task<bool> CheckForUsername(string userName)
+    {
+        //_dbContext.Users
+        return false;
+    }
     public async Task<IEnumerable<User>> GetAllUsers()
     {
         return await _dbContext.Users
