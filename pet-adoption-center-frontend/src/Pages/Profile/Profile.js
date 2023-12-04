@@ -50,12 +50,6 @@ const Profile = () => {
                     if (tempHouseResponseData && tempHouseResponseData.data) {
                         setTempHouseData(tempHouseResponseData.data);
                     }
-    
-                    console.log(tempHouseResponseData.data);
-                    console.log(tempHouseResponseData.data.PetsInTemporaryHouse);
-                    console.log(tempHouseResponseData.data.IsPreTempHousePoll);
-                    console.log(tempHouseResponseData.data.IsMeetings);
-    
                 } catch (error) {
                     console.error('Temporary house download error:', error);
                 }

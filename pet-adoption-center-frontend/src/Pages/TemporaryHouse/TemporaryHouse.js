@@ -39,7 +39,7 @@ const TemporaryHouse = () => {
     <div className="temporary-house-container">
       <div className="temporary-house-button-card">
         <div className="button-more-info">
-          {(petId || tempHouseData?.IsPreTempHousePoll) ? null : (
+          {petId || tempHouseData?.IsPreTempHousePoll ? null : (
             <Link to={`/Users/pets`} className="find-pet">
               Find your new best friend
             </Link>
@@ -61,13 +61,15 @@ const TemporaryHouse = () => {
               </Link>
             )
           )}
-          {user.id && tempHouseData && !tempHouseData?.IsMeetings ? (
-            <Link
-              to={`/Shelters/temporaryHouses/${tempHouseData?.Id}/pets/users/${user.id}`}
-              className="find-pet"
-            >
-              Meetings to know your pet
-            </Link>
+          {user.id && tempHouseData ? (
+            tempHouseData.IsMeetings ? null : (
+              <Link
+                to={`/Shelters/temporaryHouses/${tempHouseData?.Id}/pets/users/${user.id}`}
+                className="find-pet"
+              >
+                Meetings to know your pet
+              </Link>
+            )
           ) : (
             !tempHouseData?.IsMeetings ? (
               <Link
@@ -78,6 +80,11 @@ const TemporaryHouse = () => {
               </Link>
             ) : null
           )}
+           {user.id && tempHouseData?.PetsInTemporaryHouse?.length >= 1 && tempHouseData?.IsMeetings ? (
+            <Link to={`/Users/pets`} className="find-pet">
+              Add New Pet
+            </Link>
+          ) : null}
         </div>
         <div className="temporary-house-card-page">
           <div className="temporary-house-info">

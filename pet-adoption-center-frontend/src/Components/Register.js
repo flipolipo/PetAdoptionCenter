@@ -33,8 +33,8 @@ const Register = () => {
         Password: password,
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log('User registered successfully!');
-        console.log(response);
+      /*   console.log('User registered successfully!');
+        console.log(response); */
         setSuccessRegister(true);
       }
     } catch (error) {
@@ -51,44 +51,51 @@ const Register = () => {
         onRequestClose={() => setVisible(false)}
         style={customStyles}
       >
-        <div className="modal-content">
-          <input
-            className="input-black"
-            type="username"
-            placeholder="Username"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-          <input
-            className="input-black"
-            type="text"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            className="input-black"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button className="buttonRegister" onClick={registerUser}>
-            Register
-          </button>
-          <Link className='back-to-home' to={`/`}>Home</Link>
-        </div>
+        {successRegister ? (
+          <div className="register-container-info">
+            <h2 className="register-success">
+              You have been successfully registered
+            </h2>
+            <input
+              value="Back"
+              className="back-to-home"
+              onClick={() => setVisible(false)}
+            ></input>
+          </div>
+        ) : (
+          <div className="modal-content">
+            <input
+              className="input-black"
+              type="username"
+              placeholder="Username"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
+            <input
+              className="input-black"
+              type="text"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              className="input-black"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button className="buttonRegister" onClick={registerUser}>
+              Register
+            </button>
+            <input
+              value="Back"
+              className="back-to-home"
+              onClick={() => setVisible(false)}
+            ></input>
+          </div>
+        )}
       </Modal>
-      {successRegister && (
-        <div className="register-container-info">
-          <h2 className="register-success">
-            You have been successfully registered
-          </h2>
-          <Link className='back-to-home' to={`/`} >
-            Back
-          </Link>
-        </div>
-      )}
     </div>
   );
 };

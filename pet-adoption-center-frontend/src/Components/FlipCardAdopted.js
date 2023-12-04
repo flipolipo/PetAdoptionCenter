@@ -11,13 +11,11 @@ const FlipCardAdopted = () => {
 
   useEffect(() => {
     GetAdoptedPets();
-    console.log(`Adopted Pet ${currentPets}`)
   }, []);
 
   async function GetAdoptedPets() {
     try {
       const response = await axios.get(`${address_url}/Users/pets/adopted`);
-      console.log(response.data);
       setPetsAdopted(response.data);
     } catch (error) {
       console.error(error);

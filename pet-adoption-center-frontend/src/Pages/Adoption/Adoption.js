@@ -21,7 +21,7 @@ const Adoption = () => {
           },
         });
         setUserData(response.data);
-        console.log(response.data.Adoptions);
+        //console.log(response.data.Adoptions);
       } catch (err) {
         console.log(err);
       }
@@ -40,9 +40,11 @@ const Adoption = () => {
             (adoption) => adoption.IsPreAdoptionPoll
           ) ? (
             <>
-            {id ? null : (<Link to={`/Users/pets`} className="find-pet">
-                Find your new best friend
-              </Link>)}
+              {id ? null : (
+                <Link to={`/Users/pets`} className="find-pet">
+                  Find your new best friend
+                </Link>
+              )}
               {user.id && id ? (
                 <Link
                   to={`/Shelters/adoptions/pets/${id}/users/${user.id}/preadoption-poll`}
@@ -108,9 +110,51 @@ const Adoption = () => {
               )}
             </>
           ) : null}
+          {user.id && userData.Adoptions?.length === 1 ? (<> {userData.Adoptions.some(
+                (adoption) => !adoption.IsContractAdoption
+              ) ? null : (
+                <Link to={`/Users/pets`} className="find-pet">
+                  Find your new best friend
+                </Link>
+              )}</>) : null}
+          {user.id && userData.Adoptions?.length > 1 ? (
+            <>
+              {userData.Adoptions.some(
+                (adoption) => !adoption.IsContractAdoption
+              ) ? null : (
+                <Link to={`/Users/pets`} className="find-pet">
+                  Find your new best friend
+                </Link>
+              )}
+              {userData.Adoptions.every(
+                (adoption) => adoption.IsMeetings
+              ) ? null : (
+                <Link
+                  to={`/Shelters/adoptions/pets/users/${user.id}`}
+                  className="find-pet"
+                >
+                  Meetings to know your pet
+                </Link>
+              )}
+              {userData.Adoptions.every(
+                (adoption) => adoption.IsContractAdoption
+              ) ? null : (
+                <Link
+                  to={`/Shelters/adoptions/pets/users/${user.id}`}
+                  className="find-pet"
+                >
+                  Contract adoption
+                </Link>
+              )}
+            </>
+          ) : null}
         </div>
         <div className="adoption-card-page-adoption">
-          {id && !user.id ? (<h2 className='important'>Please first to start adoption process sign in or log in</h2>) : null}
+          {id && !user.id ? (
+            <h2 className="important">
+              Please first to start adoption process sign in or log in
+            </h2>
+          ) : null}
           <div className="adoption-process-info">
             <h2 className="title-pet">ADOPTION PROCESS INFO</h2>
             <ul className="adoption-process">
@@ -121,7 +165,9 @@ const Adoption = () => {
               <li>Log into your account.</li>
               <li>Select a pet from the available options.</li>
               <li>Complete the pre-adoption poll for the chosen pet.</li>
-              <li>Choose at least one meeting from the calendar named "Know me."</li>
+              <li>
+                Choose at least one meeting from the calendar named "Know me."
+              </li>
               <li>
                 After the meeting, you will be asked to confirm the adoption. If
                 you change your mind, you can choose to delete the adoption.
@@ -133,7 +179,9 @@ const Adoption = () => {
                 pick up your new friend.
               </li>
             </ul>
-            <h3 className='important'>Feel free to click on the bottom to have more information</h3>
+            <h3 className="important">
+              Feel free to click on the bottom to have more information
+            </h3>
           </div>
         </div>
       </div>

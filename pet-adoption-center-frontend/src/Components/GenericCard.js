@@ -29,7 +29,6 @@ const GenericCard = ({ pet }) => {
   const [userData, setUserData] = useState({});
   const handleMouseEnter = () => {
     setIsHovered(true);
-    console.log('entered');
   };
   const openLoginModal = () => {
     setLoginModalOpen(true);
@@ -65,7 +64,7 @@ const GenericCard = ({ pet }) => {
   useEffect(() => {
     setFavoured(CheckForFavourite(userData));
   }, [userData]);
-  console.log(user);
+  //console.log(user);
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
@@ -85,7 +84,7 @@ const GenericCard = ({ pet }) => {
         : process.env.PUBLIC_URL + '/Photo/whitePaw.png';
     }
   };
-  console.log(pet);
+  //console.log(pet);
   const ClickHandler = async () => {
     if (user.isLogged) {
       try {

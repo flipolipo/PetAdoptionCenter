@@ -12,7 +12,6 @@ function MyCalendar({ events, onEventClick }) {
     end: new Date(event.EndActivityDate),
   }));
 
-  //console.log(formattedEvents);
   return (
     <div>
       <Calendar

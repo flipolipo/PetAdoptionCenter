@@ -227,6 +227,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
             var foundActivity = foundShelter.ShelterCalendar.Activities.FirstOrDefault(e => e.Id == activityId) ?? throw new ActivityValidationException("Activity not found");
             foundShelter.ShelterCalendar.Activities.Remove(foundActivity);
+            _dbContext.Activities.Remove(foundActivity);
             _dbContext.SaveChanges();
             return true;
         }
@@ -385,6 +386,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
             var pet = foundShelter.ShelterPets.FirstOrDefault(e => e.Id == petId) ?? throw new PetValidationException("Pet not found");
             foundShelter.ShelterPets.Remove(pet);
+            _dbContext.Pets.Remove(pet);
             _dbContext.SaveChanges();
             return true;
         }
@@ -550,6 +552,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
             var foundVaccination = await GetPetVaccinationById(shelterId, pet.Id, vaccinationId) ?? throw new VaccinationValidationException("Vaccination not found");
             pet.BasicHealthInfo.Vaccinations.Remove(foundVaccination);
+            _dbContext.Vaccinations.Remove(foundVaccination);
             _dbContext.SaveChanges();
             return true;
         }
@@ -653,6 +656,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
             var foundDisease = await GetPetDiseaseById(shelterId, pet.Id, diseaseId) ?? throw new DiseaseValidationException("Disease not found");
             pet.BasicHealthInfo.MedicalHistory.Remove(foundDisease);
+            _dbContext.Diseases.Remove(foundDisease);
             _dbContext.SaveChanges();
             return true;
         }
@@ -762,6 +766,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             var foundPet = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
             var foundActivity = foundPet.Calendar.Activities.FirstOrDefault(e => e.Id == activityId) ?? throw new ActivityValidationException("Activity not found");
             foundPet.Calendar.Activities.Remove(foundActivity);
+            _dbContext.Activities.Remove(foundActivity);
             await _dbContext.SaveChangesAsync();
             return true;
         }
@@ -817,7 +822,15 @@ namespace SimpleWebDal.Repository.ShelterRepo
         }
         private async Task<bool> CheckIfUserHaveTempHouse(Guid userId)
         {
-            var foundTempHouseByUserId = await _dbContext.TempHouses.FirstOrDefaultAsync(u => u.UserId == userId) ?? throw new TempHouseValidationException("Temporary house not found");
+            if (userId.Equals(Guid.Empty))
+            {
+                throw new UserValidationException("User ID cannot be empty.");
+            }
+            var foundTempHouseByUserId = await _dbContext.TempHouses.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (foundTempHouseByUserId == null)
+            {
+                return false;
+            }
             return true;
         }
         public async Task<TempHouse> InitializeTempHouseForPet(Guid shelterId, Guid userId, Guid petId, TempHouse tempHouse)
@@ -828,7 +841,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             }
             if (userId.Equals(Guid.Empty))
             {
-                throw new UserValidationException("User ID cannot be empty");
+                throw new UserValidationException("User ID cannot be empty.");
             }
             if (petId.Equals(Guid.Empty))
             {
@@ -836,8 +849,8 @@ namespace SimpleWebDal.Repository.ShelterRepo
             }
             var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
             var pet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
-            var foundPet = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet not found in the shelter");
-            var foundUser = await FindUserById(userId) ?? throw new UserValidationException("User not found.");
+            var foundPet = await GetShelterPetById(shelterId, pet.Id) ?? throw new PetValidationException("Pet in the shelter not found"); ;
+            var foundUser = await FindUserById(userId) ?? throw new UserValidationException("User not found"); ;
             var checkIfUserHaveTempHouse = await CheckIfUserHaveTempHouse(userId);
             if (!checkIfUserHaveTempHouse)
             {
@@ -1036,6 +1049,34 @@ namespace SimpleWebDal.Repository.ShelterRepo
             }
             return null;
         }
+        public async Task<bool> DeletePetFromTempHouse(Guid tempHouseId, Guid shelterId, Guid petId, Guid userId)
+        {
+            if (tempHouseId.Equals(Guid.Empty))
+            {
+                throw new TempHouseValidationException("TempHouse ID cannot be empty.");
+            }
+            if (shelterId.Equals(Guid.Empty))
+            {
+                throw new ShelterValidationException("Shelter ID cannot be empty.");
+            }
+            if (petId.Equals(Guid.Empty))
+            {
+                throw new PetValidationException("Pet ID cannot be empty.");
+            }
+            if (userId.Equals(Guid.Empty))
+            {
+                throw new UserValidationException("User ID cannot be empty.");
+            }
+            var foundShelter = await FindShelter(shelterId) ?? throw new ShelterValidationException("Shelter not found");
+            var foundTempHouse = await GetTempHouse(tempHouseId) ?? throw new TempHouseValidationException("Temporary house not found");
+            var foundUser = await FindUserById(userId) ?? throw new UserValidationException("User not found.");
+            var foundPet = await GetPetById(petId) ?? throw new PetValidationException("Pet not found");
+            foundTempHouse.PetsInTemporaryHouse.Remove(foundPet);
+            foundPet.Status = PetStatus.AtShelter;
+            foundTempHouse.IsMeetings = true;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
         public async Task<bool> UpdateTempHouse(TempHouse tempHouse)
         {
             var foundTempHouse = await GetTempHouse(tempHouse.Id) ?? throw new TempHouseValidationException("Temporary house not found");
@@ -1082,6 +1123,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             if (howManyPetsInTempHouse <= 1)
             {
                 foundShelter.TempHouses.Remove(foundTempHouse);
+                _dbContext.TempHouses.Remove(foundTempHouse);
             }
             await _dbContext.SaveChangesAsync();
             return true;
@@ -1333,6 +1375,7 @@ namespace SimpleWebDal.Repository.ShelterRepo
             foundUser.Adoptions.Remove(foundAdoption);
             foundPet.Status = PetStatus.AtShelter;
             foundPet.AvaibleForAdoption = true;
+            _dbContext.Adoptions.Remove(foundAdoption);
             await _dbContext.SaveChangesAsync();
             return true;
         }

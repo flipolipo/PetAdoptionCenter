@@ -21,7 +21,7 @@ const customStyles = {
   },
 };
 
-const Login = () => {
+const Login = (props) => {
   const navigate = useNavigate();
   const { user, setUser } = useUser();
   const [visible, setVisible] = useState(false);
@@ -58,11 +58,11 @@ const Login = () => {
       });
       if (response.status >= 200 && response.status < 300) {
         console.log('User Logged successfully!');
-        console.log(response)
+        //console.log(response)
 
         const tokenParts = response.data.Token.split('.');
         const decodedPayload = JSON.parse(atob(tokenParts[1]));
-        console.log(decodedPayload.Id)
+        //console.log(decodedPayload.Id)
 
         setUser({
           id: decodedPayload.Id,
@@ -121,7 +121,10 @@ const Login = () => {
               <button className="buttonLogin" onClick={loginUser}>Login</button>
               <button className="buttonLogin" onClick={() => setVisible(false)}>Back</button>
               <h5 className='need-an-account'>Need an account?</h5>
-              <Link to={`/user/register`} onClick={() => setVisible(false)}>Sign Up</Link>
+              <input className='buttonLogin' type='button' value="Sign Up!" onClick={() => {
+                setVisible(false);
+                props.setModalVis(true)
+              }}></input>
             </div>
           </Modal>
         </>

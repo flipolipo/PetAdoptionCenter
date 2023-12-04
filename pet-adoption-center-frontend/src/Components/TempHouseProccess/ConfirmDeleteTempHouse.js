@@ -10,9 +10,9 @@ import axios from 'axios';
 const ConfirmDeleteTempHouse = () => {
   const { tempHouseId, petId } = useParams();
   const { user } = useUser();
-  console.log(tempHouseId);
+ /*  console.log(tempHouseId);
   console.log(petId);
-  console.log(user);
+  console.log(user); */
   const [tempHouseData, setTempHouseData] = useState({});
   const [confirmTempHouse, setConfirmTempHouse] = useState({});
   const [confirmTempHouseVisible, setConfirmTempHouseVisible] = useState(false);

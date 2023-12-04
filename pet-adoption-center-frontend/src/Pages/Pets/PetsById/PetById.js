@@ -17,6 +17,7 @@ import { fetchDataForShelter } from '../../../Service/fetchDataForShelter';
 import { FetchDataForAdoption } from '../../../Service/FetchDataForAdoption';
 import { useUser } from '../../../Components/UserContext';
 import { FaSpinner } from 'react-icons/fa';
+import { FetchTempHouseDataForUser } from '../../../Service/FetchTempHouseDataForUser';
 
 const PetById = ({
   petId,
@@ -27,11 +28,20 @@ const PetById = ({
   petsTempHouseId,
   petTempHouseId,
   userTempHouseId,
-  tempHouseId
+  tempHouseId,
 }) => {
+ /*  console.log(tempHouseId);
   console.log(petsTempHouseId);
+  console.log(petTempHouseId);
+  console.log(userTempHouseId); */
+
   const { id } = useParams();
-  const { user, setUser } = useUser();
+  //console.log(id);
+  const { user } = useUser();
+  //console.log(user.id);
+  //console.log(tempHouseId);
+  // console.log(petId);
+
   const [calendarData, setCalendarData] = useState([]);
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [startDate, setStartDate] = useState(Date.now());
@@ -54,6 +64,7 @@ const PetById = ({
   const [retryMeetings, setRetryMeetings] = useState(false);
   const [adoptionData, setAdoptionData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [tempHouseData, setTempHouseData] = useState({});
 
   Modal.setAppElement('#root');
 
@@ -103,11 +114,35 @@ const PetById = ({
       fetchData(petTempHouseId);
     }
   }, [petsTempHouseId]);
+
   useEffect(() => {
     if (adoptionById) {
       fetchDataAdoption();
     }
   }, [adoptionById]);
+
+  useEffect(() => {
+    const fetchDataTempHouse = async () => {
+      if (user.id) {
+        try {
+          const tempHouseResponseData = await FetchTempHouseDataForUser(
+            user.id
+          );
+          if (tempHouseResponseData && tempHouseResponseData.data) {
+          /*   console.log(tempHouseResponseData.data);
+            console.log(tempHouseResponseData.data.PetsInTemporaryHouse);
+            console.log(tempHouseResponseData.data.IsPreTempHousePoll);
+            console.log(tempHouseResponseData.data.IsMeetings);
+            console.log(tempHouseResponseData.data.Id); */
+            setTempHouseData(tempHouseResponseData.data);
+          }
+        } catch (error) {
+          console.error('Temporary house download error:', error);
+        }
+      }
+    };
+    fetchDataTempHouse();
+  }, [user.id]);
 
   const fetchDataAdoption = async () => {
     if (adoptionById) {
@@ -127,14 +162,14 @@ const PetById = ({
 
       const petDataById = await fetchDataForPet(param);
       setPetData(petDataById);
-      // console.log(petDataById);
+      //  console.log(petDataById);
 
       if (petDataById && petDataById.ShelterId) {
         const shelterDataById = await fetchDataForShelter(
           petDataById.ShelterId
         );
         setShelterData(shelterDataById);
-        //console.log(shelterDataById);
+        // console.log(shelterDataById);
         //console.log(shelterDataById.Name);
 
         if (shelterDataById) {
@@ -151,6 +186,7 @@ const PetById = ({
       console.log('shelter fetch error: ' + error);
     }
   };
+
   //console.log(petData);
   const updateEndDate = (e) => {
     const date = new Date(e);
@@ -197,7 +233,7 @@ const PetById = ({
           EndActivityDate: endDate,
         }
       );
-      console.log(resp);
+      //console.log(resp);
     } catch (err) {
       console.log(err);
     }
@@ -207,7 +243,7 @@ const PetById = ({
       const resp = await axios.delete(
         `${address_url}/Shelters/${petData.ShelterId}/pets/${id}/calendar/activities/${selectedActivity.id}`
       );
-      console.log(resp);
+      //console.log(resp);
     } catch (err) {
       console.log(err);
     }
@@ -240,7 +276,7 @@ const PetById = ({
     try {
       const response = await axios.post(
         `${address_url}/Shelters/temporary-houses/${tempHouseId}/pets/${petTempHouseId}/calendar/activities/${selectedActivity.id}/users/meetings-temporary-house`
-      ); 
+      );
       setChoosenMeeting(response.data);
       //console.log('meetforadoption', response.data);
       setActivityAdded(true);
@@ -257,7 +293,28 @@ const PetById = ({
       setLoading(false);
     }, 2000);
   };
-
+  const handleMeetAnotherPetForTempHouse = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${address_url}/Shelters/${shelterData.Id}/temporary-houses/${tempHouseId}/pets/${petTempHouseId}/calendar/activities/${selectedActivity.id}/users/${user.id}/meetings-another-pet-temporary-house`
+      );
+      setChoosenMeeting(response.data);
+      console.log('meetforadoption', response.data);
+      setActivityAdded(true);
+      setMeetingsSuccessMessage('Meeting added successfully!');
+      setRetryMeetings(false);
+    } catch (error) {
+      console.error(error);
+      setActivityAdded(false);
+      setMeetingsSuccessMessage('Failed to add meeting. Please try again.');
+      setRetryMeetings(true);
+      setLoading(false);
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  };
   return (
     <div className="pet-by-id-container-all">
       {petData && petData.BasicHealthInfo && petDataVisible ? (
@@ -280,14 +337,30 @@ const PetById = ({
                     Adopt Me
                   </Link>
                 ) : null}
-                {id && user.id && petData.AvaibleForAdoption &&  petData.Status !== 0 && petData.Status !== 5 ? (
-                  <Link
-                    to={`/Shelters/${shelterData.Id}/temporaryHouses/pets/${id}/users/${user.id}/pre-temporary-house-poll`}
-                    className="find-pet"
-                  >
-                    Give me a temporary house
-                  </Link>
-                ) : petData.AvaibleForAdoption && petData.Status !== 0 && petData.Status !== 5 ? (
+                {id &&
+                user.id &&
+                petData.AvaibleForAdoption &&
+                petData.Status !== 0 &&
+                petData.Status !== 5 ? (
+                  tempHouseData?.PetsInTemporaryHouse?.length >= 1 ? (
+                    <Link
+                      to={`/Shelters/temporaryHouses/${tempHouseData.Id}/pets/${id}/users/${user.id}`}
+                      className="find-pet"
+                    >
+                      Give me a temporary house
+                    </Link>
+                  ) : (
+                    <Link
+                      to={`/Shelters/${shelterData.Id}/temporaryHouses/pets/${id}/users/${user.id}/pre-temporary-house-poll`}
+                      className="find-pet"
+                    >
+                      Give me a temporary house
+                    </Link>
+                  )
+                ) : petData.AvaibleForAdoption &&
+                  petData.Status !== 0 &&
+                  petData.Status !== 5 &&
+                  !tempHouseId ? (
                   <Link
                     className="find-pet"
                     to={`/Shelters/${shelterData.Id}/temporaryHouses/pets/${id}`}
@@ -307,9 +380,11 @@ const PetById = ({
                     <>
                       {' '}
                       <Link
-                    to={`/Shelters/${shelterData.Id}/pets/${id}/users/adopt-me-virtually`}
-                    className="find-pet"
-                  >Adopt me virtually</Link>
+                        to={`/Shelters/${shelterData.Id}/pets/${id}/users/adopt-me-virtually`}
+                        className="find-pet"
+                      >
+                        Adopt me virtually
+                      </Link>
                       <button className="pet-button" onClick={goToPetCalendar}>
                         Take me for a walk
                       </button>
@@ -421,22 +496,27 @@ const PetById = ({
               </p>
             </div>
           </div>
-          {petData.Status !== 4 && petData.Status !== 3 && petData.Status !== 5 && petData.Status !== 0 && (
-            <div className="pets-available-to-adoption">
-              <div className="pet-inscription">
-                <h2>Pets available for adoption</h2>
+          {petData.Status !== 4 &&
+            petData.Status !== 3 &&
+            petData.Status !== 5 &&
+            petData.Status !== 0 &&
+            !tempHouseId && (
+              <div className="pets-available-to-adoption">
+                <div className="pet-inscription">
+                  <h2>Pets available for adoption</h2>
+                </div>
+                <div className="pet-card">
+                  <FlipCardAvailable />
+                </div>
               </div>
-              <div className="pet-card">
-                <FlipCardAvailable />
-              </div>
-            </div>
-          )}
+            )}
         </>
       ) : null}
       {(petData &&
-      petAdoptionId &&
-      petDataVisible &&
-      !adoptionData.IsMeetings) || (petData && petTempHouseId && petDataVisible) ? (
+        petAdoptionId &&
+        petDataVisible &&
+        !adoptionData.IsMeetings) ||
+      (petData && petTempHouseId && petDataVisible) ? (
         <div className="meetings-button-pet-adoption">
           <h2>Small Palls Pet's Calendar</h2>
           {(petAdoptionId || petTempHouseId) && (
@@ -476,22 +556,28 @@ const PetById = ({
                 {petAdoptionId && !activityAdded ? (
                   <div className="spinner-container">
                     <button onClick={handleMeetForAdoption}>
-                      {loading ? (
-                        <FaSpinner className="spinner" />
-                      ) : (
-                        'Add meet'
-                      )}
+                      {loading ? <FaSpinner className="spinner" /> : 'Add meet'}
                     </button>
                   </div>
                 ) : null}
-                    {petTempHouseId && !activityAdded ? (
+                {petTempHouseId &&
+                tempHouseData?.PetsInTemporaryHouse?.length === 1 && petData.Status === 5 &&
+                !activityAdded ? (
                   <div className="spinner-container">
                     <button onClick={handleMeetForTempHouse}>
-                      {loading ? (
-                        <FaSpinner className="spinner" />
-                      ) : (
-                        'Add meet'
-                      )}
+                      {loading ? <FaSpinner className="spinner" /> : 'Add meet'}
+                    </button>
+                  </div>
+                ) : null}
+                {(tempHouseId &&
+                   petData.Status !== 5 &&
+                  !activityAdded) || (tempHouseId &&
+                    petData.Status !== 5 &&
+                   !activityAdded &&
+                tempHouseData?.PetsInTemporaryHouse?.length > 1) ? (
+                  <div className="spinner-container">
+                    <button onClick={handleMeetAnotherPetForTempHouse}>
+                      {loading ? <FaSpinner className="spinner" /> : 'Add meet'}
                     </button>
                   </div>
                 ) : null}
@@ -512,7 +598,9 @@ const PetById = ({
                 )}
               </div>
             ) : null}
-                {petTempHouseId && activityAdded ? (
+            {petTempHouseId &&
+            activityAdded &&
+            tempHouseData?.PetsInTemporaryHouse?.length === 1 ? (
               <div className="adoption-success-message">
                 <p>{meetingsSuccessMessage}</p>
                 {retryMeetings ? (
@@ -527,11 +615,30 @@ const PetById = ({
                 )}
               </div>
             ) : null}
+            {tempHouseId &&
+              petData.Status !== 5 &&
+              activityAdded &&
+           tempHouseData?.PetsInTemporaryHouse?.length > 1 ? (
+              <div className="adoption-success-message">
+                <p>{meetingsSuccessMessage}</p>
+                {retryMeetings ? (
+                  <button onClick={handleMeetAnotherPetForTempHouse}>
+                    Try Again
+                  </button>
+                ) : (
+                  <Link
+                    className="button-link-go-back"
+                    to={`/Shelters/temporaryHouses/${tempHouseId}/pets/users/${userTempHouseId}`}
+                  >
+                    Go back
+                  </Link>
+                )}
+              </div>
+            ) : null}
           </Modal>
           <MyCalendar events={calendarData} onEventClick={handleEventClick} />
         </div>
       ) : null}
-      {console.log(adoptionData.Activity)}
       {petAdoptionId &&
         adoptionById &&
         adoptionData.Activity &&

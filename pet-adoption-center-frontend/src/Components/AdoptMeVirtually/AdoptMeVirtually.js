@@ -16,7 +16,6 @@ const AdoptMeVirtually = () => {
       try {
         const responseData = await fetchDataForPet(petId);
         setPetSelectedData(responseData);
-        console.log(responseData);
       } catch (err) {
         console.log('shelter fetch error: ' + err);
       }
@@ -29,7 +28,6 @@ const AdoptMeVirtually = () => {
       try {
         const responseData = await fetchDataForShelter(shelterId);
         setShelterData(responseData);
-        console.log(responseData);
       } catch (err) {
         console.log('shelter fetch error: ' + err);
       }

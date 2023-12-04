@@ -120,7 +120,7 @@ public class SheltersController : ControllerBase
     public async Task<IActionResult> UpdateShelter(Guid shelterId, string name, string description, string street, string houseNumber, string postalCode, string city, string phone, string bankNumber, IFormFile image)
     {
         bool updated = await _shelterRepository.UpdateShelter(shelterId, name, description, street, houseNumber, postalCode, city, phone, bankNumber, image);
-
+        
         if (updated)
         {
             var updatedShelter = await _shelterRepository.GetShelterById(shelterId);
@@ -165,7 +165,7 @@ public class SheltersController : ControllerBase
     [HttpGet("{shelterId}/calendar/activities/{activityId})")]
     public async Task<ActionResult<IEnumerable<ActivityReadDTO>>> GetActivityById(Guid shelterId, Guid activityId)
     {
-        var activity = await _shelterRepository.GetShelterActivityById(shelterId, activityId);
+        var activity = await _shelterRepository.GetShelterActivityById(shelterId, activityId);  
         var activityDto = _mapper.Map<ActivityReadDTO>(activity);
         if (activityDto != null)
         {
@@ -773,6 +773,22 @@ public class SheltersController : ControllerBase
         var addPetToTempHouse = await _shelterRepository.ConfirmToAddAnotherPetToTempHouse(tempHouseId, petId);
         var tempHouseReadDto = _mapper.Map<TempHouseReadDTO>(addPetToTempHouse);
         return Ok(tempHouseReadDto);
+    }
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpDelete("{shelterId}/tempHouses/{tempHouseId}/pets/{petId}/users/{userId}/delete-pet")]
+    public async Task<IActionResult> DeletePetFromTempHouse(Guid tempHouseId, Guid shelterId, Guid petId, Guid userId)
+    {
+        bool deleted = await _shelterRepository.DeletePetFromTempHouse(tempHouseId, shelterId, petId, userId);
+
+        if (deleted)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
+        }
     }
 
     [HttpPut("temporary-houses/{tempHouseId}")]
