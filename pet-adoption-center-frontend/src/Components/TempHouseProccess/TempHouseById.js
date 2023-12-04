@@ -43,7 +43,7 @@ const TempHouseById = () => {
               <PetById petsTempHouseId={pet.Id} tempHousesId={tempHouseData.Id} />
               <div className="button-container">
                 {tempHouseData.IsPreTempHousePoll &&
-                  !tempHouseData.IsMeetings && (
+                  !tempHouseData.IsMeetings && pet.Status !== 0 && (
                     <Link
                       to={`/Shelters/temporaryHouses/${tempHouseData.Id}/pets/${pet.Id}/users/${userId}`}
                       className="temp-main-page-link-2"
@@ -51,7 +51,7 @@ const TempHouseById = () => {
                       Choose meeting
                     </Link>
                   )}
-                {tempHouseData.Activity.Activities?.length >= 1 &&
+                {tempHouseData.Activity.Activities?.length >= 1 && tempHouseData.PetsInTemporaryHouse?.length <= 1 &&
                   tempHouseData.Activity.Activities.every((a) => new Date(a.EndActivityDate) < new Date() ) &&
                   !tempHouseData.IsMeetings && (
                     <Link
@@ -59,6 +59,16 @@ const TempHouseById = () => {
                       className="temp-main-page-link-2"
                     >
                       Confirm / delete your temporary house
+                    </Link>
+                  )}
+                      {tempHouseData.Activity.Activities?.length >= 1 && tempHouseData.PetsInTemporaryHouse?.length > 1 &&
+                  tempHouseData.Activity.Activities.every((a) => new Date(a.EndActivityDate) < new Date() ) &&
+                  !tempHouseData.IsMeetings && pet.Status !== 0 && (
+                    <Link
+                      to={`/Shelters/temporaryHouses/${tempHouseData.Id}/pets/${pet.Id}/confirm-delete-pet`}
+                      className="temp-main-page-link-2"
+                    >
+                      Confirm / delete selected pet
                     </Link>
                   )}
               </div>

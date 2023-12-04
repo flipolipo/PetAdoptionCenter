@@ -774,6 +774,22 @@ public class SheltersController : ControllerBase
         var tempHouseReadDto = _mapper.Map<TempHouseReadDTO>(addPetToTempHouse);
         return Ok(tempHouseReadDto);
     }
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [HttpDelete("{shelterId}/tempHouses/{tempHouseId}/pets/{petId}/users/{userId}/delete-pet")]
+    public async Task<IActionResult> DeletePetFromTempHouse(Guid tempHouseId, Guid shelterId, Guid petId, Guid userId)
+    {
+        bool deleted = await _shelterRepository.DeletePetFromTempHouse(tempHouseId, shelterId, petId, userId);
+
+        if (deleted)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
 
     [HttpPut("temporary-houses/{tempHouseId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

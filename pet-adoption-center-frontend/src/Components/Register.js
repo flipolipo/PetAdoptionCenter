@@ -33,8 +33,8 @@ const Register = () => {
         Password: password,
       });
       if (response.status >= 200 && response.status < 300) {
-        console.log('User registered successfully!');
-        console.log(response);
+      /*   console.log('User registered successfully!');
+        console.log(response); */
         setSuccessRegister(true);
       }
     } catch (error) {

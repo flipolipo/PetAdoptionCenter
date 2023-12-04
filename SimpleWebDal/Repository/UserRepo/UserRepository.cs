@@ -201,7 +201,8 @@ public class UserRepository : IUserRepository
         if (foundUser != null && foundActivity != null)
         {
             foundUser.UserCalendar.Activities.Remove(foundActivity);
-            _dbContext.SaveChanges();
+            _dbContext.Activities.Remove(foundActivity);
+            await _dbContext.SaveChangesAsync();
             return true;
         }
 
@@ -268,6 +269,7 @@ public class UserRepository : IUserRepository
         var foundUser = await GetUserById(userId) ?? throw new UserValidationException("User not found.");
         var foundRole = foundUser.Roles.FirstOrDefault(r => r.Id == roleId) ?? throw new RoleValidationException("Role not found");
         foundUser.Roles.Remove(foundRole);
+        _dbContext.Roles.Remove(foundRole);
         await _dbContext.SaveChangesAsync();
         return true;
     }

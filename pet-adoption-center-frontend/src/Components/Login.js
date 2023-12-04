@@ -58,11 +58,11 @@ const Login = () => {
       });
       if (response.status >= 200 && response.status < 300) {
         console.log('User Logged successfully!');
-        console.log(response)
+        //console.log(response)
 
         const tokenParts = response.data.Token.split('.');
         const decodedPayload = JSON.parse(atob(tokenParts[1]));
-        console.log(decodedPayload.Id)
+        //console.log(decodedPayload.Id)
 
         setUser({
           id: decodedPayload.Id,

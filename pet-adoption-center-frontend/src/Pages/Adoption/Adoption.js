@@ -21,7 +21,7 @@ const Adoption = () => {
           },
         });
         setUserData(response.data);
-        console.log(response.data.Adoptions);
+        //console.log(response.data.Adoptions);
       } catch (err) {
         console.log(err);
       }

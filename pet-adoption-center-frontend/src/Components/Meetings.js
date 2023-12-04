@@ -8,7 +8,7 @@ import './Meetings.css';
 
 const Meetings = () => {
   const { userId } = useParams();
-  console.log(userId);
+  //console.log(userId);
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
@@ -20,10 +20,10 @@ const Meetings = () => {
           },
         });
         setUserData(response.data);
-        console.log(response.data.Adoptions);
+        /* console.log(response.data.Adoptions);
         console.log(
           response.data.Adoptions.map((adoption) => adoption.Activity)
-        );
+        ); */
       } catch (err) {
         console.log(err);
       }

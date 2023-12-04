@@ -19,7 +19,6 @@ const FlipCardShelterPets = ({ id }) => {
       const response = await axios.get(
         `${address_url}/Shelters/${id}/pets/avaible`
       );
-      console.log(`pet response: ${response.data}`);
       setPetsAvailable(response.data);
     } catch (error) {
       console.error(error);

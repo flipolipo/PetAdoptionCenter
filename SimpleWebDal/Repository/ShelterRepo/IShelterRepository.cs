@@ -89,8 +89,7 @@ namespace SImpleWebLogic.Repository.ShelterRepo
         public Task<bool> DeleteAdoption(Guid shelterId, Guid adoptionId, Guid petId, Guid userId);
         public Task<bool> DeletePetDisease(Guid shelterId, Guid petId, Guid diseaseId);
         public Task<bool> DeletePetVaccination(Guid shelterId, Guid petId, Guid vaccinationId);
-
-
+        public Task<bool> DeletePetFromTempHouse(Guid tempHouseId, Guid shelterId, Guid petId, Guid userId);
 
         #endregion
 

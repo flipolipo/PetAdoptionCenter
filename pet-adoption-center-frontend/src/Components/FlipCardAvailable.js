@@ -18,7 +18,6 @@ const FlipCardAvailable = () => {
       const response = await axios.get(
         `${address_url}/Users/pets/available-to-adoption`
       );
-      console.log(response.data);
       setPetsAvailable(response.data);
     } catch (error) {
       console.error(error);
