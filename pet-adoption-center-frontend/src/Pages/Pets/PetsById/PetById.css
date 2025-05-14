@@ -1,0 +1,229 @@
+.pet-by-id-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.pet-by-id-card-image-name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #facebc;
+  border-radius: 15px;
+  margin-right: 20px;
+  border-style: outset;
+  border-color: #d88a6d;
+  width: 19vw;
+  object-fit: cover;
+  position: relative;
+  text-align: center;
+}
+.pet-img {
+  object-fit: cover;
+  margin-top: 50px;
+  width: 17vw;
+  height: 17vw;
+}
+.paw-icon {
+  position: absolute;
+  z-index: 1; 
+}
+.more-info-pet-by-id {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #facebc;
+  border-radius: 15px;
+  border-style: outset;
+  border-color: #d88a6d;
+  max-width: 20vw;
+  width: 19vw;
+  height: auto;
+  text-align: left;
+}
+.small-font {
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+}
+
+.large-font {
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+}
+.address-shelter{
+  margin-left: 20px;
+}
+.description-pet-by-id {
+  padding: 20px;
+  background-color: #facebc;
+  border-radius: 15px;
+  margin-top: 20px;
+  width: 40vw;
+  height: 25vh;
+  margin-bottom: 25px;
+  border-style: outset;
+  border-color: #d88a6d;
+}
+.img-and-info {
+  display: flex;
+  flex-direction: row;
+}
+.botton-pet-by-id {
+  display: flex;
+  flex-direction: column;
+}
+.pet-button {
+  cursor: pointer;
+  position: sticky;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(246, 158, 123, 1);
+  margin-top: 10px;
+  border-radius: 10px;
+  width: 280px;
+  margin-right: 20px;
+}
+.pet-button:hover {
+  background-color: rgba(246, 158, 123, 0.8); 
+}
+.add-activity-container {
+  display: flex;
+  flex-direction: column;
+  width: 15vw;
+  align-items: center;
+  background-color: rgba(246, 158, 123, 1);
+  border-radius: 10px;
+  font-weight: bold;
+}
+.activity-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.activity-form button {
+  border: 0;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.activity-form input{
+    border: 0;
+    border-radius: 5px;
+    height: 20px
+}
+.edit-remove-meet-buttons button{
+  cursor: pointer;
+  position: sticky;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-outfit);
+  color: var(--color-black);
+  text-align: center;
+  padding: 20px;
+  background-color: rgba(246, 158, 123, 1);
+  margin-top: 10px;
+  border-radius: 10px;
+  width: 280px;
+  margin-right: 20px;
+}
+
+.button-link-for-adoption {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-black);
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(246, 158, 123, 1);
+    margin-top: 10px;
+    border-radius: 10px;
+    width: 180px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    border: 2px solid black;
+    margin-bottom: 20px;
+}
+
+.button-link-for-adoption:hover {
+  background-color: rgba(246, 158, 123, 0.5);
+}
+
+.pet-by-id-container-all {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-link-go-back {
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-black);
+  text-align: center;
+  padding: 5px 10px;
+  background-color: rgba(246, 158, 123, 1);
+  margin-top: 10px;
+  border-radius: 5px;
+  width: 80px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  border: 1px solid black;
+  margin-top: 5px;
+}
+
+.button-link-go-back:hover {
+  background-color: rgba(246, 158, 123, 0.5);
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  }
+  50% {
+    text-shadow: 0 8px 8px rgba(0, 0, 0, 0.5);
+  }
+  100% {
+    text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  }
+}
+.important{
+  color: red;
+  font-family: var(--font-roboto);
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  -webkit-text-stroke: 1px #000;
+  font-size: 1.5rem;
+  animation: glow 2s infinite;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh; 
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

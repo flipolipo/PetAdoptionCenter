@@ -1,0 +1,43 @@
+.contract-adoption-info {
+    font-family: var(--font-roboto, Arial, sans-serif);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .contract-adoption-general-info {
+   text-align: center;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+  }
+  .contract-adoption-info-h2 {
+    font-size: 24px;
+  }
+  
+  .contract-adoption-info-h3 {
+    font-size: 20px;
+    margin-top: 20px;
+  }
+  
+  .contract-adoption-info-h4 {
+    font-size: 18px;
+    margin-top: 20px;
+  }
+  
+  .contract-adoption-info-p {
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .contract-adoption-info-ul {
+    list-style-type: disc;
+    margin-top: 10px;
+    padding-left: 20px;
+  }
+  
+  .contract-adoption-info-li {
+    margin-top: 5px;
+  }
+  

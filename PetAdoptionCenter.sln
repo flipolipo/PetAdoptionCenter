@@ -5,9 +5,14 @@ VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetAdoptionCenter", "PetAdoptionCenter\PetAdoptionCenter.csproj", "{6FCC76A4-98CB-4C8D-AEC6-89215245CDE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SImpleWebLogic", "SImpleWebLogic\SImpleWebLogic.csproj", "{C05FE676-D5A8-49C1-85E9-5C9E7863B5F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SImpleWebLogic", "SImpleWebLogic\SImpleWebLogic.csproj", "{C05FE676-D5A8-49C1-85E9-5C9E7863B5F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleWebDal", "SimpleWebDal\SimpleWebDal.csproj", "{9C7E898D-D96F-49FD-8AC8-A2E347BA4237}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleWebDal", "SimpleWebDal\SimpleWebDal.csproj", "{9C7E898D-D96F-49FD-8AC8-A2E347BA4237}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetAdoptionCenterUnitTests", "PetAdoptionCenterUnitTests\PetAdoptionCenterUnitTests.csproj", "{2FE356B4-8B7B-4718-A752-5587AEEDCB5B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6FCC76A4-98CB-4C8D-AEC6-89215245CDE6} = {6FCC76A4-98CB-4C8D-AEC6-89215245CDE6}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +32,10 @@ Global
 		{9C7E898D-D96F-49FD-8AC8-A2E347BA4237}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C7E898D-D96F-49FD-8AC8-A2E347BA4237}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C7E898D-D96F-49FD-8AC8-A2E347BA4237}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FE356B4-8B7B-4718-A752-5587AEEDCB5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FE356B4-8B7B-4718-A752-5587AEEDCB5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FE356B4-8B7B-4718-A752-5587AEEDCB5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FE356B4-8B7B-4718-A752-5587AEEDCB5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+body {
+  background-image: url('./../public/Photo/background.png');
+  background-size: cover;
+  background-repeat: repeat;
+  margin: 0;
+  line-height: normal;
+  height: 100%;
+  width: 100%;
+}
+:root {
+  /* fonts */
+  --font-roboto: Roboto;
+  --font-outfit: Outfit;
+
+  /* font sizes */
+  --font-size-21xl: 40px;
+  --font-size-31xl: 50px;
+  --font-size-51xl: 70px;
+  --font-size-xl: 20px;
+
+  /* Colors */
+  --color-white: #fff;
+  --color-lightsalmon-100: #f69e7b;
+  --color-lightsalmon-200: rgba(246, 158, 123, 0.4);
+  --color-black: #000;
+  --color-gray-100: #fefcfb;
+  --color-silver: #c7c7c7;
+  --color-peachpuff: rgba(250, 206, 188, 0.6);
+
+  /* Border radiuses */
+  --br-xl: 20px;
+  --br-6xl: 25px;
+  --br-11xl: 30px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar.fixed {
+  background-color: white;
+  z-index: 1000;
+}
+.paw-icon{
+  transition: 1;
+}
+.paw-icon:hover{
+  
+}

@@ -5,7 +5,9 @@
 /bin/
 /obj/
 .DS_Store
-
+/Properties/launchSettings.json
+.launchSettings.json
+/PetAdoptionCenter/Properties/launchSettings.json
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -417,3 +419,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/PetAdoptionCenter/secrets.json
+/SimpleWebDal/secrets.json
+/PetAdoptionCenter/secrets.json
+/SimpleWebDal/Migrations
